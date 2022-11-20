@@ -1,0 +1,33 @@
+// MEDIA QUERY MANAGER
+/*
+$breakpoint argument choices
+- phone
+- tab-port
+- tab-land
+- big-desk
+
+1em = 16px
+*/
+
+@mixin respond($breakpoint) {
+    @if $breakpoint == xs {
+        @media only screen and (max-width: 37.5em) { @content }; //600px
+    }
+    @if $breakpoint == sm {
+        @media only screen and (max-width: 60em) { @content };  //960px
+    }
+    @if $breakpoint == md {
+        @media only screen and (max-width: 80em) { @content }; //1280px
+    }
+    @if $breakpoint == lg {
+        @media only screen and (min-width: 120em) { @content }; //1920px
+    }
+  }
+
+  @mixin button {
+    text-transform: uppercase;
+    font-size: 1.6rem;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+  }
