@@ -10,6 +10,23 @@ window.Vue = require('vue').default;
 
 import vuetify from './vuetify';
 
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+/* import specific icons */
+import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { faUserCircle }  from '@fortawesome/free-solid-svg-icons';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import {faKey} from '@fortawesome/free-solid-svg-icons';
+import { faCheck} from '@fortawesome/free-solid-svg-icons'
+
+/* add icons to the library */
+library.add(faUserSecret, faEye, faUserCircle, faKey, faEyeSlash, faCheck)
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -20,9 +37,10 @@ import vuetify from './vuetify';
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('card-top', require('./components/cards/CardTop.vue').default);
+Vue.component('icon-input', require('./components/form/IconInput.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
