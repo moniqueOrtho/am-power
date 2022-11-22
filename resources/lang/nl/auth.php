@@ -17,5 +17,7 @@ return [
     'password' => 'Het opgegeven wachtwoord is onjuist.',
     'throttle' => 'Te veel login pogingen. Probeer a.u.b. opnieuw in :seconds seconden.',
     'username' => 'Gebruikersnaam',
-    'password' => 'Wachtwoord'
+    'password' => 'Wachtwoord',
+    'login' => 'Inloggen',
+    'login_welcome' => 'Log in op :attribute'
 ];

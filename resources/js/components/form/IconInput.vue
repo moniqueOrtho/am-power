@@ -13,6 +13,7 @@
           :name="name"
           @focus="inputFocused(`label-${name}`)"
           @blur="inputUnfocused(`label-${name}`)"
+          :value="inputUser"
           v-model="inputVal"
           :required="required"
           :disabled="disabled"
@@ -28,7 +29,9 @@
           </button>
         </label>
       </div>
-      <p class="icon-input__error-message" v-if="errorMessage">{{ errorMessage }}</p>
+      <div class="icon-input__error-message">
+        <slot name="error"></slot>
+      </div>
     </div>
 
   </template>
@@ -36,7 +39,7 @@
   <script>
       export default {
         name: 'IconInput',
-        props: ['name', 'type', 'placeholder', 'required', 'backendError', 'autocomplete', 'icon'],
+        props: ['name', 'type', 'placeholder', 'required', 'autocomplete', 'icon'],
         data() {
             return {
               visible: false,
@@ -46,7 +49,6 @@
               inputUser: '',
               inputObject: {},
               initialState: true,
-              errorMessage: null
             }
         },
         mounted() {
@@ -81,20 +83,12 @@
               if(this.inputUser !== '') this.initialState = false;
               if(this.required && this.inputUser !== '') this.errors = false;
             },
-            backendError() {
-              if( this.backendError && Object.keys(this.backendError).length > 0 && this.backendError.constructor === Object && this.backendError.hasOwnProperty(this.name) ) {
-                console.log('error');
-                this.errors = true;
-                this.errorMessage = this.backendError[this.name][0];
-              }
-            },
-
         }
       }
   </script>
 
   <style lang="scss" scoped>
-  @import "../../../sass/variables";
+  @import "../../../sass/base/variables";
   .container {
     display: flex;
     flex-direction: column;
@@ -133,7 +127,7 @@
       &__input {
           font-size: 1.125rem;
           padding-top: .94rem;
-          font-family: $body-font-family;
+          font-family: $font-family-base;
           width: 100%;
           height: 90%;
           border: 0;
@@ -161,6 +155,7 @@
 
       &__placeholder {
         padding: .94rem 0;
+        font-family: inherit;
         font-size: 1.125rem;
         position: absolute;
         top: 50%;
