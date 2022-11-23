@@ -5,12 +5,11 @@
           <font-awesome-icon :icon="icon" v-if="errors || initialState"/>
           <font-awesome-icon icon="fa-solid fa-check" v-else/>
         </span>
-        <label :id="`label-${name}`" :for="name" class="icon-input__label" :class="{'error-line' : errors, 'focus-label': focus}">
+        <label :id="`label-${name}`" :for="`visible-${name}`" class="icon-input__label" :class="{'error-line' : errors, 'focus-label': focus}">
           <input
-          :id="name"
           :type="type === 'password' && visible ? 'text' : type"
           class="icon-input__input"
-          :name="name"
+          :name="`visible-${name}`"
           @focus="inputFocused(`label-${name}`)"
           @blur="inputUnfocused(`label-${name}`)"
           :value="inputUser"
@@ -29,9 +28,7 @@
           </button>
         </label>
       </div>
-      <div class="icon-input__error-message">
-        <slot name="error"></slot>
-      </div>
+      <p class="icon-input__error-message" v-if="errorMessage">{{ $message }}</p>
     </div>
 
   </template>
@@ -39,7 +36,8 @@
   <script>
       export default {
         name: 'IconInput',
-        props: ['name', 'type', 'placeholder', 'required', 'autocomplete', 'icon'],
+        props: ['name', 'type', 'placeholder', 'required', 'autocomplete', 'icon', 'min', 'errorMessage'],
+
         data() {
             return {
               visible: false,
@@ -49,6 +47,7 @@
               inputUser: '',
               inputObject: {},
               initialState: true,
+              hiddenInput: null
             }
         },
         mounted() {
@@ -60,9 +59,11 @@
               return this.inputUser;
             },
             set(val) {
-              this.initialState = false;
-              this.inputUser = val;
-              this.inputObject[this.name] = this.inputUser;
+                document.getElementById(this.name).value = this.isValidate(val) ? val : '';
+                this.errors = !this.isValidate(val);
+                this.initialState = false;
+                this.inputUser = val;
+                this.inputObject[this.name] = this.inputUser;
             }
           }
         },
@@ -72,16 +73,22 @@
             },
             inputFocused(id) {
                 this.focus = true;
-                if(this.required && this.inputUser === '') this.errors = true;
+                if(this.required && this.inputUser === '' && !this.isValidate(this.inputUser)) this.errors = true;
             },
             inputUnfocused(id) {
               this.focus = false;
             },
+            isValidate(val) {
+                let passed = true;
+                if(this.type) passed = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(val)
+                if(this.min) passed = val.length >= this.min
+                return passed
+            }
         },
         watch: {
-            inputUser() {
-              if(this.inputUser !== '') this.initialState = false;
-              if(this.required && this.inputUser !== '') this.errors = false;
+            inputUser(val) {
+              if(val !== '') this.initialState = false;
+              if(this.required && val !== '' && this.isValidate(val)) this.errors = false;
             },
         }
       }
@@ -136,6 +143,7 @@
           border-bottom: 3px solid transparent;
           display: block;
           position: relative;
+          z-index: 40;
 
           &:focus,
           &:not(:placeholder-shown) {

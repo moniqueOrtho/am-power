@@ -2,10 +2,10 @@
 @php
     $inputs = [
         [
-            'name' => 'username',
-            'type'=> 'text',
+            'name' => 'email',
+            'type'=> 'email',
             'icon' =>'fa-solid fa-user-circle',
-            'placeholder' => __('auth.username'),
+            'placeholder' => __('auth.email'),
             'required' => true,
             'autocomplete' => 'off'
         ],
@@ -16,6 +16,7 @@
             'placeholder' => __('auth.password'),
             'required' => true,
             'autocomplete' => 'off',
+            'min' => 8
         ]
     ]
 @endphp
@@ -29,6 +30,8 @@
                 @csrf
 
                 @foreach ( $inputs as $input)
+                    <input type="hidden" id="{{$input['name']}}" name="{{$input['name']}}" required="{{$input['required']}}" value="">
+
                     <icon-input
                     key="{{$input['name']}}"
                     name="{{$input['name']}}"
@@ -37,20 +40,29 @@
                     placeholder="{{$input['placeholder']}} "
                     required="{{$input['required']}}"
                     autocomplete="{{$input['autocomplete']}}"
-                    :reset="@if ($_SERVER["REQUEST_METHOD"] == "POST") true @else false @endif"
+                    :reset="false"
+                    min="{{$input['min'] ?? null}}"
+                    errorMessage="@error($input['name']) {{$message}} @enderror"
                     >
                     @error($input['name'])
                         <template v-slot:error>
-                            <p>{{ $message }}</p>
+
                         </template>
                     @enderror
                     </icon-input>
+
                 @endforeach
                 <div class="d-flex justify-center my-3">
                     <btn-pressed type="submit">{{ __('auth.login') }}</btn-pressed>
                 </div>
 
             </form>
+            <v-overlay :value="@if (isset($_POST['submit'])) true @else false @endif">
+                <v-progress-circular
+                  indeterminate
+                  size="64"
+                ></v-progress-circular>
+            </v-overlay>
         </card-top>
     </v-container>
 
