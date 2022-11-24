@@ -1,69 +1,62 @@
 @extends('layouts.app')
-@php
-    $inputs = [
-        [
-            'name' => 'email',
-            'type'=> 'email',
-            'icon' =>'fa-solid fa-user-circle',
-            'placeholder' => __('auth.email'),
-            'required' => true,
-            'autocomplete' => 'off'
-        ],
-        [
-            'name' => 'password',
-            'type' => 'password',
-            'icon' => 'fa-solid fa-key',
-            'placeholder' => __('auth.password'),
-            'required' => true,
-            'autocomplete' => 'off',
-            'min' => 8
-        ]
-    ]
-@endphp
 
 @section('content')
     <v-container fluid class="login light1 fill-height justify-center" >
         <card-top class="go-down half">
 
-            <h6 class="text-h6 mx-3 text-center accent--text">{{ __('auth.login_welcome', ['attribute' => config('app.name', 'Laravel')])}}</h6>
+            <h6 class="text-h6 mx-3 text-center accent--text">{{ __('site.login_welcome', ['attribute' => config('app.name', 'Laravel')])}}</h6>
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
-                @foreach ( $inputs as $input)
-                    <input type="hidden" id="{{$input['name']}}" name="{{$input['name']}}" required="{{$input['required']}}" value="">
+                <input type="hidden" id="email" name="email" required >
+                <icon-input
+                key="email"
+                name="email"
+                icon="fa-solid fa-user-circle"
+                type="email"
+                placeholder="{{__('site.email')}}"
+                :required="true"
+                autocomplete="email"
+                :reset="false"
+                error="@if ($errors->has('email')) {{ $errors->first('email')}} @endif"
+                old-value="{{ old('email' )}}"
+                >
+                </icon-input>
 
-                    <icon-input
-                    key="{{$input['name']}}"
-                    name="{{$input['name']}}"
-                    icon="{{$input['icon']}} "
-                    type="{{$input['type']}}"
-                    placeholder="{{$input['placeholder']}} "
-                    required="{{$input['required']}}"
-                    autocomplete="{{$input['autocomplete']}}"
-                    :reset="false"
-                    min="{{$input['min'] ?? null}}"
-                    errorMessage="@error($input['name']) {{$message}} @enderror"
-                    >
-                    @error($input['name'])
-                        <template v-slot:error>
+                <input type="hidden" id="password" name="password" required max="15" min="8">
+                <icon-input
+                key="password"
+                name="password"
+                icon="fa-solid fa-key"
+                type="password"
+                placeholder="{{__('site.password')}}"
+                :required="true"
+                autocomplete="current-password"
+                :reset="false"
+                :min="8"
+                :max="15"
+                error="@if ($errors->has('password')) {{ $errors->first('password')}} @endif"
+                >
+                </icon-input>
 
-                        </template>
-                    @enderror
-                    </icon-input>
 
-                @endforeach
                 <div class="d-flex justify-center my-3">
-                    <btn-pressed type="submit">{{ __('auth.login') }}</btn-pressed>
+                    <btn-pressed type="submit">{{ __('site.login') }}</btn-pressed>
                 </div>
 
             </form>
-            <v-overlay :value="@if (isset($_POST['submit'])) true @else false @endif">
-                <v-progress-circular
-                  indeterminate
-                  size="64"
-                ></v-progress-circular>
-            </v-overlay>
+            @isset($_POST['login'])
+                <p>Wordt verzonden</p>
+                {{-- <v-overlay :value="true">
+                    <v-progress-circular
+                    indeterminate
+                    size="64"
+                    ></v-progress-circular>
+                </v-overlay> --}}
+            @endisset
+
         </card-top>
+
     </v-container>
 
 @endsection
