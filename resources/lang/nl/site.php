@@ -5,5 +5,6 @@ return [
     'password' => 'Wachtwoord',
     'login' => 'Inloggen',
     'login_welcome' => 'Log in op :attribute',
-    'email' => 'E-mail'
+    'email' => 'E-mail',
+    'logout' => 'Uitloggen'
 ];

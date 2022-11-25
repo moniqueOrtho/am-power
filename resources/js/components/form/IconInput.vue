@@ -1,26 +1,23 @@
 <template>
     <div class="container">
-      <div class="icon-input" :class="{'shake' : unvalid}">
-        <span class="icon-input__icon" :class="unvalid || initialState ? 'light1 grey1--text' : 'success white--text'">
-          <font-awesome-icon :icon="icon" v-if="unvalid || initialState"/>
+      <div class="icon-input" :class="{'shake' : invalid}">
+        <span class="icon-input__icon" :class="invalid || initialState ? 'light1 grey1--text' : 'success white--text'">
+          <font-awesome-icon :icon="icon" v-if="invalid || initialState"/>
           <font-awesome-icon icon="fa-solid fa-check" v-else/>
         </span>
-        <label :id="`label-${name}`" :for="`visible-${name}`" class="icon-input__label" :class="{'error-line' : unvalid, 'focus-label': focus}">
+        <label :id="`label-${name}`" :for="`visible-${name}`" class="icon-input__label" :class="{'error-line' : invalid, 'focus-label': focus}">
           <input
           :type="type === 'password' && visible ? 'text' : type"
-          :class="`icon-input__input ${unvalid ? 'invalid' : ''}`"
+          class="icon-input__input"
           :name="`visible-${name}`"
           @focus="inputFocused(`label-${name}`)"
           @blur="inputUnfocused(`label-${name}`)"
-          :value="getValue"
-          @input="inputVal"
+          v-model="input"
           :required="required"
           :disabled="disabled"
           :autocomplete="autocomplete"
           placeholder=" "
-          :max="max"
-          :min="min"
-
+          :ref="name"
           >
           <span class="icon-input__placeholder">{{placeholder}}</span>
           <button
@@ -31,7 +28,7 @@
           </button>
         </label>
       </div>
-      <p class="icon-input__error-message" v-if="error && inputUser === ''">{{ error }}</p>
+      <p class="icon-input__error-message" v-if="componentError">{{ error }}</p>
     </div>
 
   </template>
@@ -66,11 +63,11 @@
             },
             min: {
                 type: Number,
-                default: 0
+                required: false
             },
             max: {
                 type: Number,
-                default: 0
+                required: false
             },
             error: {
                 type: String,
@@ -86,21 +83,34 @@
               visible: false,
               focus: false,
               disabled: true,
-              unvalid: false,
+              invalid: false,
               inputUser: '',
-              inputObject: {},
               initialState: true,
-              hiddenInput: null,
-              previous: null
+              componentError: false
             }
         },
         mounted() {
           setTimeout(()=>{this.disabled = false}, 800);
-          if(this.oldValue) this.previous = this.oldValue;
+          if(this.oldValue) this.inputUser = this.oldValue;
+          if(this.max) this.$refs[this.name].setAttribute("max_length", this.max);
+          if(this.min) this.$refs[this.name].setAttribute("min_length", this.min);
+          if(this.min && this.max) this.$refs[this.name].setAttribute("pattern", `.{${this.min},${this.max}}`);
+          if(this.min && !this.max) this.$refs[this.name].setAttribute("pattern", `.{0}| .{${this.min},}`);
+          if(!this.min && this.max) this.$refs[this.name].setAttribute("pattern", `.{0}| .{,${this.max}}`);
+          if(this.error) this.componentError = true;
         },
         computed: {
-          getValue() {
-            return this.previous ? this.previous : this.inputUser;
+          input: {
+            get() {
+              return this.inputUser;
+            },
+            set(val) {
+              document.getElementById(this.name).value = val;
+              this.invalid = !this.isValidate(val);
+              this.initialState = false;
+              this.inputUser = val;
+              if(this.componentError) this.componentError = false;
+            }
           }
         },
         methods: {
@@ -109,7 +119,7 @@
             },
             inputFocused(id) {
                 this.focus = true;
-                if(this.required && this.inputUser === '') this.unvalid = true;
+                if(this.required && this.inputUser === '') this.invalid = true;
             },
             inputUnfocused(id) {
               this.focus = false;
@@ -122,20 +132,11 @@
                 if(this.max !== 0) return val.length <= this.max;
                 return true;
             },
-            inputVal(val) {
-                console.log(val)
-                document.getElementById(this.name).value = this.isValidate(val) ? val : '';
-                this.unvalid = !this.isValidate(val);
-                this.initialState = false;
-                this.previous = '';
-                this.inputUser = val;
-                this.inputObject[this.name] = this.inputUser;
-            },
         },
         watch: {
             inputUser(val) {
               if(val !== '') this.initialState = false;
-              if(this.required && val !== '') this.unvalid = !this.isValidate(val);
+              if(this.required && val !== '') this.invalid = !this.isValidate(val);
             },
         }
       }
@@ -202,7 +203,7 @@
               }
 
           }
-          &.invalid ~ .icon-input__placeholder {
+          &:focus:invalid ~ .icon-input__placeholder {
             color: var(--v-error-base);
             font-weight: 700;
           }
@@ -252,5 +253,20 @@
   .error-line {
       border-bottom: 3px solid var(--v-error-base);
   }
+
+  /* Change autocomplete styles in WebKit */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    select:-webkit-autofill,
+    select:-webkit-autofill:hover,
+    select:-webkit-autofill:focus {
+
+    -webkit-text-fill-color: var(--v-grey2-base);
+    transition: background-color 5000s ease-in-out 0s;
+    }
 
   </style>

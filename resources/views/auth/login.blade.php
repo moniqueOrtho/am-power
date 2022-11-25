@@ -3,7 +3,6 @@
 @section('content')
     <v-container fluid class="login light1 fill-height justify-center" >
         <card-top class="go-down half">
-
             <h6 class="text-h6 mx-3 text-center accent--text">{{ __('site.login_welcome', ['attribute' => config('app.name', 'Laravel')])}}</h6>
             <form method="POST" action="{{ route('login') }}">
                 @csrf
@@ -45,18 +44,7 @@
                 </div>
 
             </form>
-            @isset($_POST['login'])
-                <p>Wordt verzonden</p>
-                {{-- <v-overlay :value="true">
-                    <v-progress-circular
-                    indeterminate
-                    size="64"
-                    ></v-progress-circular>
-                </v-overlay> --}}
-            @endisset
-
         </card-top>
-
     </v-container>
 
 @endsection
