@@ -4,6 +4,125 @@ body {
   font-family: "Lexend", arial, sans-serif !important;
 }
 
+.go-down {
+  position: relative;
+  -webkit-animation-name: goDown;
+  -webkit-animation-duration: 1s;
+  animation-name: goDown;
+  animation-duration: 1s;
+}
+@keyframes goDown {
+  from {
+    transform: translateY(-20rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0rem);
+    opacity: 1;
+  }
+}
+.go-up {
+  position: relative;
+  -webkit-animation-name: goUp;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  animation-name: goUp;
+  animation-duration: 1s;
+  animation-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+@keyframes goUp {
+  from {
+    transform: translateY(15rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0rem);
+    opacity: 1;
+  }
+}
+.scale {
+  position: relative;
+  -webkit-animation-name: scale;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  animation-name: scale;
+  animation-duration: 1s;
+  animation-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+@keyframes scale {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 1rem 4rem rgba(var(--black), 0.25);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+}
+.shake {
+  animation: shake 0.5s linear;
+}
+
+.error-shake {
+  animation: shake 0.5s 1s linear;
+}
+@keyframes shake {
+  8%, 41% {
+    -webkit-transform: translateX(-10px);
+  }
+  25%, 58% {
+    -webkit-transform: translateX(10px);
+  }
+  75% {
+    -webkit-transform: translateX(-5px);
+  }
+  92% {
+    -webkit-transform: translateX(5px);
+  }
+  0%, 100% {
+    -webkit-transform: translateX(0);
+  }
+}
+.fade-in-bg { /* Chrome, Safari, Opera */
+  animation: fade-in 4s ease-in;
+}
+
+/* Chrome, Safari, Opera */
+/* Standard syntax */
+@keyframes fade-in {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 /*!
  * Bootstrap  v5.2.2 (https://getbootstrap.com/)
  * Copyright 2011-2022 The Bootstrap Authors
@@ -10826,128 +10945,131 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
-.go-down {
-  position: relative;
-  -webkit-animation-name: goDown;
-  -webkit-animation-duration: 1s;
-  animation-name: goDown;
-  animation-duration: 1s;
-}
-@keyframes goDown {
-  from {
-    transform: translateY(-20rem);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0rem);
-    opacity: 1;
-  }
-}
-.go-up {
-  position: relative;
-  -webkit-animation-name: goUp;
-  -webkit-animation-duration: 1s;
-  -webkit-animation-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
-  animation-name: goUp;
-  animation-duration: 1s;
-  animation-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
-}
-@keyframes goUp {
-  from {
-    transform: translateY(15rem);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0rem);
-    opacity: 1;
-  }
-}
-.scale {
-  position: relative;
-  -webkit-animation-name: scale;
-  -webkit-animation-duration: 1s;
-  -webkit-animation-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
-  animation-name: scale;
-  animation-duration: 1s;
-  animation-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
-}
-@keyframes scale {
-  from {
-    transform: scale(0);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-@keyframes pulsate {
-  0% {
-    transform: scale(1);
-    box-shadow: none;
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 1rem 4rem rgba(var(--black), 0.25);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: none;
-  }
-}
-.shake {
-  animation: shake 0.5s linear;
-}
-
-.error-shake {
-  animation: shake 0.5s 1s linear;
-}
-@keyframes shake {
-  8%, 41% {
-    -webkit-transform: translateX(-10px);
-  }
-  25%, 58% {
-    -webkit-transform: translateX(10px);
-  }
-  75% {
-    -webkit-transform: translateX(-5px);
-  }
-  92% {
-    -webkit-transform: translateX(5px);
-  }
-  0%, 100% {
-    -webkit-transform: translateX(0);
-  }
-}
-.fade-in-bg { /* Chrome, Safari, Opera */
-  animation: fade-in 4s ease-in;
-}
-
-/* Chrome, Safari, Opera */
-/* Standard syntax */
-@keyframes fade-in {
-  from {
-    opacity: 0.2;
-  }
-  to {
-    opacity: 1;
-  }
-}
-.custom-loader {
-  animation: loader 1s infinite;
-  display: flex;
-}
-@keyframes loader {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 .login {
   font-family: "Lexend", arial, sans-serif !important;
   background: url(/images/map.jpg?74416897048e39fc2423753904a122f4);
   background-size: cover;
   background-position: center;
+}
+
+.navigation__checkbox {
+  display: none;
+}
+.navigation__button {
+  background-color: #f1eee4;
+  height: 5rem;
+  width: 5rem;
+  position: fixed;
+  top: 2.5rem;
+  right: 2.5rem;
+  border-radius: 50%;
+  z-index: 200;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navigation__background {
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+  position: fixed;
+  top: 3rem;
+  right: 3rem;
+  background-image: radial-gradient(#bda6f9, #15102c);
+  z-index: 100;
+  transform: scale(80);
+  transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+}
+.navigation__nav {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 150;
+  opacity: 1;
+  transition: all 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+}
+.navigation__list {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  list-style: none;
+  text-align: center;
+  width: 100%;
+}
+.navigation__item {
+  margin: 1rem;
+}
+.navigation__link:link, .navigation__link:visited {
+  display: inline-block;
+  font-family: "Lexend", arial, sans-serif !important;
+  font-size: 2rem;
+  font-weight: 300;
+  padding: 1rem 2rem;
+  color: #f1eee4;
+  text-decoration: none;
+  text-transform: uppercase;
+  background-image: linear-gradient(120deg, transparent 0%, transparent 50%, #f1eee4 50%);
+  background-size: 230%;
+  transition: all 0.4s;
+}
+.navigation__link:hover, .navigation__link:active {
+  background-position: 100%;
+  color: #8672C0;
+  transform: translateX(1rem);
+}
+.navigation__checkbox:checked ~ .navigation__background {
+  transform: scale(0);
+}
+.navigation__checkbox:checked ~ .navigation__nav {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.navigation__icon {
+  position: relative;
+  background-color: transparent;
+}
+.navigation__icon, .navigation__icon::before, .navigation__icon::after {
+  width: 2.5rem;
+  height: 3px;
+  display: inline-block;
+}
+.navigation__icon::before, .navigation__icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  background-color: #333333;
+}
+.navigation__icon::before {
+  top: 0;
+  transition: all 0.2s cubic-bezier(0.78, 1.86, 0.83, 0.67);
+  transform: rotate(-135deg);
+}
+.navigation__icon::after {
+  top: 0;
+  transform: rotate(135deg);
+  transition: all 0.2s cubic-bezier(0.78, 1.86, 0.83, 0.67);
+}
+.navigation__button:hover .navigation__icon {
+  transform: scale(1.2);
+}
+.navigation__checkbox:checked + .navigation__button .navigation__icon {
+  background-color: #333333;
+}
+.navigation__checkbox:checked + .navigation__button .navigation__icon::before {
+  top: -0.5rem;
+  transform: rotate(0);
+}
+.navigation__checkbox:checked + .navigation__button .navigation__icon::after {
+  top: 0.5rem;
+  transform: rotate(0);
+}
+
+.nav-layout {
+  background-color: #E4D8C6;
 }

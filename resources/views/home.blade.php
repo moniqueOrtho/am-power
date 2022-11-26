@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.nav')
 
 @section('content')
-<div class="container">
+<v-container fluid class="accent fill-height justify-center" >
     <div class="row justify-content-center">
         <div class="col-md-8">
 
@@ -27,5 +27,5 @@
             </div>
         </div>
     </div>
-</div>
+</v-container>
 @endsection

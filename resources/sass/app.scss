@@ -4,12 +4,13 @@
 // In the base
 @import 'base/variables';
 @import 'base/base';
+@import 'base/animations';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-// Css animations
-@import 'animations';
-
 // Pages
 @import 'pages/login';
+
+@import 'layout/navigation';
+@import 'layout/layouts';

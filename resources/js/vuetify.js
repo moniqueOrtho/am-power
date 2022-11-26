@@ -13,7 +13,7 @@ export default new Vuetify({
                 secondary: '#E9B049', // sunray yellow
                 gold: '#C69963', // gold
                 //secondary: '#533f8d', // donker paars
-                accent: '#533f8d',
+                accent: '#15102c', //'#533f8d',
 
                 info: '#4856ad',
                 //warning: '#D06A4C', // Copper Red
