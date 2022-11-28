@@ -27,6 +27,11 @@ class Page extends Model
         return BelongsTo(Site::class);
     }
 
+    public function subpages()
+    {
+        return $this->hasMany(Subpage::class);
+    }
+
     public function sections()
     {
         return $this->morphMany(Section::class, 'sectionable');

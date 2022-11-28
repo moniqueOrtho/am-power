@@ -5,24 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Subpage extends Model
 {
     use HasFactory;
 
     protected $fillable=[
-        'site_id',
+        'page_id',
+        'name',
         'title',
         'subtitle',
-        'summary',
+        'description',
         'slug',
-        'icon'
+        'icon',
+        'sequence'
     ];
 
-    public function site()
+    public function page()
     {
-        return BelongsTo(Site::class);
+        return BelongsTo(Page::class);
     }
-
 
     public function sections()
     {

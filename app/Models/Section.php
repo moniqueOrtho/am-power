@@ -20,4 +20,9 @@ class Section extends Model
     {
         return $this->morphTo();
     }
+
+    public function component()
+    {
+        return $this->belongsTo(Component::class);
+    }
 }

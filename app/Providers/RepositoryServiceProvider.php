@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use App\Repositories\Contracts\{
+    IComponent,
+    IPage,
+    IPost,
+    ISection,
+    ISite,
+    ISubpage,
+    IUser
+};
+
+use App\Repositories\Eloquent\{
+    ComponentRepository,
+    PageRepository,
+    PostRepository,
+    SectionRepository,
+    SiteRepository,
+    SubpageRepository,
+    UserRepository
+};
+
+class RepositoryServiceProvider extends ServiceProvider
+{
+    /**
+     * Register services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->app->bind(IComponent::class, ComponentRepository::class);
+        $this->app->bind(IPage::class, PageRepository::class);
+        $this->app->bind(IPost::class, PostRepository::class);
+        $this->app->bind(ISection::class, SectionRepository::class);
+        $this->app->bind(ISite::class, SiteRepository::class);
+        $this->app->bind(ISubpage::class, SubpageRepository::class);
+        $this->app->bind(IUser::class, UserRepository::class);
+    }
+}
