@@ -49,4 +49,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Site::class);
     }
+
+    // Relationship with Role table
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+
 }
