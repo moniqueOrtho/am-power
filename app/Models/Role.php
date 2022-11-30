@@ -21,5 +21,10 @@ class Role extends Model
         return $this->belongsToMany(Permission::class);
     }
 
+    public function getPermissions()
+    {
+        return $this->permissions()->pluck('permission');
+    }
+
 
 }

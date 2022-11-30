@@ -11,7 +11,7 @@
   </script>
 
   <style lang="scss" scoped>
-  @import "../../../sass/mixins.scss";
+  @import "../../../sass/base/mixins.scss";
   @import "../../../sass/base/variables";
     .card-top {
       position: relative;

@@ -8,6 +8,12 @@ return [
     'email' => 'E-mail',
     'logout' => 'Uitloggen',
     'pages' => 'Pagina|Pagina\'s',
-    'blogs' => 'Blog|Blogs',
-    'sites' => 'Website|Websites'
+    'posts' => 'Blog|Blogs',
+    'sites' => 'Website|Websites',
+    'roles' => 'Rol|Rollen',
+    'permissions' => 'Bevoegdheid|Bevoegdheden',
+    'users' => 'Gebruiker|Gebruikers',
+    'components' => 'Element|Elementen',
+    'settings' => 'Instelling|Instellingen',
+    'profiles' => 'Profiel|Profielen',
 ];

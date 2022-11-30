@@ -56,5 +56,34 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
+    /**
+     * Determine if the model has the given role.
+     *
+     * @param string|int|array|\Illuminate\Support\Collection $role
+     * @param string|null $guard
+     * @return bool
+     */
+    public function hasRole($role, string $guard = null): bool
+    {
+        if (is_string($role)) {
+            return $this->role->where('role', $role)->count();
+        }
+
+        if (is_int($role)) {
+            return $this->role->where('id', $role)->count();
+        }
+
+        if ($role instanceof Role) {
+            return $this->role->where('id', $role->id)->count();
+        }
+    }
+
+    // Helper function for permissions through role
+    public function getPermissionsAttribute()
+    {
+        $role = Role::find($this->role_id);
+        return $role->permissions()->pluck('permission');
+    }
+
 
 }

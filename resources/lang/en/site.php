@@ -8,6 +8,12 @@ return [
     'email' => 'Email',
     'logout' => 'Log out',
     'pages' => 'Page|Pages',
-    'blogs' => 'Blog|Blogs',
-    'sites' => 'Site|Sites'
+    'posts' => 'Post|Posts',
+    'sites' => 'Site|Sites',
+    'roles' => 'Role|Roles',
+    'permissions' => 'Permission|Permissions',
+    'users' => 'User|Users',
+    'components' => 'Component|Components',
+    'settings' => 'Setting|Settings',
+    'profiles' => 'Profile|Profiles',
 ];
