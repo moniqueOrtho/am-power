@@ -6,10 +6,7 @@
         <div class="col-md-8">
 
             <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-                <form action="{{route('logout')}}" method="POST">
-                    @csrf
-                    <btn-pressed type="submit">{{ __('site.logout') }}</btn-pressed>
-                </form>
+
             </div>
 
             <div class="card">

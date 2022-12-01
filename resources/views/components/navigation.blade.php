@@ -42,17 +42,34 @@
 @endphp
 <div class="navigation">
     <input type="checkbox" class="navigation__checkbox" id="navi-toggle">
-    <label for="navi-toggle" class="navigation__button">
+    <label for="navi-toggle" class="navigation__button navigation__button--menu">
         <span class="navigation__icon">&nbsp;</span>
     </label>
     <div class="navigation__background">&nbsp;</div>
     <nav class="navigation__nav">
-        <ul class="navigation__list">
-            @foreach ( $navs as $nav)
-                @if ( $perms->contains("update_" . $nav['name']) )
-                    <li class="navigation__item"><a href="#" class="navigation__link">{{$nav['label']}}</a></li>
-                @endif
-            @endforeach
-        </ul>
+        <div class="navigation__list">
+            <div class="container">
+                <div class="grid">
+                    @foreach ( $navs as $nav)
+                        @if ( $perms->contains("update_" . $nav['name']) )
+                            <div class="g-col-12 g-col-md-6 g-col-lg-4">
+                                <div class="navigation__item navigation__item--nav"><a href="#" class="navigation__link">{{$nav['label']}}</a></div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        {{-- <form action="{{route('logout')}}" method="POST">
+            @csrf
+            <btn-pressed >{{ __('site.logout') }}</btn-pressed>
+        </form> --}}
+        <form action="{{route('logout')}}" method="POST">
+            @csrf
+            <button class="navigation__button navigation__button--out navigation__item" type="submit">
+                <i class="fa-solid fa-right-from-bracket navigation__font"></i>
+            </button>
+        </form>
+
     </nav>
 </div>

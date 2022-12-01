@@ -23,9 +23,10 @@ import { faUserCircle }  from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import {faKey} from '@fortawesome/free-solid-svg-icons';
 import { faCheck} from '@fortawesome/free-solid-svg-icons'
+import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faUserSecret, faEye, faUserCircle, faKey, faEyeSlash, faCheck)
+library.add(faUserSecret, faEye, faUserCircle, faKey, faEyeSlash, faCheck, faArrowRightFromBracket)
 
 /**
  * The following block of code may be used to automatically register your
