@@ -46,17 +46,13 @@
         <span class="navigation__icon">&nbsp;</span>
     </label>
     <div class="navigation__background">&nbsp;</div>
-    <div class="container-md">
-        <div class="navigation__card"></div>
-        <nav class="navigation__nav">
-            <ul class="navigation__list">
-                @foreach ( $navs as $nav)
-                    @if ( $perms->contains("update_" . $nav['name']) )
-                        <li class="navigation__item"><a href="#" class="navigation__link">{{$nav['label']}}</a></li>
-                    @endif
-                @endforeach
-            </ul>
-        </nav>
-    </div>
-
+    <nav class="navigation__nav">
+        <ul class="navigation__list">
+            @foreach ( $navs as $nav)
+                @if ( $perms->contains("update_" . $nav['name']) )
+                    <li class="navigation__item"><a href="#" class="navigation__link">{{$nav['label']}}</a></li>
+                @endif
+            @endforeach
+        </ul>
+    </nav>
 </div>

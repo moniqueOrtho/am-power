@@ -11002,7 +11002,6 @@ textarea.form-control-lg {
   transition: all 0.8s cubic-bezier(0.86, 0, 0.07, 1);
 }
 .navigation__list {
-  display: none;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -11010,21 +11009,6 @@ textarea.form-control-lg {
   list-style: none;
   text-align: center;
   width: 100%;
-}
-@media only screen and (max-width: 37.5em) {
-  .navigation__list {
-    display: block;
-  }
-}
-.navigation__card {
-  width: 100px;
-  height: 100px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  position: absolute;
-  z-index: 100;
-  background-color: red;
 }
 .navigation__item {
   margin: 1rem;
