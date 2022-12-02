@@ -11459,12 +11459,17 @@ textarea.form-control-lg {
 .navigation__item--nav {
   border-radius: 4px;
 }
-.navigation__item:hover, .navigation__item:active {
+.navigation__item:hover {
   background-position: 100%;
   color: #8672C0;
   transform: translateX(1rem);
 }
-.navigation__item:hover > .navigation__font {
+.navigation__item.active {
+  background-position: 100%;
+  color: #8672C0;
+  transform: translateX(0);
+}
+.navigation__item:hover > .navigation__font, .navigation__item:active > .navigation__font {
   fill: #8672C0;
 }
 .navigation__link:link, .navigation__link:visited {
@@ -11476,6 +11481,7 @@ textarea.form-control-lg {
   color: inherit;
   text-decoration: none;
   text-transform: uppercase;
+  width: 100%;
 }
 .navigation__font {
   width: 2.5rem;

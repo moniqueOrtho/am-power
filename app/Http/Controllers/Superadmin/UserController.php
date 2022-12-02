@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $result = $this->users->all();
 
-        return view('superadmin.users', ['data' => $result ]);
+        return view('superadmin.users', ['data' => $result]);
     }
 
     /**

@@ -72,14 +72,21 @@
             border-radius: 4px;
         }
 
-        &:hover,
-        &:active {
+        &:hover {
             background-position: 100%;
             color: $color-primary;
             transform: translateX(1rem);
         }
 
-        &:hover >  .navigation__font {
+        &.active {
+            background-position: 100%;
+            color: $color-primary;
+            transform: translateX(0);
+        }
+
+
+        &:hover >  .navigation__font,
+        &:active > .navigation__font {
             fill: $color-primary;
         }
     }
@@ -95,6 +102,7 @@
             color: inherit;
             text-decoration: none;
             text-transform: uppercase;
+            width: 100%;
         }
     }
 
@@ -164,4 +172,7 @@
         top: .5rem;
         transform: rotate(0);
     }
+
+
 }
+
