@@ -3,6 +3,16 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Superadmin\{
+    UserController,
+    SiteController,
+    PermissionController,
+    RoleController,
+    ComponentController
+
+};
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,8 +30,23 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'role:superadmin'])->group( function () {
+    Route::resource(strtolower(trans_choice('site.users', 2)), UserController::class)->names([
+        'index' => 'users'
+    ]);
+    Route::resource( strtolower(trans_choice('site.sites', 2)), SiteController::class)->names([
+        'index' => 'sites'
+    ]);
+    Route::resource('roles', RoleController::class)->names([
+        'index' => 'roles'
+    ]);
+    Route::resource('permissions', PermissionController::class)->names([
+        'index' => 'permissions'
+    ]);
+    Route::resource('components', ComponentController::class)->names([
+        'index' => 'components'
+    ]);
 
 });

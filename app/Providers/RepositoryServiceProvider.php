@@ -10,7 +10,9 @@ use App\Repositories\Contracts\{
     ISection,
     ISite,
     ISubpage,
-    IUser
+    IUser,
+    IRole,
+    IPermission
 };
 
 use App\Repositories\Eloquent\{
@@ -20,7 +22,9 @@ use App\Repositories\Eloquent\{
     SectionRepository,
     SiteRepository,
     SubpageRepository,
-    UserRepository
+    UserRepository,
+    RoleRepository,
+    PermissionRepository
 };
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -49,5 +53,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ISite::class, SiteRepository::class);
         $this->app->bind(ISubpage::class, SubpageRepository::class);
         $this->app->bind(IUser::class, UserRepository::class);
+        $this->app->bind(IRole::class, RoleRepository::class);
+        $this->app->bind(IPermission::class, PermissionRepository::class);
     }
 }

@@ -80,7 +80,7 @@
         }
 
         &:hover >  .navigation__font {
-            color: $color-primary;
+            fill: $color-primary;
         }
     }
 
@@ -99,8 +99,8 @@
     }
 
     &__font {
-        font-size: 2rem;
-        color: $color-light-light;
+        width: 2.5rem;
+        fill: $color-light-light;
     }
 
     &__checkbox:checked ~ &__background {

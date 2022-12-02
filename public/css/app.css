@@ -11465,7 +11465,7 @@ textarea.form-control-lg {
   transform: translateX(1rem);
 }
 .navigation__item:hover > .navigation__font {
-  color: #8672C0;
+  fill: #8672C0;
 }
 .navigation__link:link, .navigation__link:visited {
   display: inline-block;
@@ -11478,8 +11478,8 @@ textarea.form-control-lg {
   text-transform: uppercase;
 }
 .navigation__font {
-  font-size: 2rem;
-  color: #f1eee4;
+  width: 2.5rem;
+  fill: #f1eee4;
 }
 .navigation__checkbox:checked ~ .navigation__background {
   transform: scale(0);

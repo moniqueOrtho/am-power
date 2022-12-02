@@ -1,6 +1,7 @@
-@extends('layouts.nav')
+@extends('layouts.app')
 
 @section('content')
+<x-navigation/>
 <v-container fluid class="accent fill-height justify-center" >
     <div class="row justify-content-center">
         <div class="col-md-8">
