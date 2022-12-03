@@ -1,11 +1,30 @@
 .navigation {
+    &__container {
+        position: relative;
+        height: 4.5rem;
+        background-color: $color-primary-dark;
+        &--v {
+            position: relative;
+        }
+    }
+
+    &__header {
+        position: relative;
+        background-color: $color-light-light;
+    }
+
+    &__title {
+        padding: 1.5rem 2rem;
+        color: $color-primary-dark;
+    }
+
     &__checkbox {
         display: none;
     }
 
     &__button {
-        height: 4rem;
-        width: 4rem;
+        height: 3.5rem;
+        width: 3.5rem;
         border-radius: 50%;
         z-index: 200;
         box-shadow: 0 .5rem 2rem rgba($color-black, $alpha: .1);
@@ -15,9 +34,9 @@
         &--menu {
             background-color: $color-light-light;
             border: 1px solid $color-light-light;
-            top: 1rem;
+            top: .5rem;
             left: 2rem;
-            position: fixed;
+            position: absolute;
             cursor: pointer;
         }
         &--out {
@@ -29,16 +48,20 @@
     }
 
     &__background {
-        height: 4rem;
-        width: 4rem;
+        height: 3rem;
+        width: 3rem;
         border-radius: 50%;
-        position: fixed;
-        top: 1.5rem;
+        position: absolute;
+        top: 1rem;
         left: 2.5rem;
         background-image: radial-gradient($color-primary-light, $color-primary-dark);
         z-index: 100;
-        transform: scale(80);
+
         transition: transform .8s cubic-bezier(0.86, 0, 0.07,1);
+
+        &--open {
+            transform: scale(80);
+        }
     }
 
     &__nav {
@@ -111,46 +134,65 @@
         fill: $color-light-light;
     }
 
-    &__checkbox:checked ~ &__background {
+    &__checkbox:checked ~ &__background--open {
         transform: scale(0);
+    }
+
+    &__checkbox:checked ~ &__background--closed {
+        transform: scale(80);
     }
 
     &__checkbox:checked ~ &__nav {
         opacity: 0;
         width: 0;
         height: 0;
+        z-index: 0;
     }
 
     &__icon {
         position: relative;
         background-color: transparent;
 
-        &,
-        &::before,
-        &::after {
+        &--open,
+        &--closed,
+        &--open::before,
+        &--closed::before,
+        &--open::after,
+        &--closed::after {
           width: 2.5rem;
           height: 3px;
           display: inline-block;
         }
 
-        &::before,
-        &::after {
+        &--open::before,
+        &--closed::before,
+        &--open::after,
+        &--closed::after {
             content: "";
             position: absolute;
             left: 0;
             background-color: $color-primary;
         }
 
-        &::before {
+        // Cross
+        &--open::before {
             top: 0;
-            //top: -.5rem;
             transition: all .2s cubic-bezier(.78,1.86,.83,.67);
             transform: rotate(-135deg);
         }
-        &::after {
+        &--open::after {
             top: 0;
-            //top: .5rem;
             transform: rotate(135deg);
+            transition: all .2s cubic-bezier(.78,1.86,.83,.67);
+        }
+        // Menu
+        &--closed::before {
+            top: -.5rem;
+            transition: all .2s cubic-bezier(.78,1.86,.83,.67);
+        }
+
+        &--closed::after {
+            top: .5rem;
             transition: all .2s cubic-bezier(.78,1.86,.83,.67);
         }
     }
@@ -163,14 +205,26 @@
         background-color: $color-primary;
     }
 
-    &__checkbox:checked + &__button &__icon::before {
+    // From cross to menu
+    &__checkbox:checked + &__button &__icon--open::before {
         top: -.5rem;
         transform: rotate(0);
     }
 
-    &__checkbox:checked + &__button &__icon::after {
+    &__checkbox:checked + &__button &__icon--open::after {
         top: .5rem;
         transform: rotate(0);
+    }
+
+    // From menu to cross
+    &__checkbox:checked + &__button &__icon--closed::before {
+        top: 0;
+        transform: rotate(-135deg);
+    }
+
+    &__checkbox:checked + &__button &__icon--closed::after {
+        top: 0;
+        transform: rotate(135deg);
     }
 
 

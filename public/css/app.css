@@ -11392,12 +11392,28 @@ textarea.form-control-lg {
   background-position: center;
 }
 
+.navigation__container {
+  position: relative;
+  height: 4.5rem;
+  background-color: #15102c;
+}
+.navigation__container--v {
+  position: relative;
+}
+.navigation__header {
+  position: relative;
+  background-color: #f1eee4;
+}
+.navigation__title {
+  padding: 1.5rem 2rem;
+  color: #15102c;
+}
 .navigation__checkbox {
   display: none;
 }
 .navigation__button {
-  height: 4rem;
-  width: 4rem;
+  height: 3.5rem;
+  width: 3.5rem;
   border-radius: 50%;
   z-index: 200;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
@@ -11408,9 +11424,9 @@ textarea.form-control-lg {
 .navigation__button--menu {
   background-color: #f1eee4;
   border: 1px solid #f1eee4;
-  top: 1rem;
+  top: 0.5rem;
   left: 2rem;
-  position: fixed;
+  position: absolute;
   cursor: pointer;
 }
 .navigation__button--out {
@@ -11420,16 +11436,18 @@ textarea.form-control-lg {
   position: absolute;
 }
 .navigation__background {
-  height: 4rem;
-  width: 4rem;
+  height: 3rem;
+  width: 3rem;
   border-radius: 50%;
-  position: fixed;
-  top: 1.5rem;
+  position: absolute;
+  top: 1rem;
   left: 2.5rem;
   background-image: radial-gradient(#bda6f9, #15102c);
   z-index: 100;
-  transform: scale(80);
   transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+}
+.navigation__background--open {
+  transform: scale(80);
 }
 .navigation__nav {
   height: 100vh;
@@ -11487,37 +11505,49 @@ textarea.form-control-lg {
   width: 2.5rem;
   fill: #f1eee4;
 }
-.navigation__checkbox:checked ~ .navigation__background {
+.navigation__checkbox:checked ~ .navigation__background--open {
   transform: scale(0);
+}
+.navigation__checkbox:checked ~ .navigation__background--closed {
+  transform: scale(80);
 }
 .navigation__checkbox:checked ~ .navigation__nav {
   opacity: 0;
   width: 0;
   height: 0;
+  z-index: 0;
 }
 .navigation__icon {
   position: relative;
   background-color: transparent;
 }
-.navigation__icon, .navigation__icon::before, .navigation__icon::after {
+.navigation__icon--open, .navigation__icon--closed, .navigation__icon--open::before, .navigation__icon--closed::before, .navigation__icon--open::after, .navigation__icon--closed::after {
   width: 2.5rem;
   height: 3px;
   display: inline-block;
 }
-.navigation__icon::before, .navigation__icon::after {
+.navigation__icon--open::before, .navigation__icon--closed::before, .navigation__icon--open::after, .navigation__icon--closed::after {
   content: "";
   position: absolute;
   left: 0;
   background-color: #8672C0;
 }
-.navigation__icon::before {
+.navigation__icon--open::before {
   top: 0;
   transition: all 0.2s cubic-bezier(0.78, 1.86, 0.83, 0.67);
   transform: rotate(-135deg);
 }
-.navigation__icon::after {
+.navigation__icon--open::after {
   top: 0;
   transform: rotate(135deg);
+  transition: all 0.2s cubic-bezier(0.78, 1.86, 0.83, 0.67);
+}
+.navigation__icon--closed::before {
+  top: -0.5rem;
+  transition: all 0.2s cubic-bezier(0.78, 1.86, 0.83, 0.67);
+}
+.navigation__icon--closed::after {
+  top: 0.5rem;
   transition: all 0.2s cubic-bezier(0.78, 1.86, 0.83, 0.67);
 }
 .navigation__button:hover .navigation__icon {
@@ -11526,15 +11556,27 @@ textarea.form-control-lg {
 .navigation__checkbox:checked + .navigation__button .navigation__icon {
   background-color: #8672C0;
 }
-.navigation__checkbox:checked + .navigation__button .navigation__icon::before {
+.navigation__checkbox:checked + .navigation__button .navigation__icon--open::before {
   top: -0.5rem;
   transform: rotate(0);
 }
-.navigation__checkbox:checked + .navigation__button .navigation__icon::after {
+.navigation__checkbox:checked + .navigation__button .navigation__icon--open::after {
   top: 0.5rem;
   transform: rotate(0);
+}
+.navigation__checkbox:checked + .navigation__button .navigation__icon--closed::before {
+  top: 0;
+  transform: rotate(-135deg);
+}
+.navigation__checkbox:checked + .navigation__button .navigation__icon--closed::after {
+  top: 0;
+  transform: rotate(135deg);
 }
 
 .nav-layout {
   background-color: #E4D8C6;
+}
+
+.hidden {
+  display: none;
 }

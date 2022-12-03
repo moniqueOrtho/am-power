@@ -23,7 +23,7 @@
     </head>
     <body>
         <v-app id="app">
-            <x-navigation/>
+            <x-navigation state='open' :menu-button="true" />
             <v-main>
                 @yield('content')
             </v-main>

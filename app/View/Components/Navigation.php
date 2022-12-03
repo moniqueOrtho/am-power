@@ -7,13 +7,19 @@ use Illuminate\View\Component;
 class Navigation extends Component
 {
     /**
+     * The menu state.
+     * @var string open or closed
+     */
+     public $state;
+
+    /**
      * Create a new component instance.
-     *
+     * @param string $state
      * @return void
      */
-    public function __construct()
+    public function __construct($state )
     {
-        //
+        $this->state = $state;
     }
 
     /**
