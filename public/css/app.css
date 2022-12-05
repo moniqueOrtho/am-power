@@ -11385,11 +11385,44 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
-.login {
-  font-family: "Lexend", arial, sans-serif !important;
-  background: url(/images/map.jpg?74416897048e39fc2423753904a122f4);
-  background-size: cover;
-  background-position: center;
+.page-curl {
+  width: 7.5rem;
+  height: 7.5rem;
+  position: absolute;
+  background: linear-gradient(135deg, #fff, #f3f3f3 45%, #ddd 50%, #aaa 50%, #bbb 56%, #ccc 62%, #f3f3f3 80%, #fff 100%);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.5s ease;
+}
+.page-curl:before, .page-curl:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 12.5%;
+  bottom: 5.8%;
+  width: 70%;
+  max-width: 300px;
+  max-height: 100px;
+  height: 55%;
+  box-shadow: 0 12px 15px rgba(0, 0, 0, 0.3);
+  transform: skew(-10deg) rotate(-6deg);
+}
+.page-curl:after {
+  left: auto;
+  right: 5.8%;
+  bottom: auto;
+  top: 14.16%;
+  transform: skew(-15deg) rotate(-84deg);
+}
+.page-curl:hover {
+  width: 240px;
+  height: 240px;
+}
+.page-curl:hover:before, .page-curl:hover:after {
+  box-shadow: 0 24px 30px rgba(0, 0, 0, 0.3);
+}
+.page-curl--bottom-right {
+  bottom: 0;
+  right: 0;
 }
 
 .navigation__container {
@@ -11397,15 +11430,12 @@ textarea.form-control-lg {
   height: 4.5rem;
   background-color: #15102c;
 }
-.navigation__container--v {
-  position: relative;
-}
 .navigation__header {
   position: relative;
   background-color: #f1eee4;
 }
 .navigation__title {
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 0;
   color: #15102c;
 }
 .navigation__checkbox {
@@ -11429,25 +11459,40 @@ textarea.form-control-lg {
   position: absolute;
   cursor: pointer;
 }
+@media only screen and (min-width: 120em) {
+  .navigation__button--menu {
+    left: 10%;
+  }
+}
 .navigation__button--out {
   background-color: transparent;
   bottom: 1rem;
   right: 2rem;
   position: absolute;
 }
+@media only screen and (min-width: 120em) {
+  .navigation__button--out {
+    right: 10%;
+  }
+}
 .navigation__background {
   height: 3rem;
   width: 3rem;
   border-radius: 50%;
-  position: absolute;
+  position: fixed;
   top: 1rem;
   left: 2.5rem;
-  background-image: radial-gradient(#bda6f9, #15102c);
+  background-image: radial-gradient(#bda6f9, #15102c 80%);
   z-index: 100;
   transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
 }
+@media only screen and (min-width: 120em) {
+  .navigation__background {
+    left: 10%;
+  }
+}
 .navigation__background--open {
-  transform: scale(80);
+  transform: scale(90);
 }
 .navigation__nav {
   height: 100vh;
@@ -11464,7 +11509,13 @@ textarea.form-control-lg {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  padding: 2rem;
   width: 100%;
+}
+@media only screen and (min-width: 120em) {
+  .navigation__list {
+    width: 70%;
+  }
 }
 .navigation__item {
   border: 1px solid #f1eee4;
@@ -11515,14 +11566,13 @@ textarea.form-control-lg {
   opacity: 0;
   width: 0;
   height: 0;
-  z-index: 0;
 }
 .navigation__icon {
   position: relative;
   background-color: transparent;
 }
 .navigation__icon--open, .navigation__icon--closed, .navigation__icon--open::before, .navigation__icon--closed::before, .navigation__icon--open::after, .navigation__icon--closed::after {
-  width: 2.5rem;
+  width: 2rem;
   height: 3px;
   display: inline-block;
 }
@@ -11556,6 +11606,9 @@ textarea.form-control-lg {
 .navigation__checkbox:checked + .navigation__button .navigation__icon {
   background-color: #8672C0;
 }
+.navigation__checkbox:checked ~ .navigation__nav .navigation__list .navigation__row .navigation__col .navigation__item .navigation__link {
+  pointer-events: none;
+}
 .navigation__checkbox:checked + .navigation__button .navigation__icon--open::before {
   top: -0.5rem;
   transform: rotate(0);
@@ -11579,4 +11632,28 @@ textarea.form-control-lg {
 
 .hidden {
   display: none;
+}
+
+.relative {
+  position: relative;
+}
+
+.am-container {
+  margin: 0;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+@media only screen and (min-width: 120em) {
+  .am-container {
+    margin: 0 10%;
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+.login {
+  font-family: "Lexend", arial, sans-serif !important;
+  background: url(/images/map.jpg?74416897048e39fc2423753904a122f4);
+  background-size: cover;
+  background-position: center;
 }

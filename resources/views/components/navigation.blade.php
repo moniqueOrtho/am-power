@@ -51,8 +51,8 @@
 
 @endphp
 <div class="navigation">
-    <div class="navigation__container">
-        <v-container class="pa-0">
+    <div class="navigation__container relative">
+
             @if ($route != 'home')
                 <input type="checkbox" class="navigation__checkbox" id="navi-toggle">
                 <label for="navi-toggle" class="navigation__button navigation__button--menu">
@@ -74,24 +74,23 @@
             >&nbsp;</div>
             <nav class="navigation__nav">
                 <div class="navigation__list">
-                    <v-container class="pa-0">
-                        <div class="row">
-                            @foreach ( $navs as $nav)
-                                @if ( $perms->contains("update_" . $nav['perm']) )
-                                    <div class="col-12 col-md-6 col-lg-4">
-                                        <div class="navigation__item navigation__item--nav @if ($nav['name'] === $route)
-                                        active @endif"><a href="{{$nav['link']}}" class="navigation__link">{{$nav['label']}}</a>
-                                    </div>
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    </v-container>
+                    <div class="grid navigation__row">
+                        @foreach ( $navs as $nav)
+                            @if ( $perms->contains("update_" . $nav['perm']) )
+                                <div class="g-col-12 g-col-md-6 g-col-lg-4 navigation__col">
+                                    <div class="navigation__item navigation__item--nav @if ($nav['name'] === $route)
+                                    active @endif"><a href="{{$nav['link']}}" class="navigation__link">{{$nav['label']}}</a>
+                                </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
                 {{-- <form action="{{route('logout')}}" method="POST">
                     @csrf
                     <btn-pressed >{{ __('site.logout') }}</btn-pressed>
                 </form> --}}
+                {{-- <div class="page-curl page-curl--bottom-right"></div> --}}
                 <form action="{{route('logout')}}" method="POST">
                     @csrf
                     <button class="navigation__button navigation__button--out navigation__item" type="submit">
@@ -101,12 +100,12 @@
                 </form>
 
             </nav>
-        </v-container>
+
     </div>
-    <div class="navigation__header">
-        <v-container class="pa-0">
+    <div class="am-container">
+
             <h4 class="text-h4 navigation__title mb-0">{{trans_choice('site.' . $route, 2)}}</h4>
-        </v-container>
+
     </div>
 
     <div id="overlay">

@@ -10,10 +10,16 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+// Components
+@import 'components/page-curl';
+
+// Layouts
+@import 'layout/navigation';
+@import 'layout/layouts';
+
 // Pages
 @import 'pages/login';
 
-@import 'layout/navigation';
-@import 'layout/layouts';
+
 
 

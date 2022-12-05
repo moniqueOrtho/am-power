@@ -3,9 +3,6 @@
         position: relative;
         height: 4.5rem;
         background-color: $color-primary-dark;
-        &--v {
-            position: relative;
-        }
     }
 
     &__header {
@@ -14,7 +11,7 @@
     }
 
     &__title {
-        padding: 1.5rem 2rem;
+        padding: 1.5rem 0;
         color: $color-primary-dark;
     }
 
@@ -38,12 +35,18 @@
             left: 2rem;
             position: absolute;
             cursor: pointer;
+            @include respond(lg) {
+                left: 10%;
+            }
         }
         &--out {
             background-color: transparent;
             bottom: 1rem;
             right: 2rem;
             position: absolute;
+            @include respond(lg) {
+                right: 10%;
+            }
         }
     }
 
@@ -51,16 +54,19 @@
         height: 3rem;
         width: 3rem;
         border-radius: 50%;
-        position: absolute;
+        position: fixed;
         top: 1rem;
         left: 2.5rem;
-        background-image: radial-gradient($color-primary-light, $color-primary-dark);
+        background-image: radial-gradient($color-primary-light, $color-primary-dark 80%);
         z-index: 100;
 
         transition: transform .8s cubic-bezier(0.86, 0, 0.07,1);
+        @include respond(lg) {
+            left: 10%;
+        }
 
         &--open {
-            transform: scale(80);
+            transform: scale(90);
         }
     }
 
@@ -80,7 +86,11 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
+        padding: 2rem;
         width: 100%;
+        @include respond(lg) {
+            width: 70%;
+        }
     }
 
     &__item {
@@ -146,7 +156,6 @@
         opacity: 0;
         width: 0;
         height: 0;
-        z-index: 0;
     }
 
     &__icon {
@@ -159,7 +168,7 @@
         &--closed::before,
         &--open::after,
         &--closed::after {
-          width: 2.5rem;
+          width: 2rem;
           height: 3px;
           display: inline-block;
         }
@@ -203,6 +212,10 @@
 
     &__checkbox:checked + &__button &__icon {
         background-color: $color-primary;
+    }
+
+    &__checkbox:checked ~ &__nav &__list &__row &__col &__item &__link  {
+        pointer-events: none;
     }
 
     // From cross to menu

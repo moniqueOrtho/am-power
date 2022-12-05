@@ -24,9 +24,13 @@
     <body>
         <v-app id="app">
             <x-navigation state='open' :menu-button="true" />
-            <v-main>
-                @yield('content')
-            </v-main>
+            <v-container fluid class="light2 fill-height justify-center">
+                <div class="am-container">
+                    <v-main>
+                        @yield('content')
+                    </v-main>
+                </div>
+            </v-container>
         </v-app>
         @yield('js')
     </body>
