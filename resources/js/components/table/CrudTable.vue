@@ -9,8 +9,8 @@
         :expanded.sync="expanded"
         :item-key="tableInfo.itemKey"
         :search="search"
-        :show-expand="expandItems"
-        :no-results-text="$t('data iterator no result text')"
+        :show-expand="expand"
+        :no-results-text="tableInfo.noResultText"
       >
 
         <template v-slot:top>
@@ -28,7 +28,7 @@
             <v-text-field
               v-model="search"
               append-icon="mdi-magnify"
-              :label="$t('search')"
+              :label="tableInfo.searchLabel"
               single-line
               hide-details
             ></v-text-field>
@@ -42,22 +42,22 @@
                 @click="goToNewPage"
                 v-if="tableInfo.editByPage && !'noCrud' in tableInfo"
               >
-                {{ tableInfo.action }}
+                {{ tableInfo.newBtn }}
             </v-btn>
             <!-- This is the form dialog with button and is handled with the dialogForm property -->
               <FormDialog
                 :loading="loadingDialog"
                 :resetForm="getResetForm"
                 :dialogForm="dialog"
-                :elements="tableInfo.dialog.items"
-                :defaultItem="getFormItems"
+                :elements="formItems"
+                :defaultItem="valuesFormItems"
                 :formInfo="formAction"
                 @form-input="passData"
                 :errors="errors"
                 @btn-clicked="dialog = true"
                 @dialog-closed="dialog = false"
                 @clear-errors="clearErrors"
-                v-if=" !tableInfo.editByPage && ('noCrud' in tableInfo && !tableInfo.noCrud)"
+                v-if=" !tableInfo.editByPage && headers.find(header => header.value !== 'actions')"
               />
 
             <!-- This is de delete dialog and is handled with the dialogDelete Method -->
@@ -67,7 +67,7 @@
               :title="$t('delete message', [deletedItem.name])"
               @dialog-closed="dialogDelete = false"
               @delete-confirmed="deleteItemConfirm"
-              v-if=" !tableInfo.editByPage && ('noCrud' in tableInfo && !tableInfo.noCrud)"
+              v-if=" !tableInfo.editByPage && headers.find(header => header.value !== 'actions')"
             />
 
           </v-toolbar>
@@ -115,18 +115,18 @@
           </v-btn>
         </template>
         <!-- Slide-out menu in the table -->
-        <template v-slot:expanded-item="{ headers, item }" v-if="expandItems">
+        <template v-slot:expanded-item="{ headers, item }" v-if="expand">
           <td :colspan="headers.length" class="crud-table__expand">
             <p
               class="crud-table__expand--header primary--text"
-              v-if="tableInfo.expand.headerTitle">{{tableInfo.expand.headerTitle}} {{ item[tableInfo.expand.headerItem] }}</p>
+              v-if="expandElements.headerTitle">{{expandElements.headerTitle}} {{ item[expandElements.headerItem] }}</p>
             <p
               class="crud-table__expand--rows"
-              v-for="n in tableInfo.expand.numberRows"
+              v-for="n in expandElements.numberRows"
               v-if="item[`row${n}`]">{{ item[`row${n}`] }}</p>
             <p
               class="primary--text crud-table__expand--footer"
-              v-if="tableInfo.expand.footerTitle">{{tableInfo.expand.footerTitle}} {{item[tableInfo.expand.footerItem]}}</p>
+              v-if="expandElements.footerTitle">{{expandElements.footerTitle}} {{item[expandElements.footerItem]}}</p>
           </td>
 
         </template>
@@ -136,16 +136,25 @@
 
     <script>
     import CloseAlert from "~/components/alerts/CloseAlert.vue";
-    import TheForm from "~/components/form/TheForm";
-    import Team from "~/models/Team";
     import FormDialog from "~/components/dialogs/FormDialog";
     import DeleteDialog from "~/components/dialogs/DeleteDialog";
     export default {
-      components: { CloseAlert, TheForm, FormDialog, DeleteDialog },
+      components: { CloseAlert, FormDialog, DeleteDialog },
       props: {
         tableInfo: {
           type: Object,
-          required: true,
+          default: () => {
+            return {
+                sortBy : 'index',
+                itemKey : 'id',
+                editByPage : false,
+                newBtn : 'Nieuw',
+                editTitle: 'Aanpassen',
+                noResultText: '',
+                searchLabel: '',
+
+            }
+          },
         },
         items: {
           type: Array,
@@ -155,9 +164,25 @@
           type: Array,
           required: true,
         },
-        expandItems: {
+        formItems : {
+            type: Array,
+            required: true,
+        },
+        expand: {
           type: Boolean,
           default: false,
+        },
+        expandElements: {
+          type: Object,
+          default: () => {
+            return {
+                headerTitle: '',
+                headerItem: '', // Item for the header in the expand from items
+                numberRows: 0,
+                footerTitle: '',
+                footerItem: '' // Item for the footer in the expand from items
+            }
+          },
         },
         defaultItem: {
           type: Object,
@@ -169,10 +194,6 @@
         dialogError: {
           type: Object,
         },
-        // editedObj: {
-        //   type: Array,
-        //   required: true
-        // },
         succesMessage: {
           type: String,
         },
@@ -181,7 +202,6 @@
           default: false,
         },
       },
-      emits: ["delete-item", 'alert-closed', "form-input", "set-updated", 'clear-errors', 'item-switched'],
       data: () => ({
         search: "",
         dialog: false,
@@ -205,14 +225,14 @@
         },
         formTitle() {
           return this.editedIndex === -1
-            ? this.tableInfo.action
+            ? this.tableInfo.newBtn
             : this.tableInfo.editTitle;
         },
         formAction() {
-          return !this.tableInfo.editByPage && !'noCrud' in this.tableInfo ? {
+          return {
             title:
               this.editedIndex === -1
-                ? this.tableInfo.action
+                ? this.tableInfo.newBtn
                 : this.tableInfo.editTitle,
             action: this.editedIndex === -1 ? "create" : "update",
             selectAll: this.tableInfo.dialog.selectAll
@@ -222,16 +242,16 @@
               ? this.tableInfo.dialog.selectAllName
               : null,
             dialogWidth: this.tableInfo.dialog.width ? this.tableInfo.dialog.width : '80vw',
-            newBtn: this.tableInfo.action,
+            newBtn: this.tableInfo.newBtn,
             icon: this.tableInfo.icon ? this.tableInfo.icon : false
-          } : {};
+          };
         },
         alertMessage() {
           return this.succesMessage
             ? this.succesMessage
             : this.$store.state.admin.succesMessage;
         },
-        getFormItems() {
+        valuesFormItems() {
           return this.editedIndex === -1 ? this.defaultItem : this.editedItem;
         },
       },
@@ -295,7 +315,6 @@
             this.$router.push(this.tableInfo.editHref + item.id);
           } else {
             this.editedIndex = this.setItems.indexOf(item);
-            this.$emit("set-updated", true);
             if (item.id) this.editedId = item.id;
             const itemArray = Object.entries(item);
             const filtered = itemArray.filter(
@@ -307,12 +326,11 @@
           }
         },
         handleActive(item) {
-          this.$emit('item-switched', item);
+          // Set hidden select input
         },
         clearErrors() {
           this.errorMessage = "";
           this.errors = {};
-          this.$emit("clear-errors");
         },
         deleteItem(item) {
 
@@ -329,14 +347,13 @@
         },
 
         deleteItemConfirm() {
-          this.$emit( "delete-item", this.deletedItem );
+          // Set hidden input
           this.setItems.splice(this.editedIndex, 1);
           this.closeDelete();
         },
 
         close() {
           this.dialog = false;
-          this.$emit("set-updated", false);
           this.$nextTick(() => {
             this.editedItem = Object.assign({}, this.defaultItem);
             this.editedIndex = -1;
@@ -358,15 +375,11 @@
           }
           this.close();
         },
-        closeSuccesBox() {
-          this.$store.commit("admin/closeSuccesBox");
-          this.$emit('alert-closed');
-        },
         passData(input) {
           this.loadingDialog = true;
           this.editedItem = input;
           if (this.editedIndex !== -1) input.id = this.editedId;
-          this.$emit("form-input", input);
+          // Set form data
         },
       },
     };
