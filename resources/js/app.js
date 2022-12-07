@@ -38,6 +38,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('card-top', require('./components/cards/CardTop.vue').default);
 Vue.component('icon-input', require('./components/form/IconInput.vue').default);
 Vue.component('btn-pressed', require('./components/buttons/BtnPressed.vue').default);
+Vue.component('CrudTable', require('./components/table/CrudTable.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

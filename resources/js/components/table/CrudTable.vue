@@ -16,11 +16,10 @@
         <template v-slot:top>
           <close-alert
             alertColor="green-me"
-            :alertMessage="alertMessage"
+            :alertMessage="succesMessage"
             type="succes"
             spacing="my-3"
             :closeAction="true"
-            @closeAlert="closeSuccesBox"
           ></close-alert>
           <v-toolbar
             flat
@@ -39,15 +38,15 @@
                 color="primary"
                 dark
                 class="mb-2"
-                @click="goToNewPage"
-                v-if="tableInfo.editByPage && !'noCrud' in tableInfo"
+                :href="tableInfo.editByPage"
+                v-if="tableInfo.editByPage"
               >
                 {{ tableInfo.newBtn }}
             </v-btn>
             <!-- This is the form dialog with button and is handled with the dialogForm property -->
               <FormDialog
                 :loading="loadingDialog"
-                :resetForm="getResetForm"
+                :resetForm="!dialog"
                 :dialogForm="dialog"
                 :elements="formItems"
                 :defaultItem="valuesFormItems"
@@ -64,7 +63,7 @@
             <DeleteDialog
               :deletedItem="deletedItem"
               :dialogDelete="dialogDelete"
-              :title="$t('delete message', [deletedItem.name])"
+              :title="language === 'nl' ? `Klopt het dat u ${deletedItem.name} wilt verwijderen?` : `Is it correct that you want to delete ${deletedItem.name}?`"
               @dialog-closed="dialogDelete = false"
               @delete-confirmed="deleteItemConfirm"
               v-if=" !tableInfo.editByPage && headers.find(header => header.value !== 'actions')"
@@ -111,7 +110,7 @@
             color="primary"
             @click="initialize"
           >
-            {{ $t('reset')}}
+            Reset
           </v-btn>
         </template>
         <!-- Slide-out menu in the table -->
@@ -135,177 +134,114 @@
     </template>
 
     <script>
-    import CloseAlert from "~/components/alerts/CloseAlert.vue";
-    import FormDialog from "~/components/dialogs/FormDialog";
-    import DeleteDialog from "~/components/dialogs/DeleteDialog";
+    import CloseAlert from "../alerts/CloseAlert.vue";
+    import FormDialog from "../dialogs/FormDialog.vue";
+    import DeleteDialog from "../dialogs/DeleteDialog.vue";
     export default {
       components: { CloseAlert, FormDialog, DeleteDialog },
       props: {
-        tableInfo: {
-          type: Object,
-          default: () => {
-            return {
-                sortBy : 'index',
-                itemKey : 'id',
-                editByPage : false,
-                newBtn : 'Nieuw',
-                editTitle: 'Aanpassen',
-                noResultText: '',
-                searchLabel: '',
-
-            }
-          },
+            language: {
+                type: String,
+                default: 'nl'
+            },
+            tableInfo: {
+                type: Object,
+                default: () => {
+                    return {
+                        sortBy : 'index',
+                        itemKey : 'id',
+                        editByPage : '', // Enter the route here if you edit a page
+                        deletedItem: 'name',
+                        dialogWidth: '80vw',
+                        selectAll: false,
+                        selectAllName: null,
+                        newBtn : 'Nieuw',
+                        editTitle: 'Aanpassen',
+                        noResultText: '',
+                        searchLabel: 'Zoeken',
+                        resetText: 'Reset'
+                    }
+                },
+            },
+            items: {
+                type: Array,
+                required: true,
+            },
+            headers: {
+                type: Array,
+                required: true,
+            },
+            formItems : {
+                type: Array,
+                required: true,
+            },
+            expand: {
+                type: Boolean,
+                default: false,
+            },
+            expandElements: {
+                type: Object,
+                default: () => {
+                    return {
+                        headerTitle: '',
+                        headerItem: '', // Item for the header in the expand from items
+                        numberRows: 0,
+                        footerTitle: '',
+                        footerItem: '' // Item for the footer in the expand from items
+                    }
+                },
+            },
+            defaultItem: {
+                type: Object,
+                required: false,
+            },
+            dialogSucces: {
+                type: Object,
+            },
+            dialogError: {
+                type: Object,
+            },
+            succesMessage: {
+                type: String,
+            },
+            loading: {
+                type: Boolean,
+                default: false,
+            },
         },
-        items: {
-          type: Array,
-          required: true,
-        },
-        headers: {
-          type: Array,
-          required: true,
-        },
-        formItems : {
-            type: Array,
-            required: true,
-        },
-        expand: {
-          type: Boolean,
-          default: false,
-        },
-        expandElements: {
-          type: Object,
-          default: () => {
-            return {
-                headerTitle: '',
-                headerItem: '', // Item for the header in the expand from items
-                numberRows: 0,
-                footerTitle: '',
-                footerItem: '' // Item for the footer in the expand from items
-            }
-          },
-        },
-        defaultItem: {
-          type: Object,
-          required: false,
-        },
-        dialogSucces: {
-          type: Object,
-        },
-        dialogError: {
-          type: Object,
-        },
-        succesMessage: {
-          type: String,
-        },
-        loading: {
-          type: Boolean,
-          default: false,
-        },
-      },
-      data: () => ({
-        search: "",
-        dialog: false,
-        dialogDelete: false,
-        loadingDialog: false,
-        deletedItem: {},
-        expanded: [],
-        setItems: [],
-        editedItem: null,
-        editedId: null,
-        editedIndex: -1,
-        pageLoad: null,
-        errorMessage: "",
-        errors: {},
-      }),
-
-      computed: {
-        getResetForm() {
-          console.log(this.tableInfo)
-          return (this.tableInfo && 'dialog' in this.tableInfo && 'resetForm' in this.tableInfo.dialog) ? this.tableInfo.dialog.resetForm : false;
-        },
-        formTitle() {
-          return this.editedIndex === -1
-            ? this.tableInfo.newBtn
-            : this.tableInfo.editTitle;
-        },
-        formAction() {
-          return {
-            title:
-              this.editedIndex === -1
-                ? this.tableInfo.newBtn
-                : this.tableInfo.editTitle,
-            action: this.editedIndex === -1 ? "create" : "update",
-            selectAll: this.tableInfo.dialog.selectAll
-              ? this.tableInfo.dialog.selectAll
-              : null,
-            selectAllName: this.tableInfo.dialog.selectAllName
-              ? this.tableInfo.dialog.selectAllName
-              : null,
-            dialogWidth: this.tableInfo.dialog.width ? this.tableInfo.dialog.width : '80vw',
-            newBtn: this.tableInfo.newBtn,
-            icon: this.tableInfo.icon ? this.tableInfo.icon : false
-          };
-        },
-        alertMessage() {
-          return this.succesMessage
-            ? this.succesMessage
-            : this.$store.state.admin.succesMessage;
-        },
-        valuesFormItems() {
-          return this.editedIndex === -1 ? this.defaultItem : this.editedItem;
-        },
-      },
-
-      watch: {
-        dialog(val) {
-          val || this.close();
-        },
-        dialogDelete(val) {
-          val || this.closeDelete();
-        },
-        loading() {
-          if (!this.loading) this.initialize();
-        },
-        $route() {
-          //this.routeArr = this.$route.path.split('/');
-          if (this.$store.state.admin[this.tableInfo.admin])
-            this.pageLoading = false;
-        },
-        dialogSucces() {
-          if (
-            this.dialogSucces &&
-            Object.keys(this.dialogSucces).length !== 0 &&
-            this.dialogSucces.constructor === Object
-          ) {
-            this.loadingDialog = false;
-            this.editedItem = { ...this.editedItem, ...this.dialogSucces };
-            this.save();
-          }
-        },
-        dialogError() {
-          if (
-            this.dialogError &&
-            Object.keys(this.dialogError).length !== 0 &&
-            this.dialogError.constructor === Object
-          ) {
-            this.loadingDialog = false;
-            this.errorMessage = this.dialogError.message;
-            if(this.dialogError.errors) this.errors = this.dialogError.errors;
-          }
-        },
-      },
       created() {
         this.editedItem = this.defaultItem;
         this.initialize();
       },
-
+      data() {
+            return {
+                nl : {
+                        create: 'Aanmaken',
+                        update: 'Wijzigen'
+                    },
+                en : {
+                    create: 'Create',
+                    update: 'Update'
+                },
+                search: "",
+                dialog: false,
+                dialogDelete: false,
+                loadingDialog: false,
+                deletedItem: {},
+                expanded: [],
+                setItems: [],
+                editedItem: null,
+                editedId: null,
+                editedIndex: -1,
+                pageLoad: null,
+                errorMessage: "",
+                errors: {},
+            }
+        },
       methods: {
         initialize() {
           this.setItems = this.items;
           this.pageLoad = this.loading;
-        },
-        goToNewPage() {
-          this.$router.push(this.tableInfo.newHref);
         },
         closeDialog() {
           this.dialog = false;
@@ -333,19 +269,12 @@
           this.errors = {};
         },
         deleteItem(item) {
-
-          this.deletedItem["name"] = item.label
-            ? item.label
-            : item[this.tableInfo.deletedItem];
+          this.deletedItem["name"] = this.tableInfo.deletedItem;
           this.deletedItem["id"] = item.id;
-          this.deletedItem["type"] = this.tableInfo.multipleTableKey
-            ? item[this.tableInfo.multipleTableKey]
-            : null;
           this.editedIndex = this.setItems.indexOf(item);
           this.editedItem = Object.assign({}, item);
           this.dialogDelete = true;
         },
-
         deleteItemConfirm() {
           // Set hidden input
           this.setItems.splice(this.editedIndex, 1);
@@ -382,6 +311,70 @@
           // Set form data
         },
       },
+      computed: {
+        lang() {
+            return this.language === 'nl' ? this.nl : this.en;
+        },
+        formTitle() {
+          return this.editedIndex === -1
+            ? this.tableInfo.newBtn
+            : this.tableInfo.editTitle;
+        },
+        formAction() {
+          return {
+            title:
+              this.editedIndex === -1
+                ? this.tableInfo.newBtn
+                : this.tableInfo.editTitle,
+            action: this.editedIndex === -1 ?
+            this.lang.create : this.lang.update,
+            selectAll: this.tableInfo.selectAll,
+            selectAllName: this.tableInfo.selectAllName
+              ? this.tableInfo.selectAllName
+              : null,
+            dialogWidth: this.tableInfo.width,
+            newBtn: this.tableInfo.newBtn,
+          };
+        },
+        valuesFormItems() {
+          return this.editedIndex === -1 ? this.defaultItem : this.editedItem;
+        },
+      },
+
+      watch: {
+        dialog(val) {
+          val || this.close();
+        },
+        dialogDelete(val) {
+          val || this.closeDelete();
+        },
+        loading() {
+          if (!this.loading) this.initialize();
+        },
+        dialogSucces() {
+          if (
+            this.dialogSucces &&
+            Object.keys(this.dialogSucces).length !== 0 &&
+            this.dialogSucces.constructor === Object
+          ) {
+            this.loadingDialog = false;
+            this.editedItem = { ...this.editedItem, ...this.dialogSucces };
+            this.save();
+          }
+        },
+        dialogError() {
+          if (
+            this.dialogError &&
+            Object.keys(this.dialogError).length !== 0 &&
+            this.dialogError.constructor === Object
+          ) {
+            this.loadingDialog = false;
+            this.errorMessage = this.dialogError.message;
+            if(this.dialogError.errors) this.errors = this.dialogError.errors;
+          }
+        },
+      },
+
     };
     </script>
 

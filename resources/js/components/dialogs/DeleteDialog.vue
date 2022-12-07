@@ -7,11 +7,11 @@
           </div>
           <div class="delete-dialog__body ma-6">
             <h6 class="text-h6 font-weight-medium light1--text mb-6">
-              {{ title ? title : setTitle }}
+              {{ title }}
             </h6>
             <div class="delete-dialog__actions">
               <div >
-                <v-btn color="light1"  @click="close" class="mr-3">{{ $t("cancel") }}</v-btn>
+                <v-btn color="light1"  @click="close" class="mr-3">{{ lang[language]['cancel'] }}</v-btn>
                 <v-btn color="error darken-1"  @click="deleteItemConfirm" >Ok</v-btn>
               </div>
             </div>
@@ -36,7 +36,17 @@
       title: {
         type: String,
         required: false
+      },
+      language: {
+        type: String,
+        default: 'nl'
       }
+    },
+    data: {
+        lang: {
+            nl: {cancel: 'terug'},
+            en: {cancel: 'cancel'},
+        }
     },
     emits: ["dialog-closed", "delete-confirmed"],
     methods: {
@@ -49,15 +59,6 @@
       }
     },
     computed: {
-      setTitle() {
-        switch(this.deletedItem.type) {
-          case 'image':
-            return this.$t("delete message image", [this.deletedItem.name]);
-            break;
-          default:
-            return this.$t("delete message", [this.deletedItem.name]);
-        }
-      },
       setDialog: {
         set(value) {
           this.close();

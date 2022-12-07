@@ -11,33 +11,12 @@
         {{ formInfo.title }}
       </h6>
 
-      <div v-for="(element, index) in elements" :key="element.text">
-        <div class="d-flex justify-space-between align-center primary--text">
-          <h6 :class="`text-h6 ${element.selectAll ? '' : 'mb-3'}`">
-            {{
-              element.text !== "products"
-                ? element.text.toUpperCase()
-                : $tc("Products", 1).toUpperCase()
-            }}
-          </h6>
-          <v-checkbox
-            v-if="element.selectAll"
-            v-model="selectAll"
-            color="primary"
-          >
-            <template v-slot:label>
-              <span class="form__selected-all--label">{{$t('select all')}}</span>
-            </template>
-          </v-checkbox>
-        </div>
 
         <v-row
-          v-for="(input, index) in element.inputs"
-          :key="index"
-          v-if="element.text !== 'products'"
+          v-for="(input, index) in elements" :key="index"
         >
           <v-col
-            v-for="i in input['row' + index]"
+            v-for="i in input[index]"
             :key="i.name"
             cols="12"
             :sm="i.sm"
@@ -109,13 +88,14 @@
               v-if="i.item === 'image'"
             /> -->
           </v-col>
+          <div class="pb-4" v-if="elements.length !== index + 1">
+            <v-divider></v-divider>
+            </div>
+            <div class="mb-2" v-else>&nbsp;</div>
         </v-row>
 
-        <div class="pb-4" v-if="elements.length !== index + 1">
-          <v-divider></v-divider>
-        </div>
-        <div class="mb-2" v-else>&nbsp;</div>
-      </div>
+
+
       <div class="d-flex justify-end">
         <v-btn
           type="button"
@@ -123,11 +103,9 @@
           class="mr-4"
           @click="goBack"
           large
-          >{{ $t("back") }}</v-btn
+          >Terug</v-btn
         >
-        <v-btn type="submit" color="primary" large>{{
-          formInfo.action ? $t(formInfo.action) : $t('save')
-        }}</v-btn>
+        <v-btn type="submit" color="primary" large>{{formInfo.action}}</v-btn>
       </div>
     </v-form>
   </template>

@@ -20,16 +20,18 @@
 
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
     </head>
     <body>
         <v-app id="app">
             <x-navigation state='open' :menu-button="true" />
-            <v-container fluid class="light2 fill-height justify-center">
-                <div class="am-container">
-                    <v-main>
-                        @yield('content')
-                    </v-main>
-                </div>
+            <v-container fluid class="light2 am-fill-height pa-0">
+
+                <v-main>
+                    @yield('content')
+                </v-main>
+
             </v-container>
         </v-app>
         @yield('js')

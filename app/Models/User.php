@@ -78,6 +78,11 @@ class User extends Authenticatable
         }
     }
 
+    public function getRoleNameAttribute()
+    {
+        return $this->role()->value('role');
+    }
+
     // Helper function for permissions through role
     public function getPermissionsAttribute()
     {

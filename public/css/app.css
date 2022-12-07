@@ -11642,6 +11642,8 @@ textarea.form-control-lg {
   margin: 0;
   padding-right: 2rem;
   padding-left: 2rem;
+  width: 100%;
+  height: 100%;
 }
 @media only screen and (min-width: 120em) {
   .am-container {
@@ -11649,6 +11651,12 @@ textarea.form-control-lg {
     padding-right: 0;
     padding-left: 0;
   }
+}
+
+.am-fill-height {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
 }
 
 .login {

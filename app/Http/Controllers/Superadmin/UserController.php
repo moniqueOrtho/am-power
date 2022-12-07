@@ -8,6 +8,14 @@ use App\Repositories\Contracts\IUser;
 
 class UserController extends Controller
 {
+    // public $headers = collect(
+    //     [ 'text' => 'Id', 'value' => 'id'],
+    //     [ 'text' => 'Name', 'value' => 'name'],
+    //     [ 'text' => 'Email', 'value' => 'email' ],
+    //     [ 'text' => 'Role', 'value' => 'role'],
+    //     [ 'text' => 'Actions', 'value' => 'actions', 'sortable' => false]
+    // );
+
     protected $users;
 
     public function __construct(IUser $users)
@@ -23,6 +31,18 @@ class UserController extends Controller
     public function index()
     {
         $result = $this->users->all();
+        $result = $result->map(function($user) {
+            return [
+                'id' => $user->id,
+                'gender' => $user->gender,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->roleName
+            ];
+        });
+
 
         return view('superadmin.users', ['data' => $result]);
     }
