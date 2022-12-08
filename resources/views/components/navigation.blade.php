@@ -119,7 +119,6 @@
 </div>
 @section('js')
    <script>
-    console.log(window.location.pathname !== '/home')
     function hideOverlay() {
         document.getElementById('overlay').classList.add('hidden');
     }

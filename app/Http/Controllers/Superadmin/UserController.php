@@ -39,10 +39,10 @@ class UserController extends Controller
                 'last_name' => $user->last_name,
                 'name' => $user->name,
                 'email' => $user->email,
+                'role_id' => $user->role_id,
                 'role' => $user->roleName
             ];
         });
-
 
         return view('superadmin.users', ['data' => $result]);
     }

@@ -1,222 +1,195 @@
 <template>
-    <v-form
-      @submit.prevent="validateForm"
-      ref="form"
-      v-model="valid"
-      lazy-validation
-      autocomplete="off"
-      class="pa-8 teams-form"
+    <v-dialog
+        v-model="setDialog"
+        max-width="80vw"
     >
-      <h6 class="text-h6 text-uppercase primary--text mb-6" v-if="formInfo.title">
-        {{ formInfo.title }}
-      </h6>
-
-
-        <v-row
-          v-for="(input, index) in elements" :key="index"
-        >
-          <v-col
-            v-for="i in input[index]"
-            :key="i.name"
-            cols="12"
-            :sm="i.sm"
-            :md="i.md"
-          >
-            <template v-if="i.item === 'select'">
-              <v-select
-                :autofocus="i.tab === 1 ? true : false"
-                v-model="editedItem[i.name]"
-                :tabindex="i.tab"
-                :items="i.items"
-                item-text="text"
-                item-value="value"
-                :label="i.placeholder"
-                outlined
-                :rules="i.rules"
-                filled
+        <template v-slot:activator="{ on, attrs }">
+            <v-btn
                 color="primary"
-              ></v-select>
-            </template>
-            <template v-if="i.item === 'text'">
-              <v-text-field
-                :autofocus="i.tab === 1 ? true : false"
-                v-model="editedItem[i.name]"
-                outlined
-                :tabindex="i.tab"
-                :label="i.placeholder"
-                :prepend-inner-icon="i.icon"
-                :type="i.type"
-                :counter="i.counter"
-                :rules="i.rules"
-                clearable
-                background-color="grey lighten-4"
-                :disabled="i.disabled ? i.disabled : false"
-                :error-messages=" i.name in errors ? errors[i.name][0] : '' "
-                @input="inputIsSet"
-              ></v-text-field>
-            </template>
+                dark
+                class="mb-2"
+                v-bind="attrs"
+                v-on="on"
+            >
+                New Item
+            </v-btn>
+        </template>
 
-            <template v-if="i.item === 'textarea'">
-              <v-textarea
-                :autofocus="i.tab === 1 ? true : false"
-                v-model="editedItem[i.name]"
-                outlined
-                :auto-grow="i.autoGrow"
-                :tabindex="i.tab"
-                :label="i.placeholder"
-                :counter="i.counter"
-                :rules="i.rules"
-                :rows="i.rows"
-                :row-height="i.rowHeight"
-                clearable
-                background-color="grey lighten-4"
-                :disabled="i.disabled ? i.disabled : false"
-                :error-messages=" i.name in errors ? errors[i.name][0] : '' "
-                @input="inputIsSet"
-              ></v-textarea>
-            </template>
+        <v-card>
+            <v-card-title>
+                <span class="text-h5">{{ formTitle }}</span>
+            </v-card-title>
 
-            <template v-if="i.item === 'checkbox'">
-              <v-checkbox
-                v-model="editedItem[i.vName]"
-                :label="i.placeholder"
-                :color="i.color ? i.color : 'primary'"
-                :value="i.value"
-              ></v-checkbox>
-            </template>
-            <!-- <advanced-cropper
-              v-if="i.item === 'image'"
-            /> -->
-          </v-col>
-          <div class="pb-4" v-if="elements.length !== index + 1">
-            <v-divider></v-divider>
-            </div>
-            <div class="mb-2" v-else>&nbsp;</div>
-        </v-row>
+        <div class="mx-3">
+            <v-container>
+                <v-form
+                    @submit.prevent="validateForm"
+                    ref="form"
+                    v-model="valid"
+                    lazy-validation
+                >
+                    <v-row>
+                        <v-col
+                        v-for="(element, index) in elements"
+                        :key="index"
+                        cols="12"
+                        :sm="element.sm"
+                        :md="element.md"
+                        >
+                            <v-select
+                                v-if="element.input === 'select'"
+                                v-model="inputValue[element.name]"
+                                outlined
+                                :tabindex="(index + 1)"
+                                :items="element.items"
+                                item-text="text"
+                                item-value="value"
+                                :label="element.label"
+                                filled
+                                color="primary"
+                            >
+                            </v-select>
+                            <v-text-field
+                                v-if="element.input === 'text'"
+                                outlined
+                                v-model="inputValue[element.name]"
+                                :label="element.label"
 
+                                :prepend-inner-icon="element.icon"
+                                :type="element.type"
+                                :counter="element.counter"
+                                clearable
+                                background-color="grey lighten-4"
+                                :disabled="element.disabled"
+                                :error-messages="element.name in errors ? errors[i.name][0] : '' "
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+                </v-form>
+            </v-container>
+        </div>
+        <v-divider></v-divider>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+            type="button"
+            color="secondary"
+            @click="close"
+            large
+            >
+            Cancel
+            </v-btn>
+            <v-btn
+            type="button"
+            color="primary" large
+            @click="save"
+            >
+            Save
+            </v-btn>
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+</template>
 
-
-      <div class="d-flex justify-end">
-        <v-btn
-          type="button"
-          color="secondary"
-          class="mr-4"
-          @click="goBack"
-          large
-          >Terug</v-btn
-        >
-        <v-btn type="submit" color="primary" large>{{formInfo.action}}</v-btn>
-      </div>
-    </v-form>
-  </template>
-
-  <script>
-  //import AdvancedCropper from "~/components/form/AdvancedCropper";
-  export default {
-    name: "the-form",
-    //components: { AdvancedCropper },
+<script>
+export default {
     props: {
-      elements: {
-        type: Array,
-        required: true,
-      },
-      defaultItem: {
-        type: Object,
-        required: true,
-      },
-      formInfo: {
-        type: Object,
-        required: true,
-      },
-      errors: {
-        type: Object,
-      },
-      resetForm: {
-        type: Boolean,
-        default: false,
-      }
+        fields: {
+            type: Array,
+            default: () => []
+        },
+        dialogForm: {
+            type: Boolean,
+            default: false
+        },
+        defaultItem: {
+            type: Object,
+            required: true
+        },
+        errors: {
+            type: Object,
+            default: () => ({})
+        },
+        formTitle: {
+            type: String,
+            default: ''
+        }
     },
-    emits: ["form-input", "clear-errors", "loading-state", "close-dialog"],
-    data() {
-      return {
-        valid: true,
-        editedItem: null,
-        submitRequest: false,
-        selectAll: false
-      };
-    },
+    emits: ['close-dialog', 'save-input'],
     created() {
-      this.initialize();
+        this.initialize();
+    },
+    data() {
+        return {
+            dialog: false,
+            inputValue: null,
+            defaultInput: { // If selectbox add then input: 'select' and items: ['text': , 'value']
+                sm: 6,
+                md: 4,
+                name: '',
+                label: '',
+                input: 'text',
+                icon: 'mdi-pencil',
+                type: 'text',
+                counter: 20,
+                disabled: false
+            },
+            elements: [],
+            valid: true,
+        }
     },
     methods: {
-      initialize() {
-        this.editedItem = Object.assign({}, this.defaultItem);
-      },
-      inputIsSet(item) {
-        if (
-          this.errors &&
-          Object.keys(this.errors).length !== 0 &&
-          this.errors.constructor === Object
-        )
-          this.$emit("clear-errors");
-      },
-      goBack() {
-        if (this.formInfo.hrefBack) {
-          this.$router.push(this.formInfo.hrefBack);
-        } else {
-          this.$emit("close-dialog");
-        }
-      },
-      validateForm() {
-        this.submitRequest = false;
-        if (this.$refs.form.validate()) {
-          if(this.formInfo.productsRequired) {
-            this.submitRequest = true
-          } else {
-            this.$emit("form-input", this.editedItem);
-          }
+        initialize() {
+            this.inputValue = Object.assign({}, this.defaultItem);
+            this.setElements();
+        },
+        setElements() {
+            let inputs, searchResult;
+            inputs = Object.keys(this.inputValue);
 
-        };
-      },
-      submit(input) {
-        this.editedItem["products"] = input;
-        this.$emit("form-input", this.editedItem);
-      },
-      setLoading(payload) {
-        this.$emit("loading-state", payload);
-      },
-    },
-    watch: {
-      resetForm(value) {
-        if(value) this.initialize();
-      },
-      // succes() {
-      //   if (this.succes) this.initialize();
-      // },
-      errors() {
-        if (
-          this.errors &&
-          Object.keys(this.errors).length === 0 &&
-          this.errors.constructor === Object
-        ) {
-          this.submitRequest = false;
-        }
-      },
-      defaultItem() {
-        this.initialize();
-      },
-      selectAll() {
-        this.editedItem[this.formInfo.selectAllName] = this.selectAll ? this.formInfo.selectAll: [];
-      },
-    },
-  };
-  </script>
+            inputs.forEach((input) => {
+                if(this.fields.length > 0) searchResult = this.fields.find(x => x['name'] === input);
+                if(searchResult) {
+                    this.mergeAllElements()
+                } else {
+                    this.elements.push( {...this.defaultInput, ...{name: input, label: input } } )
+                }
+            })
 
-  <style lang="scss" scoped>
-  .form {
-    &__selected-all--label {
-      color: var(--v-primary-base);
-      font-weight: 500;
+
+        },
+        mergeAllElements(element) {
+            let defaultInputArr, newObj = {};
+            defaultInputArr = Object.keys(this.defaultInput);
+            defaultInputArr.forEach(input => {
+                if(!input in element) {
+                    newObj[input] = this.defaultInput[input];
+                }
+            })
+            this.elements.push({...newObj, ...element});
+
+        },
+        close() {
+            this.$emit('close-dialog')
+        },
+        save() {
+            this.$emit('save-input', this.inputValue)
+        }
+    },
+    computed: {
+        setDialog: {
+        set(value) {
+            this.close();
+        },
+        get() {
+            return this.dialogForm
+        }
+        }
     }
-  }
-  </style>
+
+}
+</script>
+
+<style lang="scss" scoped>
+
+</style>
