@@ -11647,9 +11647,8 @@ textarea.form-control-lg {
 }
 @media only screen and (min-width: 120em) {
   .am-container {
-    margin: 0 10%;
-    padding-right: 0;
-    padding-left: 0;
+    padding-right: 10%;
+    padding-left: 10%;
   }
 }
 

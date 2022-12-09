@@ -18,9 +18,8 @@
     height: 100%;
 
     @include respond(lg) {
-        margin: 0 10%;
-        padding-right: 0;
-        padding-left: 0;
+        padding-right: 10%;
+        padding-left: 10%;
     }
 }
 

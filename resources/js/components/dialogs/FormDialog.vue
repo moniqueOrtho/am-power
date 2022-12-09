@@ -16,28 +16,26 @@
         </template>
 
         <v-card>
-            <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
-
-        <div class="mx-3">
-            <v-container>
-                <v-form
-                    @submit.prevent="validateForm"
-                    ref="form"
-                    v-model="valid"
-                    lazy-validation
-                >
-                    <v-row>
-                        <v-col
-                        v-for="(element, index) in elements"
-                        :key="index"
-                        cols="12"
-                        :sm="element.sm"
-                        :md="element.md"
-                        >
+            <v-form
+                @submit.prevent="validateForm"
+                ref="form"
+                v-model="valid"
+                lazy-validation
+                class="pa-8"
+            >
+            <h6 class="text-h6 text-uppercase primary--text mb-6" >
+                {{ formTitle }}
+            </h6>
+                <v-row>
+                    <v-col
+                    v-for="(element, index) in elements"
+                    :key="element.name"
+                    cols="12"
+                    :sm="element.sm"
+                    :md="element.md"
+                    >
+                        <template v-if="element.input === 'select'">
                             <v-select
-                                v-if="element.input === 'select'"
                                 v-model="inputValue[element.name]"
                                 outlined
                                 :tabindex="(index + 1)"
@@ -49,12 +47,13 @@
                                 color="primary"
                             >
                             </v-select>
+                        </template>
+                        <template v-if="element.input === 'text'">
                             <v-text-field
-                                v-if="element.input === 'text'"
                                 outlined
                                 v-model="inputValue[element.name]"
                                 :label="element.label"
-
+                                :tabindex="(index + 1)"
                                 :prepend-inner-icon="element.icon"
                                 :type="element.type"
                                 :counter="element.counter"
@@ -63,30 +62,27 @@
                                 :disabled="element.disabled"
                                 :error-messages="element.name in errors ? errors[i.name][0] : '' "
                             ></v-text-field>
-                        </v-col>
-                    </v-row>
-                </v-form>
-            </v-container>
-        </div>
-        <v-divider></v-divider>
-        <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-            type="button"
-            color="secondary"
-            @click="close"
-            large
-            >
-            Cancel
-            </v-btn>
-            <v-btn
-            type="button"
-            color="primary" large
-            @click="save"
-            >
-            Save
-            </v-btn>
-        </v-card-actions>
+                        </template>
+                    </v-col>
+                </v-row>
+                <v-divider></v-divider>
+                <div class="d-flex justify-end">
+                    <v-btn
+                        type="button"
+                        color="secondary"
+                        class="mr-4"
+                        @click="close"
+                        large
+                        >Cancel</v-btn
+                    >
+                    <v-btn type="button" color="primary" large @click="save">Save</v-btn>
+                </div>
+
+            </v-form>
+
+
+
+
         </v-card>
     </v-dialog>
 </template>
