@@ -23,48 +23,50 @@
                 lazy-validation
                 class="pa-8"
             >
-            <h6 class="text-h6 text-uppercase primary--text mb-6" >
-                {{ formTitle }}
-            </h6>
-                <v-row>
-                    <v-col
-                    v-for="(element, index) in elements"
-                    :key="element.name"
-                    cols="12"
-                    :sm="element.sm"
-                    :md="element.md"
-                    >
-                        <template v-if="element.input === 'select'">
-                            <v-select
-                                v-model="inputValue[element.name]"
-                                outlined
-                                :tabindex="(index + 1)"
-                                :items="element.items"
-                                item-text="text"
-                                item-value="value"
-                                :label="element.label"
-                                filled
-                                color="primary"
-                            >
-                            </v-select>
-                        </template>
-                        <template v-if="element.input === 'text'">
-                            <v-text-field
-                                outlined
-                                v-model="inputValue[element.name]"
-                                :label="element.label"
-                                :tabindex="(index + 1)"
-                                :prepend-inner-icon="element.icon"
-                                :type="element.type"
-                                :counter="element.counter"
-                                clearable
-                                background-color="grey lighten-4"
-                                :disabled="element.disabled"
-                                :error-messages="element.name in errors ? errors[i.name][0] : '' "
-                            ></v-text-field>
-                        </template>
-                    </v-col>
-                </v-row>
+                <h6 class="text-h6 text-uppercase primary--text mb-6" >
+                    {{ formTitle }}
+                </h6>
+
+                    <v-row>
+                        <v-col
+                            v-for="(element, index) in elements"
+                            :key="element.name"
+                            cols="12"
+                            :sm="element.sm"
+                            :md="element.md"
+                        >
+                            <template v-if="element.input === 'select'">
+                                <v-select
+                                    v-model="inputValue[element.name]"
+                                    outlined
+                                    :tabindex="(index + 1)"
+                                    :items="element.items"
+                                    item-text="text"
+                                    item-value="value"
+                                    :label="element.label"
+                                    filled
+                                    color="primary"
+                                >
+                                </v-select>
+                            </template>
+                            <template v-if="element.input === 'text'">
+                                <v-text-field
+                                    outlined
+                                    v-model="inputValue[element.name]"
+                                    :label="element.label"
+                                    :tabindex="(index + 1)"
+                                    :prepend-inner-icon="element.icon"
+                                    :type="element.type"
+                                    :counter="element.counter"
+                                    clearable
+                                    background-color="grey lighten-4"
+                                    :error-messages="element.name in errors ? errors[i.name][0] : '' "
+                                ></v-text-field>
+                            </template>
+                        </v-col>
+                    </v-row>
+
+
                 <v-divider></v-divider>
                 <div class="d-flex justify-end">
                     <v-btn
@@ -140,19 +142,20 @@ export default {
             this.setElements();
         },
         setElements() {
-            let inputs, searchResult;
-            inputs = Object.keys(this.inputValue);
+            let inputs, searchResult, newObj;
 
-            inputs.forEach((input) => {
+            inputs = Object.keys(this.inputValue);
+            inputs.forEach(input => {
+                newObj = Object.assign({}, this.defaultInput);
                 if(this.fields.length > 0) searchResult = this.fields.find(x => x['name'] === input);
                 if(searchResult) {
-                    this.mergeAllElements()
+
                 } else {
-                    this.elements.push( {...this.defaultInput, ...{name: input, label: input } } )
+                   newObj['name'] = input;
+                   newObj['label'] = input
                 }
-            })
-
-
+                this.elements.push(newObj);
+            });
         },
         mergeAllElements(element) {
             let defaultInputArr, newObj = {};
