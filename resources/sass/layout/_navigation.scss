@@ -5,6 +5,12 @@
         background-color: $color-primary-dark;
     }
 
+    &__row {
+       display: grid;
+       grid-template-columns: repeat(3, 1fr);
+       grid-gap: 3.75rem
+    }
+
     &__header {
         position: relative;
         background-color: $color-light-light;
@@ -128,7 +134,7 @@
         &:link,
         &:visited {
             display: inline-block;
-            font-family: $font-family-base;
+            font-family: $body-font-family;
             font-size: 1.5rem;
             font-weight: 300;
             padding: 1rem 2rem;
@@ -214,7 +220,7 @@
         background-color: $color-primary;
     }
 
-    &__checkbox:checked ~ &__nav &__list &__row &__col &__item &__link  {
+    &__checkbox:checked ~ &__nav &__list &__row &__item &__link  {
         pointer-events: none;
     }
 

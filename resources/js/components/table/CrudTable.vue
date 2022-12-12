@@ -9,12 +9,13 @@
       <v-toolbar
         flat
       >
-        <v-toolbar-title>My CRUD</v-toolbar-title>
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        ></v-divider>
+      <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          :label="labels.search[langIndex]"
+          single-line
+          hide-details
+        ></v-text-field>
         <v-spacer></v-spacer>
 
         <!-- This is the form dialog with button and is handled with the dialogForm property -->
@@ -44,12 +45,14 @@
       <v-icon
         small
         class="mr-2"
+        color="primary"
         @click="editItem(item)"
       >
         mdi-pencil
       </v-icon>
       <v-icon
         small
+        color="error"
         @click="deleteItem(item)"
       >
         mdi-delete
@@ -73,6 +76,10 @@ export default {
     components: { FormDialog },
 
     props: {
+        langauage: {
+            type: String,
+            default: 'nl'
+        },
         headers: {
         type: Array,
         required: true
@@ -87,15 +94,22 @@ export default {
         }
     },
     created () {
-        this.initialize()
+        this.initialize();
+
     },
     data() {
         return {
-        dialog: false,
-        dialogDelete: false,
-        editedIndex: -1,
-        editedItem: null,
-        ownItems: []
+            dialog: false,
+            dialogDelete: false,
+            editedIndex: -1,
+            editedItem: null,
+            ownItems: [],
+            search: '',
+            lang: ['en', 'nl'],
+            langIndex: -1,
+            labels: {
+                search: ['Search', 'Zoeken']
+            }
         }
     },
 
@@ -108,6 +122,8 @@ export default {
         initialize () {
         this.ownItems = [...this.items];
         this.editedItem = Object.assign({}, this.defaultItem);
+        this.langIndex = this.lang.findIndex(e => e === this.langauage);
+        console.log(this.lang.findIndex(e => e === this.langauage))
         },
 
         editItem (item) {

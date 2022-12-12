@@ -4,6 +4,7 @@
     <div class="my-8">
         <div class="am-container">
             <crud-table
+                langauage = {{app()->getLocale()}}
                 :headers=" {{ Js::from( [
                         [ 'text' => 'Id', 'value' => 'id'],
                         [ 'text' => 'Name', 'value' => 'name'],

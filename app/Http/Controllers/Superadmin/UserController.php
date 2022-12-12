@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Superadmin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\IUser;
+use App\Repositories\Eloquent\Criteria\EagerLoad;
 
 class UserController extends Controller
 {
@@ -30,7 +31,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $result = $this->users->all();
+        $result = $this->users->withCriteria([
+            new EagerLoad(['role'])
+        ])->all();
+
         $result = $result->map(function($user) {
             return [
                 'id' => $user->id,
@@ -40,7 +44,7 @@ class UserController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role_id' => $user->role_id,
-                'role' => $user->roleName
+                'role' => $user->role->role
             ];
         });
 

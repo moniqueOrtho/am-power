@@ -182,7 +182,7 @@
       &__input {
           font-size: 1.125rem;
           padding-top: .94rem;
-          font-family: $font-family-base;
+          font-family: $body-font-family;
           width: 100%;
           height: 90%;
           border: 0;
