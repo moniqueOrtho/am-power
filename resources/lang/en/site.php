@@ -16,4 +16,15 @@ return [
     'components' => 'Component|Components',
     'settings' => 'Setting|Settings',
     'profiles' => 'Profile|Profiles',
+    'names' => 'Name|Names',
+    'emails' => 'Email|Emails',
+    'roles' => 'Role|Roles',
+    'actions' => 'Action|Actions',
+    'search' => 'Search',
+    'cancel'=> 'Cancel',
+    'no result text' => 'No matching records found',
+    'items_per_p' => 'Items per page',
+    'new i' => 'New|New',
+    'edit' => 'Edit',
+    'save' => 'Save'
 ];

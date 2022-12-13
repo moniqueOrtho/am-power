@@ -10,8 +10,9 @@
                 class="mb-2"
                 v-bind="attrs"
                 v-on="on"
+                @click.stop="$emit('btn-clicked')"
             >
-                New Item
+                {{labels.newItem}}
             </v-btn>
         </template>
 
@@ -21,7 +22,7 @@
                 ref="form"
                 v-model="valid"
                 lazy-validation
-                class="pa-8"
+                class="pa-8 form-dialog"
             >
                 <h6 class="text-h6 text-uppercase primary--text mb-6" >
                     {{ formTitle }}
@@ -68,16 +69,16 @@
 
 
                 <v-divider></v-divider>
-                <div class="d-flex justify-end">
+                <div class="d-flex justify-end mt-3">
                     <v-btn
                         type="button"
                         color="secondary"
                         class="mr-4"
-                        @click="close"
+                        @click.stop="close"
                         large
-                        >Cancel</v-btn
+                        >{{labels.cancel}}</v-btn
                     >
-                    <v-btn type="button" color="primary" large @click="save">Save</v-btn>
+                    <v-btn type="button" color="primary" large @click="save">{{labels.save}}</v-btn>
                 </div>
 
             </v-form>
@@ -111,11 +112,16 @@ export default {
         formTitle: {
             type: String,
             default: ''
+        },
+        labels: {
+            type: Object,
+            required: true
         }
     },
-    emits: ['close-dialog', 'save-input'],
-    created() {
+    emits: ['close-dialog', 'save-input', 'btn-clicked'],
+    mounted() {
         this.initialize();
+        this.setElements();
     },
     data() {
         return {
@@ -139,7 +145,6 @@ export default {
     methods: {
         initialize() {
             this.inputValue = Object.assign({}, this.defaultItem);
-            this.setElements();
         },
         setElements() {
             let inputs, searchResult, newObj;
@@ -184,11 +189,19 @@ export default {
             return this.dialogForm
         }
         }
+    },
+    watch: {
+        defaultItem() {
+            this.initialize();
+        },
     }
 
 }
 </script>
 
 <style lang="scss" scoped>
-
+@import "../../../sass/base/variables";
+    .form-dialog {
+        font-family: $body-font-family;
+    }
 </style>

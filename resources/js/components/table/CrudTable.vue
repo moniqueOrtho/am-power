@@ -3,7 +3,9 @@
     :headers="headers"
     :items="ownItems"
     sort-by="id"
-    class="elevation-1"
+    class="elevation-1 pa-4 crud-table"
+    :no-results-text="labels.noResultText"
+    :items-per-page-text="labels.itemsPage"
   >
     <template v-slot:top>
       <v-toolbar
@@ -12,7 +14,7 @@
       <v-text-field
           v-model="search"
           append-icon="mdi-magnify"
-          :label="labels.search[langIndex]"
+          :label="labels.search"
           single-line
           hide-details
         ></v-text-field>
@@ -25,7 +27,8 @@
           :dialogForm="dialog"
           @close-dialog="close"
           @saveInput="save"
-
+          @btn-clicked="dialog = true"
+          :labels="labels"
         ></form-dialog>
 
         <v-dialog v-model="dialogDelete" max-width="500px">
@@ -33,7 +36,7 @@
             <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+              <v-btn color="blue darken-1" text @click="closeDelete">{{labels.cancel}}</v-btn>
               <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
@@ -91,6 +94,20 @@ export default {
         defaultItem: {
         type: Object,
         default: () => {}
+        },
+        labels: {
+            type: Object,
+            default: () => {
+                return {
+                    search: 'Search',
+                    cancel: 'Cancel',
+                    noResultText: 'No matching records found',
+                    itemsPage: 'Items per page',
+                    newItem: 'New item',
+                    editItem: 'Edit item',
+                    save: 'Save'
+                }
+            }
         }
     },
     created () {
@@ -105,25 +122,19 @@ export default {
             editedItem: null,
             ownItems: [],
             search: '',
-            lang: ['en', 'nl'],
-            langIndex: -1,
-            labels: {
-                search: ['Search', 'Zoeken']
-            }
+
         }
     },
 
     computed: {
         formTitle () {
-        return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+        return this.editedIndex === -1 ? this.labels.newItem : this.labels.editItem
         },
     },
     methods: {
         initialize () {
         this.ownItems = [...this.items];
         this.editedItem = Object.assign({}, this.defaultItem);
-        this.langIndex = this.lang.findIndex(e => e === this.langauage);
-        console.log(this.lang.findIndex(e => e === this.langauage))
         },
 
         editItem (item) {
@@ -180,5 +191,8 @@ export default {
 </script >
 
 <style lang="scss" scoped>
-
+@import "../../../sass/base/variables";
+    .crud-table {
+        font-family: $body-font-family;
+    }
 </style>

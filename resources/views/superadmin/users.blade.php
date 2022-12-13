@@ -21,6 +21,15 @@
                     'email' => '',
                     'role_id' => ''
                 ]) }} "
+                :labels="{{ Js::from( [
+                    'search' => __('site.search'),
+                    'cancel' => __('site.cancel'),
+                    'noResultText' => __('site.no result text'),
+                    'itemsPage' => __('site.items_per_p'),
+                    'newItem' => trans_choice('site.new i', 2) . " " . trans_choice('site.users', 1),
+                    'editItem' => __('site.edit'),
+                    'save' => __('site.save')
+                ]) }}"
             >
             </crud-table>
         </div>
