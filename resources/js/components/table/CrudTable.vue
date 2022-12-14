@@ -5,7 +5,9 @@
     sort-by="id"
     class="elevation-1 pa-4 crud-table"
     :no-results-text="labels.noResultText"
-    :items-per-page-text="labels.itemsPage"
+    :footer-props="{
+        'items-per-page-text' : labels.itemsPage
+    }"
   >
     <template v-slot:top>
       <v-toolbar
@@ -25,8 +27,9 @@
           :default-item="editedItem"
           :formTitle="formTitle"
           :dialogForm="dialog"
+          :fields="fields"
           @close-dialog="close"
-          @saveInput="save"
+          @save-input="save"
           @btn-clicked="dialog = true"
           :labels="labels"
         ></form-dialog>
@@ -44,6 +47,18 @@
         </v-dialog>
       </v-toolbar>
     </template>
+
+    <!-- Icons on the table -->
+    <template v-slot:item.gender="{ item }">
+      <v-icon
+
+        class="mr-2"
+        color="primary"
+      >
+        {{item.gender === 'male' ? 'mdi-gender-male' : 'mdi-gender-female'}}
+      </v-icon>
+    </template>
+
     <template v-slot:item.actions="{ item }">
       <v-icon
         small
@@ -79,9 +94,21 @@ export default {
     components: { FormDialog },
 
     props: {
-        langauage: {
+        info: {
+            type: Object,
+            default: () => {
+                return {
+                    editTitleObject : 'name'
+                }
+            }
+        },
+        request: {
             type: String,
-            default: 'nl'
+            default: ''
+        },
+        fields: {
+            type: Array,
+            default: () => []
         },
         headers: {
         type: Array,
@@ -112,7 +139,6 @@ export default {
     },
     created () {
         this.initialize();
-
     },
     data() {
         return {
@@ -122,13 +148,13 @@ export default {
             editedItem: null,
             ownItems: [],
             search: '',
-
+            loaded: false
         }
     },
 
     computed: {
         formTitle () {
-        return this.editedIndex === -1 ? this.labels.newItem : this.labels.editItem
+        return this.editedIndex === -1 ? this.labels.newItem : `${this.labels.editItem} ${this.editedItem[this.info.editTitleObject]}`
         },
     },
     methods: {
@@ -163,20 +189,48 @@ export default {
         },
 
         closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem)
-            this.editedIndex = -1
-        })
+            this.dialogDelete = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
+            })
         },
+        setEditedItem(editedItem) {
+            Object.assign(this.ownItems[this.editedIndex], editedItem)
+        },
+        setCreatedItem(newItem) {
+            this.ownItems.push(newItem);
+        },
+        async store(data) {
+            try {
+                    if (this.editedIndex > -1) {
+                        const editedItem = await axios.put(`${this.request}/${data.id}`, data)
+                        this.setEditedItem(editedItem.data.data)
+                    } else {
+                        const newItem = await axios.post(this.request, data)
+                        this.setCreatedItem(newItem.data.data)
+                        console.log(newItem)
+                    }
 
+            } catch (error) {
+                if(error) console.log(error);
+            } finally {
+                this.loaded = true
+                this.close()
+            }
+        },
         save (data) {
-        if (this.editedIndex > -1) {
-            Object.assign(this.ownItems[this.editedIndex], data)
-        } else {
-            this.ownItems.push(data)
-        }
-        this.close()
+            if(this.request) {
+                this.store(data)
+            } else {
+                if (this.editedIndex > -1) {
+                    this.setEditedItem(data)
+                } else {
+                    this.setCreatedItem(data)
+                }
+            }
+
+            this.close()
         },
     },
     watch: {

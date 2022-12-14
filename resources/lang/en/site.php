@@ -16,6 +16,9 @@ return [
     'components' => 'Component|Components',
     'settings' => 'Setting|Settings',
     'profiles' => 'Profile|Profiles',
+    'gender' => 'Gender',
+    'male' => 'Male',
+    'female' => 'Female',
     'names' => 'Name|Names',
     'emails' => 'Email|Emails',
     'roles' => 'Role|Roles',
@@ -26,5 +29,7 @@ return [
     'items_per_p' => 'Items per page',
     'new i' => 'New|New',
     'edit' => 'Edit',
-    'save' => 'Save'
+    'save' => 'Save',
+    'first_name' => 'First name',
+    'last_name' => 'Last name'
 ];

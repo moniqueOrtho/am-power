@@ -154,7 +154,7 @@ export default {
                 newObj = Object.assign({}, this.defaultInput);
                 if(this.fields.length > 0) searchResult = this.fields.find(x => x['name'] === input);
                 if(searchResult) {
-
+                    newObj = this.mergeAllElements(searchResult, newObj);
                 } else {
                    newObj['name'] = input;
                    newObj['label'] = input
@@ -162,16 +162,15 @@ export default {
                 this.elements.push(newObj);
             });
         },
-        mergeAllElements(element) {
-            let defaultInputArr, newObj = {};
-            defaultInputArr = Object.keys(this.defaultInput);
-            defaultInputArr.forEach(input => {
-                if(!input in element) {
-                    newObj[input] = this.defaultInput[input];
+        mergeAllElements(element, base) {
+            let changed, newObj = Object.assign({}, base);
+            changed = Object.keys(element);
+            changed.forEach(input => {
+                if( input in base) {
+                    delete newObj[input];
                 }
             })
-            this.elements.push({...newObj, ...element});
-
+            return {...element, ...newObj};
         },
         close() {
             this.$emit('close-dialog')

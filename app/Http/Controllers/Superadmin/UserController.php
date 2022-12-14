@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Superadmin;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Hash;
+use App\Repositories\Contracts\IRole;
 use App\Repositories\Contracts\IUser;
 use App\Repositories\Eloquent\Criteria\EagerLoad;
 
@@ -18,10 +22,12 @@ class UserController extends Controller
     // );
 
     protected $users;
+    protected $roles;
 
-    public function __construct(IUser $users)
+    public function __construct(IUser $users, IRole $roles)
     {
        $this->users = $users;
+       $this->roles = $roles;
     }
 
     /**
@@ -34,6 +40,8 @@ class UserController extends Controller
         $result = $this->users->withCriteria([
             new EagerLoad(['role'])
         ])->all();
+
+        $allRoles = $this->roles->all();
 
         $result = $result->map(function($user) {
             return [
@@ -48,7 +56,14 @@ class UserController extends Controller
             ];
         });
 
-        return view('superadmin.users', ['data' => $result]);
+        $allRoles = $allRoles->map(function($role) {
+            return [
+                'text' => $role->role,
+                'value' => $role->id
+            ];
+        });
+
+        return view('superadmin.users', ['data' => $result, 'roles' => $allRoles]);
     }
 
     /**
@@ -58,7 +73,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -69,7 +84,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate request
+        $validated = $this->validateUser($request);
+
+        // Create User with relationships
+        if($validated) {
+            $password = substr($request['last_name'],0,4) . date("Y");
+            $newUser = $this->users->create([
+                'gender' => $request['gender'],
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
+                'name' => $request['first_name'] . " " . $request['last_name'],
+                'email' => $request['email'],
+                'email_verified_at' => Carbon::now(),
+                'password' => Hash::make($password),
+                'role_id' => $request->role_id
+            ]);
+            return new UserResource($newUser);
+        }
     }
 
     /**
@@ -115,5 +147,20 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    protected function validateUser($request, $id = null)
+    {
+
+        $email = $id == null ? 'unique:users,email' : 'unique:users,email,'. $id;
+
+        $request->validate([
+            'gender' => ['required', 'string', 'max:7'],
+            'first_name' => ['nullable', 'string', 'max:15'],
+            'last_name' => ['required', 'string', 'max:30'],
+            'email' => ['required', 'string', 'nullable', 'email', 'max:255', $email],
+        ]);
+        return true;
     }
 }

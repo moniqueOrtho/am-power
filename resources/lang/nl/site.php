@@ -16,6 +16,9 @@ return [
     'components' => 'Element|Elementen',
     'settings' => 'Instelling|Instellingen',
     'profiles' => 'Profiel|Profielen',
+    'gender' => 'Geslacht',
+    'male' => 'Man',
+    'female' => 'Vrouw',
     'names' => 'Naam|Namen',
     'emails' => 'E-mail|E-mails',
     'roles' => 'Rol|Rollen',
@@ -26,5 +29,7 @@ return [
     'items_per_p' => 'Items per pagina',
     'new i' => 'Nieuw|Nieuwe',
     'edit' => 'Bewerk',
-    'save' => 'Opslaan'
+    'save' => 'Opslaan',
+    'first_name' => 'Voornaam',
+    'last_name' => 'Achternaam'
 ];
