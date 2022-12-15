@@ -10,6 +10,13 @@
     }"
   >
     <template v-slot:top>
+      <close-alert
+        alertColor="green-me"
+        :alertMessage="succesMessage"
+        type="succes"
+        spacing="my-3"
+        :closeAction="true"
+      ></close-alert>
       <v-toolbar
         flat
       >
@@ -89,16 +96,18 @@
 
 <script>
 import FormDialog from "../dialogs/FormDialog.vue";
+import CloseAlert from "../alerts/CloseAlert.vue";
 export default {
     name: 'curd-table',
-    components: { FormDialog },
+    components: { FormDialog, CloseAlert },
 
     props: {
         info: {
             type: Object,
             default: () => {
                 return {
-                    editTitleObject : 'name'
+                    editTitleObject : 'name',
+                    succesMessageObject: 'name'
                 }
             }
         },
@@ -132,7 +141,12 @@ export default {
                     itemsPage: 'Items per page',
                     newItem: 'New item',
                     editItem: 'Edit item',
-                    save: 'Save'
+                    save: 'Save',
+                    succesMessage: 'has been created',
+                    updateMessage: 'has been changed successfully.',
+                    required: 'is required',
+                    emailInvalid: 'E-mail must be valid',
+                    maxCounter: 'must be less than *vue* characters!'
                 }
             }
         }
@@ -148,7 +162,8 @@ export default {
             editedItem: null,
             ownItems: [],
             search: '',
-            loaded: false
+            loaded: false,
+            succesMessage: '',
         }
     },
 
@@ -196,10 +211,12 @@ export default {
             })
         },
         setEditedItem(editedItem) {
-            Object.assign(this.ownItems[this.editedIndex], editedItem)
+            Object.assign(this.ownItems[this.editedIndex], editedItem);
+            this.succesMessage = `${editedItem[this.info.succesMessageObject]} ${this.labels.updateMessage}`;
         },
         setCreatedItem(newItem) {
             this.ownItems.push(newItem);
+            this.succesMessage = `${newItem[this.info.succesMessageObject]} ${this.labels.succesMessage}`;
         },
         async store(data) {
             try {
@@ -211,15 +228,16 @@ export default {
                         this.setCreatedItem(newItem.data.data)
                         console.log(newItem)
                     }
-
+                    this.close()
             } catch (error) {
                 if(error) console.log(error);
             } finally {
                 this.loaded = true
-                this.close()
+
             }
         },
         save (data) {
+            this.succesMessage = '';
             if(this.request) {
                 this.store(data)
             } else {
@@ -228,9 +246,8 @@ export default {
                 } else {
                     this.setCreatedItem(data)
                 }
+                this.close()
             }
-
-            this.close()
         },
     },
     watch: {

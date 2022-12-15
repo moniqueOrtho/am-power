@@ -31,5 +31,10 @@ return [
     'edit' => 'Bewerk',
     'save' => 'Opslaan',
     'first_name' => 'Voornaam',
-    'last_name' => 'Achternaam'
+    'last_name' => 'Achternaam',
+    'succes_message' => 'is aangemaakt.',
+    'update_message' => 'is succesvol gewijzigd.',
+    'is_required' => 'is vereist.',
+    'email_invalid' => 'E-mail moet geldig zijn.',
+    'error_count_vue' => 'moet minder dan *vue* tekens zijn!'
 ];

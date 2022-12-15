@@ -21,7 +21,7 @@
                 @submit.prevent="validateForm"
                 ref="form"
                 v-model="valid"
-                lazy-validation
+
                 class="pa-8 form-dialog"
             >
                 <h6 class="text-h6 text-uppercase primary--text mb-6" >
@@ -58,6 +58,7 @@
                                     :tabindex="(index + 1)"
                                     :prepend-inner-icon="element.icon"
                                     :type="element.type"
+                                    :rules="getRules(element.rules, element.label, element.counter)"
                                     :counter="element.counter"
                                     clearable
                                     background-color="grey lighten-4"
@@ -135,8 +136,9 @@ export default {
                 input: 'text',
                 icon: 'mdi-pencil',
                 type: 'text',
-                counter: 20,
-                disabled: false
+                counter: false,
+                disabled: false,
+                rules: []
             },
             elements: [],
             valid: true,
@@ -177,6 +179,38 @@ export default {
         },
         save() {
             this.$emit('save-input', this.inputValue)
+        },
+        rules(rule, name, counter) {
+            let v;
+            if(rule === 'required') {
+                return (v) => !!v || `${name} ${this.labels.required}`
+            } else if(rule === 'email') {
+                return (v) => /.+@.+\..+/.test(v) || this.labels.emailInvalid
+            } else if(rule === 'max-counter') {
+                let text = this.labels.maxCounter.replace('*vue*', counter);
+                return (v && v.length <= counter) || `${name} ${text}`
+            } else {
+                return [];
+            }
+        },
+        getRules(rule, name, counter) {
+            let vueRules = [], vueRule;
+            if(typeof rule === 'string') {
+                vueRule = this.rules(rule, name, counter);
+                vueRules.push(vueRule);
+            } else if( typeof rule === 'array') {
+                vueRules = rule.map(r => {
+                    return this.rules(r, name, counter);
+                });
+            } else if(typeof rule === 'object') {
+                vueRule = Object.values(rule);
+                vueRules = vueRule.map(r => {
+                    return this.rules(r, name, counter);
+                });
+            } else {
+                vueRules = [];
+            }
+            return vueRules;
         }
     },
     computed: {

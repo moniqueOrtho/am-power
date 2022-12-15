@@ -29,13 +29,18 @@
                     'itemsPage' => __('site.items_per_p'),
                     'newItem' => trans_choice('site.new i', 2) . " " . trans_choice('site.users', 1),
                     'editItem' => __('site.edit'),
-                    'save' => __('site.save')
+                    'save' => __('site.save'),
+                    'succesMessage' => __('site.succes_message'),
+                    'update_message' => __('site.update_message'),
+                    'required' => __('site.is_required'),
+                    'emailInvalid' => __('site.email_invalid'),
+                    'maxCounter' => __('site.error_count_vue')
                 ]) }}"
                 :fields="{{ Js::from( [
                     [ 'name' => 'gender', 'label' => __('site.gender'), 'input' => 'select', 'items' => [ [ 'text' => __('site.male'), 'value' => 'male'], [ 'text' => __('site.female'), 'value' => 'female']] ],
                     [ 'name' => 'first_name', 'label' => __('site.first_name') ],
-                    [ 'name' => 'last_name', 'label' => __('site.last_name') ],
-                    [ 'name' => 'email', 'label' => trans_choice('site.emails', 1) ],
+                    [ 'name' => 'last_name', 'label' => __('site.last_name'), 'counter' => 20, 'rules' => ['required', 'max-counter'] ],
+                    [ 'name' => 'email', 'label' => trans_choice('site.emails', 1), 'type'=> 'email', 'rules' => ['email', 'required'] ],
                     [ 'name' => 'role_id', 'label' => trans_choice('site.roles', 1), 'input' => 'select', 'items' => $roles ]
                 ]) }}"
             >

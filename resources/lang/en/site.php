@@ -31,5 +31,10 @@ return [
     'edit' => 'Edit',
     'save' => 'Save',
     'first_name' => 'First name',
-    'last_name' => 'Last name'
+    'last_name' => 'Last name',
+    'succes_message' => 'has been created.',
+    'update_message' => 'has been changed successfully.',
+    'is_required' => 'is required.',
+    'email_invalid' => 'E-mail must be valid.',
+    'error_count_vue' => 'must be less than *vue* characters!'
 ];
