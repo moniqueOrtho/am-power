@@ -37,11 +37,11 @@
                     'maxCounter' => __('site.error_count_vue')
                 ]) }}"
                 :fields="{{ Js::from( [
-                    [ 'name' => 'gender', 'label' => __('site.gender'), 'input' => 'select', 'items' => [ [ 'text' => __('site.male'), 'value' => 'male'], [ 'text' => __('site.female'), 'value' => 'female']] ],
+                    [ 'name' => 'gender', 'label' => __('site.gender'), 'input' => 'select', 'rules' => 'required', 'items' => [ [ 'text' => __('site.male'), 'value' => 'male'], [ 'text' => __('site.female'), 'value' => 'female']] ],
                     [ 'name' => 'first_name', 'label' => __('site.first_name') ],
-                    [ 'name' => 'last_name', 'label' => __('site.last_name'), 'counter' => 20, 'rules' => ['required', 'max-counter'] ],
-                    [ 'name' => 'email', 'label' => trans_choice('site.emails', 1), 'type'=> 'email', 'rules' => ['email', 'required'] ],
-                    [ 'name' => 'role_id', 'label' => trans_choice('site.roles', 1), 'input' => 'select', 'items' => $roles ]
+                    [ 'name' => 'last_name', 'label' => __('site.last_name'), 'counter' => 20, 'rules' => ['required', 'max-counter'], 'required' => true ],
+                    [ 'name' => 'email', 'label' => trans_choice('site.emails', 1), 'type'=> 'email', 'rules' => ['required', 'email'], 'required' => true ],
+                    [ 'name' => 'role_id', 'label' => trans_choice('site.roles', 1), 'input' => 'select', 'rules' => 'required', 'items' => $roles ]
                 ]) }}"
             >
             </crud-table>

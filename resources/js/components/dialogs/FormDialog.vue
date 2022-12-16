@@ -18,10 +18,10 @@
 
         <v-card>
             <v-form
-                @submit.prevent="validateForm"
+                @submit.prevent="save"
                 ref="form"
                 v-model="valid"
-
+                lazy-validation
                 class="pa-8 form-dialog"
             >
                 <h6 class="text-h6 text-uppercase primary--text mb-6" >
@@ -47,6 +47,7 @@
                                     :label="element.label"
                                     filled
                                     color="primary"
+                                    :rules="element.rules"
                                 >
                                 </v-select>
                             </template>
@@ -58,10 +59,11 @@
                                     :tabindex="(index + 1)"
                                     :prepend-inner-icon="element.icon"
                                     :type="element.type"
-                                    :rules="getRules(element.rules, element.label, element.counter)"
+                                    :rules="element.rules"
                                     :counter="element.counter"
                                     clearable
                                     background-color="grey lighten-4"
+                                    :required="element.required"
                                     :error-messages="element.name in errors ? errors[i.name][0] : '' "
                                 ></v-text-field>
                             </template>
@@ -79,7 +81,7 @@
                         large
                         >{{labels.cancel}}</v-btn
                     >
-                    <v-btn type="button" color="primary" large @click="save">{{labels.save}}</v-btn>
+                    <v-btn type="submit" color="primary" large>{{labels.save}}</v-btn>
                 </div>
 
             </v-form>
@@ -138,6 +140,7 @@ export default {
                 type: 'text',
                 counter: false,
                 disabled: false,
+                required: false,
                 rules: []
             },
             elements: [],
@@ -165,36 +168,40 @@ export default {
             });
         },
         mergeAllElements(element, base) {
-            let changed, newObj = Object.assign({}, base);
+            let changed, newObj = Object.assign({}, base), newElement = Object.assign({}, element);
             changed = Object.keys(element);
             changed.forEach(input => {
                 if( input in base) {
                     delete newObj[input];
                 }
+                if(input === 'rules') {
+                    newElement[input] = this.getRules(element.rules, element.label, element.counter);
+                }
             })
-            return {...element, ...newObj};
+            return {...newElement, ...newObj};
         },
         close() {
             this.$emit('close-dialog')
         },
         save() {
-            this.$emit('save-input', this.inputValue)
+            if(this.$refs.form.validate()) {
+                this.$emit('save-input', this.inputValue)
+            }            //
         },
         rules(rule, name, counter) {
-            let v;
             if(rule === 'required') {
                 return (v) => !!v || `${name} ${this.labels.required}`
             } else if(rule === 'email') {
                 return (v) => /.+@.+\..+/.test(v) || this.labels.emailInvalid
             } else if(rule === 'max-counter') {
                 let text = this.labels.maxCounter.replace('*vue*', counter);
-                return (v && v.length <= counter) || `${name} ${text}`
+                return (v) => (v && v.length <= counter) || `${name} ${text}`
             } else {
                 return [];
             }
         },
         getRules(rule, name, counter) {
-            let vueRules = [], vueRule;
+            let vueRules = [], vueRule, vueArr;
             if(typeof rule === 'string') {
                 vueRule = this.rules(rule, name, counter);
                 vueRules.push(vueRule);
@@ -203,8 +210,8 @@ export default {
                     return this.rules(r, name, counter);
                 });
             } else if(typeof rule === 'object') {
-                vueRule = Object.values(rule);
-                vueRules = vueRule.map(r => {
+                vueArr = Object.values(rule);
+                vueRules = vueArr.map(r => {
                     return this.rules(r, name, counter);
                 });
             } else {
