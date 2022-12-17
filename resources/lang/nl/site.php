@@ -36,5 +36,6 @@ return [
     'update_message' => 'is succesvol gewijzigd.',
     'is_required' => 'is vereist.',
     'email_invalid' => 'E-mail moet geldig zijn.',
-    'error_count_vue' => 'moet minder dan *vue* tekens zijn!'
+    'error_count_vue' => 'moet minder dan *vue* tekens zijn!',
+    'input_not_valid' => 'Invoer was niet geldig!'
 ];

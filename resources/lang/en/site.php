@@ -36,5 +36,6 @@ return [
     'update_message' => 'has been changed successfully.',
     'is_required' => 'is required.',
     'email_invalid' => 'E-mail must be valid.',
-    'error_count_vue' => 'must be less than *vue* characters!'
+    'error_count_vue' => 'must be less than *vue* characters!',
+    'input_not_valid' => 'Input was not valid!'
 ];

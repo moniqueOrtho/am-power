@@ -101,7 +101,9 @@ class UserController extends Controller
                 'role_id' => $request->role_id
             ]);
             return new UserResource($newUser);
-        }
+        } else {
+            return response()->json(['message', __('site.input_not_valid')], 400);
+         }
     }
 
     /**
@@ -135,7 +137,25 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+         // Validate request
+         $validated = $this->validateUser($request, $id);
+
+         // Create User with relationships
+         if($validated) {
+            $updatedUser = $this->users->update( $id, [
+                'gender' => $request['gender'],
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
+                'name' => $request['first_name'] . " " . $request['last_name'],
+                'email' => $request['email'],
+                'role_id' => $request->role_id
+            ]);
+
+            return new UserResource($updatedUser);
+
+         } else {
+            return response()->json(['message', __('site.input_not_valid')], 400);
+         }
     }
 
     /**
@@ -146,7 +166,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->users->delete($id);
+        return response()->json(['response' => 1 ], 200);
     }
 
 

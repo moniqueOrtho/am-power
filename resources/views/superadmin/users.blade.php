@@ -31,7 +31,7 @@
                     'editItem' => __('site.edit'),
                     'save' => __('site.save'),
                     'succesMessage' => __('site.succes_message'),
-                    'update_message' => __('site.update_message'),
+                    'updateMessage' => __('site.update_message'),
                     'required' => __('site.is_required'),
                     'emailInvalid' => __('site.email_invalid'),
                     'maxCounter' => __('site.error_count_vue')
