@@ -166,7 +166,13 @@ return [
     */
 
     'attributes' => [
-        'password' => 'wachtwoord'
+        'password' => 'wachtwoord',
+        'gender' => 'geslacht',
+        'first_name' => 'voornaam',
+        'last_name' => 'achternaam',
+        'name' => 'naam',
+        'email' => 'e-mail',
+        'role' => 'rol'
     ],
 
 ];

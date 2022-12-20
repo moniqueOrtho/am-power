@@ -29,7 +29,7 @@
         ></v-text-field>
         <v-spacer></v-spacer>
 
-        <!-- This is the form dialog with button and is handled with the dialogForm property -->
+        <!-- This is the form dialog with button and is handlederrorserrors with the dialogForm property -->
         <form-dialog
           :default-item="editedItem"
           :formTitle="formTitle"
@@ -39,6 +39,8 @@
           @save-input="save"
           @btn-clicked="dialog = true"
           :labels="labels"
+          :errors="errors"
+          @clear-error="clearError"
         ></form-dialog>
 
         <v-dialog v-model="dialogDelete" max-width="500px">
@@ -146,7 +148,7 @@ export default {
                     updateMessage: 'has been changed successfully.',
                     required: 'is required',
                     emailInvalid: 'E-mail must be valid',
-                    maxCounter: 'must be less than *vue* characters!'
+                    maxCounter: 'must be less than *vue* characters!',
                 }
             }
         }
@@ -164,6 +166,7 @@ export default {
             search: '',
             loaded: false,
             succesMessage: '',
+            errors: {}
         }
     },
 
@@ -230,7 +233,10 @@ export default {
                     }
                     this.close()
             } catch (error) {
-                if(error) console.log(error);
+                if(error) {
+                    this.errors = error.response.data.errors;
+                    console.log(error.response);
+                }
             } finally {
                 this.loaded = true
 
@@ -249,6 +255,9 @@ export default {
                 this.close()
             }
         },
+        clearError (name) {
+           delete this.errors[name];
+        }
     },
     watch: {
         dialog (val) {

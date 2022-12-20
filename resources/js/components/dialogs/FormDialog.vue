@@ -48,6 +48,8 @@
                                     filled
                                     color="primary"
                                     :rules="element.rules"
+                                    :error-messages="element.name in errors ? errors[element.name][0] : '' "
+                                    @change="inputChanged(element.name)"
                                 >
                                 </v-select>
                             </template>
@@ -64,7 +66,8 @@
                                     clearable
                                     background-color="grey lighten-4"
                                     :required="element.required"
-                                    :error-messages="element.name in errors ? errors[i.name][0] : '' "
+                                    :error-messages="element.name in errors ? errors[element.name][0] : '' "
+                                    @input="inputChanged(element.name)"
                                 ></v-text-field>
                             </template>
                         </v-col>
@@ -121,7 +124,7 @@ export default {
             required: true
         }
     },
-    emits: ['close-dialog', 'save-input', 'btn-clicked'],
+    emits: ['close-dialog', 'save-input', 'btn-clicked', 'clear-error'],
     mounted() {
         this.initialize();
         this.setElements();
@@ -185,8 +188,8 @@ export default {
         },
         save() {
             if(this.$refs.form.validate()) {
-                this.$emit('save-input', this.inputValue)
-            }            //
+                this.$emit('save-input', this.inputValue);
+            }
         },
         rules(rule, name, counter) {
             if(rule === 'required') {
@@ -218,6 +221,12 @@ export default {
                 vueRules = [];
             }
             return vueRules;
+        },
+        inputChanged(name) {
+            if(name in this.errors) {
+                console.log(name)
+                this.$emit('clear-error', name)
+            }
         }
     },
     computed: {

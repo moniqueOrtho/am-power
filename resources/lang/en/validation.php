@@ -159,7 +159,13 @@ return [
     */
 
     'attributes' => [
-        'password' => 'password'
+        'password' => 'password',
+        'gender' => 'gender',
+        'first_name' => 'first name',
+        'last_name' => 'last name',
+        'name' => 'name',
+        'email' => 'e-mail',
+        'role' => 'role'
     ],
 
 ];
