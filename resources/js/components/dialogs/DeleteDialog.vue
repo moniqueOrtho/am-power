@@ -11,7 +11,7 @@
             </h6>
             <div class="delete-dialog__actions">
               <div >
-                <v-btn color="light1"  @click="close" class="mr-3">{{ lang[language]['cancel'] }}</v-btn>
+                <v-btn color="light1"  @click="close" class="mr-3">{{ labels.cancel }}</v-btn>
                 <v-btn color="error darken-1"  @click="deleteItemConfirm" >Ok</v-btn>
               </div>
             </div>
@@ -25,10 +25,6 @@
   export default {
     name: "delete-dialog",
     props: {
-      deletedItem: {
-        type: Object,
-        required: true,
-      },
       dialogDelete: {
         type: Boolean,
         default: false
@@ -37,22 +33,16 @@
         type: String,
         required: false
       },
-      language: {
-        type: String,
-        default: 'nl'
+      labels: {
+        type: Object,
+        required: true
       }
-    },
-    data: {
-        lang: {
-            nl: {cancel: 'terug'},
-            en: {cancel: 'cancel'},
-        }
     },
     emits: ["dialog-closed", "delete-confirmed"],
     methods: {
       deleteItemConfirm() {
         this.close();
-        this.$emit("delete-confirmed", this.deletedItem);
+        this.$emit("delete-confirmed");
       },
       close() {
         this.$emit('dialog-closed');

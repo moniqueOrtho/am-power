@@ -37,5 +37,8 @@ return [
     'is_required' => 'is required.',
     'email_invalid' => 'E-mail must be valid.',
     'error_count_vue' => 'must be less than *vue* characters!',
-    'input_not_valid' => 'Input was not valid!'
+    'input_not_valid' => 'Input was not valid!',
+    'delete_message_vue' => 'Are you sure you want to delete *vue*?',
+    'delete_successful' => '*vue* has been deleted.',
+    'dates' => 'Date|Dates'
 ];

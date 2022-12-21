@@ -6,11 +6,12 @@
             <crud-table
                 request="{{request()->route()->uri}}"
                 :headers=" {{ Js::from( [
-                        [ 'text' => 'Id', 'value' => 'id'],
-                        [ 'text' => __('site.gender'), 'value' => 'gender'],
+                        [ 'text' => '#', 'value' => 'rank'],
+                        [ 'text' => __('site.gender'), 'value' => 'gender', 'sortable' => false],
                         [ 'text' => trans_choice('site.names', 1), 'value' => 'name'],
                         [ 'text' => trans_choice('site.emails', 1), 'value' => 'email' ],
                         [ 'text' => trans_choice('site.roles', 1), 'value' => 'role'],
+                        [ 'text' => trans_choice('site.dates', 1), 'value' => 'created_at'],
                         [ 'text' => trans_choice('site.actions', 2), 'value' => 'actions', 'sortable' => false]
                     ]
                 ) }}"
@@ -34,7 +35,9 @@
                     'updateMessage' => __('site.update_message'),
                     'required' => __('site.is_required'),
                     'emailInvalid' => __('site.email_invalid'),
-                    'maxCounter' => __('site.error_count_vue')
+                    'maxCounter' => __('site.error_count_vue'),
+                    'deleteMessage' => __('site.delete_message_vue'),
+                    'deleteSuccessful' => __('site.delete_successful')
                 ]) }}"
                 :fields="{{ Js::from( [
                     [ 'name' => 'gender', 'label' => __('site.gender'), 'input' => 'select', 'rules' => 'required', 'items' => [ [ 'text' => __('site.male'), 'value' => 'male'], [ 'text' => __('site.female'), 'value' => 'female']] ],

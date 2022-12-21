@@ -2,7 +2,6 @@
   <v-data-table
     :headers="headers"
     :items="ownItems"
-    sort-by="id"
     class="elevation-1 pa-4 crud-table"
     :no-results-text="labels.noResultText"
     :footer-props="{
@@ -11,9 +10,9 @@
   >
     <template v-slot:top>
       <close-alert
-        alertColor="green-me"
-        :alertMessage="succesMessage"
-        type="succes"
+        :alertColor="getAlertColor"
+        :alertMessage="getAlertMessage"
+        :type="getAlertType"
         spacing="my-3"
         :closeAction="true"
       ></close-alert>
@@ -41,20 +40,25 @@
           :labels="labels"
           :errors="errors"
           @clear-error="clearError"
+          :loading="dataLoading"
+          :reset-form="resetForm"
         ></form-dialog>
 
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">{{labels.cancel}}</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+         <!-- This is de delete dialog and is handled with the dialogDelete Method -->
+        <DeleteDialog
+          :dialogDelete="dialogDelete"
+          :title="deleteMessage"
+          :labels="labels"
+          @dialog-closed="dialogDelete = false"
+          @delete-confirmed="deleteItemConfirm"
+        />
+
       </v-toolbar>
+    </template>
+
+    <!-- Make rank number bold -->
+    <template v-slot:item.rank="{ item }">
+        <td class="font-weight-bold">{{ item.rank }}</td>
     </template>
 
     <!-- Icons on the table -->
@@ -98,10 +102,11 @@
 
 <script>
 import FormDialog from "../dialogs/FormDialog.vue";
+import DeleteDialog from "../dialogs/DeleteDialog.vue";
 import CloseAlert from "../alerts/CloseAlert.vue";
 export default {
     name: 'curd-table',
-    components: { FormDialog, CloseAlert },
+    components: { FormDialog, CloseAlert, DeleteDialog },
 
     props: {
         info: {
@@ -109,7 +114,8 @@ export default {
             default: () => {
                 return {
                     editTitleObject : 'name',
-                    succesMessageObject: 'name'
+                    succesMessageObject: 'name',
+                    deleteMessageObject: 'name'
                 }
             }
         },
@@ -149,6 +155,8 @@ export default {
                     required: 'is required',
                     emailInvalid: 'E-mail must be valid',
                     maxCounter: 'must be less than *vue* characters!',
+                    deleteMessage: 'Are you sure you want to delete *vue*?',
+                    deleteSuccessful: '*vue*  has been deleted.'
                 }
             }
         }
@@ -166,7 +174,11 @@ export default {
             search: '',
             loaded: false,
             succesMessage: '',
-            errors: {}
+            errors: {},
+            deleteMessage: '',
+            errorMessage: '',
+            dataLoading: false,
+            resetForm: false
         }
     },
 
@@ -174,11 +186,40 @@ export default {
         formTitle () {
         return this.editedIndex === -1 ? this.labels.newItem : `${this.labels.editItem} ${this.editedItem[this.info.editTitleObject]}`
         },
+        getAlertColor() {
+            return this.errorMessage ? 'red-me' : 'green-me';
+        },
+        getAlertMessage() {
+            return this.errorMessage ? this.errorMessage : this.succesMessage;
+        },
+        getAlertType() {
+            return this.errorMessage ? 'error' : 'success';
+        }
     },
     methods: {
         initialize () {
-        this.ownItems = [...this.items];
+        // Number items if header contains 'rank'
+        if(this.headers.findIndex(x => x.value === 'rank') > -1) {
+            this.ownItems = this.rankedItems(this.items);
+        } else {
+            this.ownItems = [...this.items];
+        }
+
         this.editedItem = Object.assign({}, this.defaultItem);
+        this.resetMessages();
+        },
+
+        rankedItems(items) {
+            let newObj = {};
+            return items.map((x, i) => {
+                newObj['rank'] = items.length - i;
+                return {...x, ...newObj};
+            })
+        },
+
+        resetMessages() {
+            if(this.succesMessage) this.succesMessage = '';
+            if(this.errorMessage) this.errorMessage = '';
         },
 
         editItem (item) {
@@ -190,12 +231,29 @@ export default {
         deleteItem (item) {
         this.editedIndex = this.ownItems.indexOf(item)
         this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
+        this.dialogDelete = true;
+        this.deleteMessage = this.labels.deleteMessage.replace('*vue*', item[this.info.deleteMessageObject]);
         },
 
-        deleteItemConfirm () {
-        this.ownItems.splice(this.editedIndex, 1)
-        this.closeDelete()
+        async deleteItemConfirm () {
+            let obj = this.editedItem[this.info.deleteMessageObject], deleted;
+            this.resetMessages();
+            try {
+                await axios.delete(`${this.request}/${this.editedItem.id}`)
+                this.succesMessage = this.labels.deleteSuccessful.replace('*vue*', obj);
+                if(this.headers.findIndex(x => x.value === 'rank') > -1) {
+                    deleted = this.ownItems.filter(x => x[[this.info.deleteMessageObject]] !== obj);
+                    this.ownItems = this.rankedItems(deleted);
+                } else {
+                    this.ownItems.splice(this.editedIndex, 1)
+                }
+
+            } catch (error) {
+                console.log(error);
+                this.errorMessage = error.response.data.message;
+            } finally {
+                this.closeDelete()
+            }
         },
 
         close() {
@@ -218,10 +276,15 @@ export default {
             this.succesMessage = `${editedItem[this.info.succesMessageObject]} ${this.labels.updateMessage}`;
         },
         setCreatedItem(newItem) {
-            this.ownItems.push(newItem);
+            this.ownItems.unshift(newItem);
+            if(this.headers.findIndex(x => x.value === 'rank') > -1) this.ownItems = this.rankedItems(this.ownItems);
             this.succesMessage = `${newItem[this.info.succesMessageObject]} ${this.labels.succesMessage}`;
+            this.resetForm = true;
         },
         async store(data) {
+            this.dataLoading = true;
+            this.resetForm = false;
+            this.resetMessages();
             try {
                     if (this.editedIndex > -1) {
                         const editedItem = await axios.put(`${this.request}/${data.id}`, data)
@@ -229,16 +292,14 @@ export default {
                     } else {
                         const newItem = await axios.post(this.request, data)
                         this.setCreatedItem(newItem.data.data)
-                        console.log(newItem)
                     }
                     this.close()
             } catch (error) {
                 if(error) {
                     this.errors = error.response.data.errors;
-                    console.log(error.response);
                 }
             } finally {
-                this.loaded = true
+                this.dataLoading = false
 
             }
         },

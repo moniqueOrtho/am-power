@@ -2,7 +2,7 @@
     <transition name="alert">
         <div :class="['alert', alertColor, spacing]" v-if="alert">
             <div class="alert__message">
-                <span class="alert__check"><font-awesome-icon icon="fa-solid fa-circle-check" v-if="type === 'succes'" /></span>
+                <span class="alert__check"><font-awesome-icon icon="fa-solid fa-circle-check" v-if="type === 'success'" /></span>
                 <span class="alert__check"><font-awesome-icon icon="fa-solid fa-circle-exclamation" v-if="type === 'error'" /></span>
                 <span class="alert__msg">{{alertMessage}}</span>
             </div>

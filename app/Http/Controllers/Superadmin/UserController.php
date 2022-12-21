@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Repositories\Contracts\IRole;
 use App\Repositories\Contracts\IUser;
 use App\Repositories\Eloquent\Criteria\EagerLoad;
+use App\Repositories\Eloquent\Criteria\LatestFirst;
 
 class UserController extends Controller
 {
@@ -38,7 +39,8 @@ class UserController extends Controller
     public function index()
     {
         $result = $this->users->withCriteria([
-            new EagerLoad(['role'])
+            new EagerLoad(['role']),
+            new LatestFirst()
         ])->all();
 
         $allRoles = $this->roles->all();
@@ -52,7 +54,8 @@ class UserController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role_id' => $user->role_id,
-                'role' => $user->role->role
+                'role' => $user->role->role,
+                'created_at' => Carbon::parse($user->created_at)->format('d/m/Y')
             ];
         });
 

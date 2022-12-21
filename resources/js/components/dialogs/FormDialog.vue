@@ -16,9 +16,9 @@
             </v-btn>
         </template>
 
-        <v-card>
+        <v-card :loading="loading">
             <v-form
-                @submit.prevent="save"
+                @submit.stop.prevent="save"
                 ref="form"
                 v-model="valid"
                 lazy-validation
@@ -103,6 +103,10 @@ export default {
             type: Array,
             default: () => []
         },
+        loading: {
+            type: Boolean,
+            default: false
+        },
         dialogForm: {
             type: Boolean,
             default: false
@@ -122,6 +126,10 @@ export default {
         labels: {
             type: Object,
             required: true
+        },
+        resetForm: {
+            type: Boolean,
+            default: false,
         }
     },
     emits: ['close-dialog', 'save-input', 'btn-clicked', 'clear-error'],
@@ -243,6 +251,12 @@ export default {
         defaultItem() {
             this.initialize();
         },
+        resetForm(value) {
+            if(value) {
+                this.$refs.form.reset();
+                this.initialize();
+            }
+        }
     }
 
 }
