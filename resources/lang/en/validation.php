@@ -165,7 +165,9 @@ return [
         'last_name' => 'last name',
         'name' => 'name',
         'email' => 'e-mail',
-        'role' => 'role'
+        'role' => 'role',
+        'lang' => 'language',
+        'slug' => 'URL'
     ],
 
 ];

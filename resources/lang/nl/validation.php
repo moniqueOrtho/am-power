@@ -172,7 +172,9 @@ return [
         'last_name' => 'achternaam',
         'name' => 'naam',
         'email' => 'e-mail',
-        'role' => 'rol'
+        'role' => 'rol',
+        'lang' => 'taal',
+        'slug' => 'URL'
     ],
 
 ];

@@ -4,6 +4,7 @@
     :items="ownItems"
     class="elevation-1 pa-4 crud-table"
     :no-results-text="labels.noResultText"
+    :no-data-text="labels.noDataText"
     :footer-props="{
         'items-per-page-text' : labels.itemsPage
     }"
@@ -28,21 +29,37 @@
         ></v-text-field>
         <v-spacer></v-spacer>
 
-        <!-- This is the form dialog with button and is handlederrorserrors with the dialogForm property -->
-        <form-dialog
-          :default-item="editedItem"
-          :formTitle="formTitle"
-          :dialogForm="dialog"
-          :fields="fields"
-          @close-dialog="close"
-          @save-input="save"
-          @btn-clicked="dialog = true"
-          :labels="labels"
-          :errors="errors"
-          @clear-error="clearError"
-          :loading="dataLoading"
-          :reset-form="resetForm"
-        ></form-dialog>
+        <!-- This is the form dialog with button -->
+
+        <v-dialog
+            v-model="dialog"
+            max-width="80vw"
+        >
+            <template v-slot:activator="{ on }">
+                <v-btn
+                    color="primary"
+                    dark
+                    class="mb-2"
+                    v-on="on"
+                >
+                    {{labels.newItem}}
+                </v-btn>
+            </template>
+
+            <v-card :loading="dataLoading">
+                <TheForm
+                :default-item="editedItem"
+                :formTitle="formTitle"
+                :fields="fields"
+                @close-dialog="close"
+                @save-input="save"
+                :labels="labels"
+                :errors="errors"
+                @clear-error="clearError"
+                :reset-form="resetForm"
+                />
+            </v-card>
+        </v-dialog>
 
          <!-- This is de delete dialog and is handled with the dialogDelete Method -->
         <DeleteDialog
@@ -89,24 +106,24 @@
         mdi-delete
       </v-icon>
     </template>
-    <template v-slot:no-data>
+    <!-- <template v-slot:no-data>
       <v-btn
         color="primary"
         @click="initialize"
       >
         Reset
       </v-btn>
-    </template>
+    </template> -->
   </v-data-table>
 </template>
 
 <script>
-import FormDialog from "../dialogs/FormDialog.vue";
+import TheForm from "../form/TheForm.vue";
 import DeleteDialog from "../dialogs/DeleteDialog.vue";
 import CloseAlert from "../alerts/CloseAlert.vue";
 export default {
     name: 'curd-table',
-    components: { FormDialog, CloseAlert, DeleteDialog },
+    components: { TheForm, CloseAlert, DeleteDialog },
 
     props: {
         info: {
@@ -146,6 +163,7 @@ export default {
                     search: 'Search',
                     cancel: 'Cancel',
                     noResultText: 'No matching records found',
+                    noDataText: 'No data available!',
                     itemsPage: 'Items per page',
                     newItem: 'New item',
                     editItem: 'Edit item',
@@ -154,6 +172,7 @@ export default {
                     updateMessage: 'has been changed successfully.',
                     required: 'is required',
                     emailInvalid: 'E-mail must be valid',
+                    urlInvalid: 'Url must be valid',
                     maxCounter: 'must be less than *vue* characters!',
                     deleteMessage: 'Are you sure you want to delete *vue*?',
                     deleteSuccessful: '*vue*  has been deleted.'

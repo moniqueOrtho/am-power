@@ -26,6 +26,7 @@ return [
     'search' => 'Zoeken',
     'cancel'=> 'Terug',
     'no result text' => 'Geen overeenkomende resultaten gevonden',
+    'no_data_text' => 'Geen data beschikbaar!',
     'items_per_p' => 'Items per pagina',
     'new i' => 'Nieuw|Nieuwe',
     'edit' => 'Bewerk',
@@ -36,9 +37,13 @@ return [
     'update_message' => 'is succesvol gewijzigd.',
     'is_required' => 'is vereist.',
     'email_invalid' => 'E-mail moet geldig zijn.',
+    'url_invalid' => 'URL moet geldig zijn.',
     'error_count_vue' => 'moet minder dan *vue* tekens zijn!',
     'input_not_valid' => 'Invoer was niet geldig!',
     'delete_message_vue' => 'Weet u zeker dat u *vue* wilt verwijderen?',
     'delete_successful' => '*vue* is verwijderd.',
-    'dates' => 'Datum|Datums'
+    'dates' => 'Datum|Datums',
+    'lang' => 'Taal|Talen',
+    'admin' => 'Beheerder|Beheerders',
+    'themes' => 'Thema|Thema\'s'
 ];

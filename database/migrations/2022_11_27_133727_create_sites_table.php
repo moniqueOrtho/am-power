@@ -16,13 +16,13 @@ class CreateSitesTable extends Migration
         Schema::create('sites', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
-            $table->string('title', 250);
+            $table->string('title', 250)->nullable();
             $table->string('subtitle', 250)->nullable();
             $table->text('description')->nullable();
             $table->string('slug')->unique();
             $table->string('lang', 4)->default('nl');
-            $table->string('theme', 50)->nullable();
-            $table->json('colors');
+            $table->string('theme', 50);
+            $table->json('colors')->nullable();
             $table->timestamps();
         });
     }

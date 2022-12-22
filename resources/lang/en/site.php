@@ -26,6 +26,7 @@ return [
     'search' => 'Search',
     'cancel'=> 'Cancel',
     'no result text' => 'No matching records found',
+    'no_data_text' => 'No data available!',
     'items_per_p' => 'Items per page',
     'new i' => 'New|New',
     'edit' => 'Edit',
@@ -36,9 +37,13 @@ return [
     'update_message' => 'has been changed successfully.',
     'is_required' => 'is required.',
     'email_invalid' => 'E-mail must be valid.',
+    'url_invalid' => 'Url must be valid.',
     'error_count_vue' => 'must be less than *vue* characters!',
     'input_not_valid' => 'Input was not valid!',
     'delete_message_vue' => 'Are you sure you want to delete *vue*?',
     'delete_successful' => '*vue* has been deleted.',
-    'dates' => 'Date|Dates'
+    'dates' => 'Date|Dates',
+    'lang' => 'Language|languages',
+    'admin' => 'Administrator|Administrators',
+    'themes' => 'Theme|Themes'
 ];
