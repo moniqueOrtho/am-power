@@ -12,7 +12,7 @@
                     [ 'text' => trans_choice('site.names', 1), 'value' => 'name'],
                     [ 'text' => 'url', 'value' => 'slug' ],
                     [ 'text' => trans_choice('site.lang', 1), 'value' => 'lang'],
-                    [ 'text' => trans_choice('site.admin', 1), 'value' => 'user_name'],
+                    [ 'text' => trans_choice('site.admin', 1), 'value' => 'owner_name'],
                     [ 'text' => trans_choice('site.actions', 2), 'value' => 'actions', 'sortable' => false]
                 ]
             ) }}"
@@ -22,7 +22,7 @@
                 'name' => '',
                 'slug' => '',
                 'lang' => '',
-                'user_id' => ''
+                'owner_id' => ''
             ]) }} "
             :labels="{{ Js::from( [
                 'search' => __('site.search'),
@@ -47,7 +47,7 @@
                 [ 'name' => 'name', 'label' => trans_choice('site.names', 1) ],
                 [ 'name' => 'slug', 'label' => 'url', 'rules' => ['required', 'url'], 'required' => true ],
                 [ 'name' => 'lang', 'label' => trans_choice('site.lang', 1), 'input' => 'select', 'rules' => 'required', 'items' => [['text' => 'EN', 'value' => 'en'], ['text' => 'NL', 'value' => 'nl']] ],
-                [ 'name' => 'user_id', 'label' => trans_choice('site.admin', 1), 'input' => 'select', 'rules' => 'required', 'items' => $admins ]
+                [ 'name' => 'owner_id', 'label' => trans_choice('site.admin', 1), 'input' => 'select', 'rules' => 'required', 'items' => $admins ]
             ]) }}"
         >
         </crud-table>

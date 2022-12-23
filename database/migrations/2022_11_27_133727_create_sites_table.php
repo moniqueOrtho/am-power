@@ -19,10 +19,11 @@ class CreateSitesTable extends Migration
             $table->string('title', 250)->nullable();
             $table->string('subtitle', 250)->nullable();
             $table->text('description')->nullable();
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->index();
             $table->string('lang', 4)->default('nl');
             $table->string('theme', 50);
             $table->json('colors')->nullable();
+            $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();
         });
     }

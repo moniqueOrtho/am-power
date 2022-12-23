@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use App\Exceptions\PermissionDoesNotExist;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -46,9 +47,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // De site where the user belongs to
     public function sites()
     {
         return $this->belongsToMany(Site::class);
+    }
+
+    public function ownedSite()
+    {
+        return $this->sites()->where('owner_id', $this->id);
+    }
+
+    public function isOwnerOfSite($site)
+    {
+        return (bool)$this->sites()
+                ->where('id', $site->id)
+                ->where('owner_id', $this->id)
+                ->count();
     }
 
     // Relationship with Role table
@@ -89,6 +104,42 @@ class User extends Authenticatable
     {
         $role = Role::find($this->role_id);
         return $role->permissions()->pluck('permission');
+    }
+
+    public function hasPermissionTo($permission, $role): bool
+    {
+        $permissionClass = new Permission; // $this->getModel();
+
+        if (is_string($permission)) {
+
+            $permission = $permissionClass->findByName(
+                $permission
+            );
+        }
+
+        if (is_int($permission)) {
+            $permission = $permissionClass->findById(
+                $permission
+            );
+        }
+
+        if (! $permission instanceof Permission) {
+            throw new PermissionDoesNotExist;
+        }
+
+        return $this->hasPermissionViaRole($permission, $role);
+    }
+
+    /**
+     * Determine if the model has, via roles, the given permission.
+     *
+     * @param Permission $permission
+     *
+     * @return bool
+     */
+    protected function hasPermissionViaRole(Permission $permission, $roleId): bool
+    {
+        return $permission->roles()->where('id', $roleId)->count();
     }
 
 

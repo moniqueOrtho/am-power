@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Superadmin;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\Contracts\IRole;
@@ -36,8 +35,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index()    {
+
+
+        $this->authorize('view', User::class);
+
         $result = $this->users->withCriteria([
             new EagerLoad(['role']),
             new LatestFirst()
@@ -87,6 +89,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
+        $this->authorize('create', User::class);
+
         // Validate request
         $validated = $this->validateUser($request);
 
@@ -140,7 +145,9 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-         // Validate request
+        $this->authorize('update', User::class);
+
+        // Validate request
          $validated = $this->validateUser($request, $id);
 
          // Create User with relationships
@@ -169,6 +176,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete', User::class);
+
         $this->users->delete($id);
         return response()->json(['response' => 1 ], 200);
     }

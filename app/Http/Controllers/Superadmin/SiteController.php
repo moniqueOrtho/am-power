@@ -32,7 +32,7 @@ class SiteController extends Controller
     public function index()
     {
         $result = $this->sites->withCriteria([
-            new EagerLoad(['users']),
+            new EagerLoad(['owner']),
             new LatestFirst()
         ])->all();
 
@@ -43,8 +43,8 @@ class SiteController extends Controller
                 'name' => $site->name,
                 'slug' => $site->slug,
                 'lang' => $site->lang,
-                'user_name' => $site->users[0]['name'],
-                'user_id' => $site->users[0]['id']
+                'owner_name' => $site->owner->name,
+                'owner_id' => $site->owner->id
             ];
         });
 
@@ -84,9 +84,9 @@ class SiteController extends Controller
                 'slug' => $request['slug'],
                 'lang' => $request['lang'],
                 'theme' => $request['theme'] ?? null,
-                'colors' => $request['colors'] ?? null
+                'colors' => $request['colors'] ?? null,
+                'owner_id'=> $request['owner_id']
             ]);
-            $newSite->users()->attach($request['user_id']);
             return new SiteResource($newSite);
         } else {
             return response()->json(['message', __('site.input_not_valid')], 400);
@@ -118,8 +118,8 @@ class SiteController extends Controller
                 'theme' => $request['theme'],
                 'colors' => $request['colors'] ?? null
             ]);
-            if(isset($request['user_id'])) {
-                $updated->users()->sync($request['user_id']);
+            if(isset($request['owner_id'])) {
+                $updated->users()->sync($request['owner_id']);
             }
 
             return new SiteResource($updated);

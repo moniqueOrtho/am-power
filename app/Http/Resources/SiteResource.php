@@ -24,7 +24,8 @@ class SiteResource extends JsonResource
             'lang' => $this->lang,
             'theme' => $this->theme,
             'colors' => $this->colors,
-            'users' => UserResource::collection($this->users)
+            'owner_name' => $this->owner->name,
+            'owner_id' => $this->owner->id
         ];
     }
 }
