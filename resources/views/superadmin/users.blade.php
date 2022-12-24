@@ -10,7 +10,6 @@
                         [ 'text' => __('site.gender'), 'value' => 'gender', 'sortable' => false],
                         [ 'text' => trans_choice('site.names', 1), 'value' => 'name'],
                         [ 'text' => trans_choice('site.emails', 1), 'value' => 'email' ],
-                        [ 'text' => trans_choice('site.roles', 1), 'value' => 'role'],
                         [ 'text' => trans_choice('site.dates', 1), 'value' => 'created_at'],
                         [ 'text' => trans_choice('site.actions', 2), 'value' => 'actions', 'sortable' => false]
                     ]
@@ -20,8 +19,7 @@
                     'gender' => '',
                     'first_name' => '',
                     'last_name' => '',
-                    'email' => '',
-                    'role_id' => ''
+                    'email' => ''
                 ]) }} "
                 :labels="{{ Js::from( [
                     'search' => __('site.search'),
@@ -44,8 +42,7 @@
                     [ 'name' => 'gender', 'label' => __('site.gender'), 'input' => 'select', 'rules' => 'required', 'items' => [ [ 'text' => __('site.male'), 'value' => 'male'], [ 'text' => __('site.female'), 'value' => 'female']] ],
                     [ 'name' => 'first_name', 'label' => __('site.first_name') ],
                     [ 'name' => 'last_name', 'label' => __('site.last_name'), 'counter' => 20, 'rules' => ['required', 'max-counter'], 'required' => true ],
-                    [ 'name' => 'email', 'label' => trans_choice('site.emails', 1), 'type'=> 'email', 'rules' => ['required', 'email'], 'required' => true ],
-                    [ 'name' => 'role_id', 'label' => trans_choice('site.roles', 1), 'input' => 'select', 'rules' => 'required', 'items' => $roles ]
+                    [ 'name' => 'email', 'label' => trans_choice('site.emails', 1), 'type'=> 'email', 'rules' => ['required', 'email'], 'required' => true ]
                 ]) }}"
             >
             </crud-table>

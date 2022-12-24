@@ -30,15 +30,7 @@ class UserPolicy
      */
     public function view(User $user)
     {
-        $role = '';
-        if($user->hasRole('superadmin')) {
-            $role = 'update_admin';
-        }
-        if($user->hasRole('admin')){
-            $role = 'update_subscriber';
-        }
-
-        return ($user->hasPermissionTo($role, $user['role_id']));
+        return ($user->hasPermissionTo('view_users', $user['role_id']));
     }
 
     /**
@@ -47,17 +39,9 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user, Role $role)
     {
-        $role = '';
-        if($user->hasRole('superadmin')) {
-            $role = 'create_admin';
-        }
-        if($user->hasRole('admin')){
-            $role = 'create_subscriber';
-        }
-
-        return ($user->hasPermissionTo($role, $user['role_id']));
+        return ($user->hasPermissionTo('create_'. $role->role, $user['role_id']));
     }
 
     /**
@@ -67,17 +51,9 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user)
+    public function update(User $user, Role $role)
     {
-        $role = '';
-        if($user->hasRole('superadmin')) {
-            $role = 'update_admin';
-        }
-        if($user->hasRole('admin')){
-            $role = 'update_subscriber';
-        }
-
-        return ($user->hasPermissionTo($role, $user['role_id']));
+        return ($user->hasPermissionTo('update_'. $role->role, $user['role_id']));
     }
 
     /**
@@ -87,17 +63,9 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user)
+    public function delete(User $user, Role $role)
     {
-        $role = '';
-        if($user->hasRole('superadmin')) {
-            $role = 'delete_admin';
-        }
-        if($user->hasRole('admin')){
-            $role = 'delete_subscriber';
-        }
-
-        return ($user->hasPermissionTo($role, $user['role_id']));
+        return ($user->hasPermissionTo('delete_'. $role->role, $user['role_id']));
     }
 
     /**

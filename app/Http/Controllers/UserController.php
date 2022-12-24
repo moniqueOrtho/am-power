@@ -13,13 +13,6 @@ use App\Repositories\Eloquent\Criteria\LatestFirst;
 
 class UserController extends Controller
 {
-    // public $headers = collect(
-    //     [ 'text' => 'Id', 'value' => 'id'],
-    //     [ 'text' => 'Name', 'value' => 'name'],
-    //     [ 'text' => 'Email', 'value' => 'email' ],
-    //     [ 'text' => 'Role', 'value' => 'role'],
-    //     [ 'text' => 'Actions', 'value' => 'actions', 'sortable' => false]
-    // );
 
     protected $users;
     protected $roles;
@@ -40,12 +33,11 @@ class UserController extends Controller
 
         $this->authorize('view', User::class);
 
-        $result = $this->users->withCriteria([
-            new EagerLoad(['role']),
-            new LatestFirst()
-        ])->all();
+        $role = $this->getEditedRoles();
 
-        $allRoles = $this->roles->all();
+        $result = $this->users->withCriteria([
+            new LatestFirst()
+        ])->findMembers($role);
 
         $result = $result->map(function($user) {
             return [
@@ -55,20 +47,11 @@ class UserController extends Controller
                 'last_name' => $user->last_name,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role_id' => $user->role_id,
-                'role' => $user->role->role,
                 'created_at' => Carbon::parse($user->created_at)->format('d/m/Y')
             ];
         });
 
-        $allRoles = $allRoles->map(function($role) {
-            return [
-                'text' => $role->role,
-                'value' => $role->id
-            ];
-        });
-
-        return view('superadmin.users', ['data' => $result, 'roles' => $allRoles]);
+        return view('superadmin.users', ['data' => $result]);
     }
 
     /**
@@ -90,7 +73,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
 
-        $this->authorize('create', User::class);
+         // Authorize request
+        $role = $this->getEditedRoles();
+        $this->authorize('create', [User::class, $role]);
 
         // Validate request
         $validated = $this->validateUser($request);
@@ -106,7 +91,7 @@ class UserController extends Controller
                 'email' => $request['email'],
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make($password),
-                'role_id' => $request->role_id
+                'role_id' => $role->id
             ]);
             return new UserResource($newUser);
         } else {
@@ -145,7 +130,10 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->authorize('update', User::class);
+        // Authorize request
+        $role = $this->getEditedRoles();
+
+        $this->authorize('update',[User::class, $role]);
 
         // Validate request
          $validated = $this->validateUser($request, $id);
@@ -158,7 +146,7 @@ class UserController extends Controller
                 'last_name' => $request['last_name'],
                 'name' => $request['first_name'] . " " . $request['last_name'],
                 'email' => $request['email'],
-                'role_id' => $request->role_id
+                'role_id' => $role->id
             ]);
 
             return new UserResource($updatedUser);
@@ -176,7 +164,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $this->authorize('delete', User::class);
+        // Authorize request
+        $role = $this->getEditedRoles();
+
+        $this->authorize('delete', [User::class, $role]);
 
         $this->users->delete($id);
         return response()->json(['response' => 1 ], 200);
@@ -195,5 +186,14 @@ class UserController extends Controller
             'email' => ['required', 'string', 'nullable', 'email', 'max:255', $email],
         ]);
         return true;
+    }
+
+    protected function getEditedRoles()
+    {
+        $perms = auth()->user()->permissions;
+        $allRoles = $this->roles->all();
+        return $allRoles->first(function ($role) use($perms) {
+            return $perms->contains("update_" . $role->role);
+        });
     }
 }

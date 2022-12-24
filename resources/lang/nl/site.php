@@ -45,5 +45,6 @@ return [
     'dates' => 'Datum|Datums',
     'lang' => 'Taal|Talen',
     'admin' => 'Beheerder|Beheerders',
-    'themes' => 'Thema|Thema\'s'
+    'themes' => 'Thema|Thema\'s',
+    'subscribers' => 'Abonnee|Abonnees'
 ];

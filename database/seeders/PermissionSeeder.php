@@ -21,17 +21,17 @@ class PermissionSeeder extends Seeder
         $permission_role = collect([
             [
                 'role' => 'superadmin',
-                'permissions' => ['create_component', 'update_component', 'delete_component', 'create_permission', 'update_permission', 'delete_permission', 'create_role', 'update_role', 'delete_role', 'create_site', 'update_site', 'delete_site', 'create_admin', 'update_admin', 'delete_admin']],
+                'permissions' => ['create_component', 'update_component', 'delete_component', 'create_permission', 'update_permission', 'delete_permission', 'create_role', 'update_role', 'delete_role', 'create_site', 'update_site', 'delete_site', 'create_admin', 'update_admin', 'delete_admin', 'view_users']],
             [
                 'role' => 'admin',
                 'permissions' => [
-                    'update_site', 'update_user', 'create_page', 'update_page', 'delete_page','create_post', 'update_post', 'delete_post', 'create_subscriber', 'update_subscriber', 'delete_subscriber'
+                    'update_site', 'update_profile', 'create_page', 'update_page', 'delete_page','create_post', 'update_post', 'delete_post', 'create_subscriber', 'update_subscriber', 'delete_subscriber', 'view_users'
                 ]
             ],
             [
                 'role' => 'subscriber',
                 'permissions' => [
-                    'update_user'
+                    'update_profile'
                 ]
             ],
         ]);

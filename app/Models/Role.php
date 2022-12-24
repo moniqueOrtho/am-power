@@ -26,5 +26,20 @@ class Role extends Model
         return $this->permissions()->pluck('permission');
     }
 
+    public function hasPermission($permission): bool
+    {
+        if (is_string($permission)) {
+            return $this->permissions->where('permission', $permission)->count();
+        }
+
+        if (is_int($permission)) {
+            return $this->permissions->where('id', $permission)->count();
+        }
+
+        if ($permission instanceof Permission) {
+            return $this->permissions->where('id', $permission->id)->count();
+        }
+    }
+
 
 }

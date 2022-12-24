@@ -5,13 +5,14 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Superadmin\{
-    UserController,
     SiteController,
     PermissionController,
     RoleController,
     ComponentController
 
 };
+
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------

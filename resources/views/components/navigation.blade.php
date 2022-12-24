@@ -3,9 +3,15 @@
     $navs = collect(
         [
             [
-                'name' => 'users',
-                'perm'  => 'user',
-                'label' => trans_choice('site.users', 2),
+                'name' => 'admins',
+                'perm'  => 'admin',
+                'label' => trans_choice('site.admin', 2),
+                'link' => route('users')
+            ],
+            [
+                'name' => 'subscriber',
+                'perm'  => 'subscriber',
+                'label' => trans_choice('site.subscribers', 2),
                 'link' => route('users')
             ],
             [
