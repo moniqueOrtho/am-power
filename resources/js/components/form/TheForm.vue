@@ -131,6 +131,7 @@ export default {
             this.inputValue = Object.assign({}, this.defaultItem);
         },
         setElements() {
+            console.log(this.inputValue)
             let inputs, searchResult, newObj;
 
             inputs = Object.keys(this.inputValue);

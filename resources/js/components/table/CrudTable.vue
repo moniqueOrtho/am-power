@@ -66,7 +66,7 @@
           :dialogDelete="dialogDelete"
           :title="deleteMessage"
           :labels="labels"
-          @dialog-closed="dialogDelete = false"
+          @dialog-closed="dialogDeleteClosed"
           @delete-confirmed="deleteItemConfirm"
         />
 
@@ -245,6 +245,7 @@ export default {
         this.editedIndex = this.ownItems.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
+        this.resetForm = false
         },
 
         deleteItem (item) {
@@ -252,6 +253,12 @@ export default {
         this.editedItem = Object.assign({}, item)
         this.dialogDelete = true;
         this.deleteMessage = this.labels.deleteMessage.replace('*vue*', item[this.info.deleteMessageObject]);
+        this.resetForm = false
+        },
+
+        dialogDeleteClosed() {
+            this.dialogDelete = false;
+            this.close();
         },
 
         async deleteItemConfirm () {
@@ -277,6 +284,7 @@ export default {
 
         close() {
         this.dialog = false
+        this.resetForm = true;
         this.$nextTick(() => {
             this.editedItem = Object.assign({}, this.defaultItem)
             this.editedIndex = -1
@@ -298,7 +306,6 @@ export default {
             this.ownItems.unshift(newItem);
             if(this.headers.findIndex(x => x.value === 'rank') > -1) this.ownItems = this.rankedItems(this.ownItems);
             this.succesMessage = `${newItem[this.info.succesMessageObject]} ${this.labels.succesMessage}`;
-            this.resetForm = true;
         },
         async store(data) {
             this.dataLoading = true;
