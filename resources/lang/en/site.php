@@ -46,5 +46,6 @@ return [
     'lang' => 'Language|languages',
     'admin' => 'Administrator|Administrators',
     'themes' => 'Theme|Themes',
-    'subscribers' => 'Subscriber|Subscribers'
+    'subscribers' => 'Subscriber|Subscribers',
+    'descriptions' => 'Description|Descriptions'
 ];

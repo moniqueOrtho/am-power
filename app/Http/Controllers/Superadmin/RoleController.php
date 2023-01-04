@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Superadmin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\IRole;
+use App\Repositories\Eloquent\Criteria\EagerLoad;
+use App\Repositories\Eloquent\Criteria\LatestFirst;
 
 class RoleController extends Controller
 {
@@ -22,8 +24,18 @@ class RoleController extends Controller
      */
     public function index()
     {
-        // $result = $this->roles->all();
+        $results = $this->roles->withCriteria([
+            new EagerLoad(['permissions']),
+            new LatestFirst()
+        ])->all();
 
-        // return view('superadmin.users', ['data' => $result ]);
+        $results = $results->map(function($result) {
+            return [
+                'id' => $result->id,
+                'role' => $result->role
+            ];
+        });
+
+        return view('superadmin.roles', ['data' => $results]);
     }
 }

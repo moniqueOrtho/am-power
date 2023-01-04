@@ -8,6 +8,10 @@
     :footer-props="{
         'items-per-page-text' : labels.itemsPage
     }"
+    :show-expand="lookForExpand"
+    :expanded.sync="expanded"
+    :single-expand="defaultExpand.singleExpand"
+    :item-key="defaultExpand.itemKey"
   >
     <template v-slot:top>
       <close-alert
@@ -76,6 +80,12 @@
     <!-- Make rank number bold -->
     <template v-slot:item.rank="{ item }">
         <td class="font-weight-bold">{{ item.rank }}</td>
+    </template>
+
+    <template v-slot:expanded-item="{ headers, item }" v-if="lookForExpand">
+      <td :colspan="headers.length">
+        {{ expandText(item) }}
+      </td>
     </template>
 
     <!-- Icons on the table -->
@@ -178,6 +188,10 @@ export default {
                     deleteSuccessful: '*vue*  has been deleted.'
                 }
             }
+        },
+        expand: {
+            type: [Object, Boolean],
+            default: false
         }
     },
     created () {
@@ -197,7 +211,14 @@ export default {
             deleteMessage: '',
             errorMessage: '',
             dataLoading: false,
-            resetForm: false
+            resetForm: false,
+            expanded: [],
+            defaultExpand: {
+                singleExpand: true,
+                itemKey: 'id',
+                itemInfo: 'info'
+            }
+
         }
     },
 
@@ -213,7 +234,15 @@ export default {
         },
         getAlertType() {
             return this.errorMessage ? 'error' : 'success';
-        }
+        },
+        lookForExpand() {
+            return this.headers.findIndex((v) => v.value === 'data-table-expand') > -1;
+        },
+        expandText() {
+            return (item) => {
+                return `More info about ${item[this.defaultExpand.itemKey] }`
+            }
+        },
     },
     methods: {
         initialize () {
@@ -226,6 +255,9 @@ export default {
 
         this.editedItem = Object.assign({}, this.defaultItem);
         this.resetMessages();
+        if(this.lookForExpand) {
+            this.setExpand();
+        }
         },
 
         rankedItems(items) {
@@ -239,6 +271,17 @@ export default {
         resetMessages() {
             if(this.succesMessage) this.succesMessage = '';
             if(this.errorMessage) this.errorMessage = '';
+        },
+
+        setExpand() {
+            if(this.expand) {
+                let keys = Object.keys(this.defaultExpand);
+                keys.forEach(key => {
+                    if(key in this.expand) {
+                        this.defaultExpand[key] = this.expand[key]
+                    }
+                })
+            }
         },
 
         editItem (item) {

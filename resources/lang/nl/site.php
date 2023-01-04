@@ -46,5 +46,6 @@ return [
     'lang' => 'Taal|Talen',
     'admin' => 'Beheerder|Beheerders',
     'themes' => 'Thema|Thema\'s',
-    'subscribers' => 'Abonnee|Abonnees'
+    'subscribers' => 'Abonnee|Abonnees',
+    'descriptions' => 'Beschrijving|Beschrijvingen'
 ];
