@@ -47,5 +47,6 @@ return [
     'admin' => 'Administrator|Administrators',
     'themes' => 'Theme|Themes',
     'subscribers' => 'Subscriber|Subscribers',
-    'descriptions' => 'Description|Descriptions'
+    'descriptions' => 'Description|Descriptions',
+    'permissions_of_role' => 'The permissions of :role are:'
 ];

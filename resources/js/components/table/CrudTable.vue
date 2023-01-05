@@ -83,8 +83,7 @@
     </template>
 
     <template v-slot:expanded-item="{ headers, item }" v-if="lookForExpand">
-      <td :colspan="headers.length">
-        {{ expandText(item) }}
+      <td :colspan="headers.length" v-html="expandText(item)">
       </td>
     </template>
 
@@ -216,7 +215,7 @@ export default {
             defaultExpand: {
                 singleExpand: true,
                 itemKey: 'id',
-                itemInfo: 'info'
+                text: 'expand'
             }
 
         }
@@ -240,7 +239,7 @@ export default {
         },
         expandText() {
             return (item) => {
-                return `More info about ${item[this.defaultExpand.itemKey] }`
+                return this.defaultExpand.text in item ? item[this.defaultExpand.text] : `<span>More info about ${item[this.defaultExpand.itemKey] }</span>`;
             }
         },
     },

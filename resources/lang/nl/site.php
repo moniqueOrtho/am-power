@@ -47,5 +47,6 @@ return [
     'admin' => 'Beheerder|Beheerders',
     'themes' => 'Thema|Thema\'s',
     'subscribers' => 'Abonnee|Abonnees',
-    'descriptions' => 'Beschrijving|Beschrijvingen'
+    'descriptions' => 'Beschrijving|Beschrijvingen',
+    'permissions_of_role' => 'De machtigingen van :role zijn:'
 ];

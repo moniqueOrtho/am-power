@@ -13,7 +13,7 @@
             <v-row>
                 <v-col
                     v-for="(element, index) in elements"
-                    :key="element.name"
+                    :key="`${element.name}-${index}`"
                     cols="12"
                     :sm="element.sm"
                     :md="element.md"
@@ -52,9 +52,29 @@
                             @input="inputChanged(element.name)"
                         ></v-text-field>
                     </template>
+                    <template v-if="element.input === 'checkbox'">
+                        <v-checkbox
+                            v-model="selectAll"
+                            hide-details
+                            v-if="element.type === 'selectAll'"
+                        >
+                            <template v-slot:label>
+                                <span class="the-form__selected-all--label">{{ element.label }}</span>
+                            </template>
+                        </v-checkbox>
+
+                        <v-checkbox
+                            v-else
+                            v-model="inputValue[element.name]"
+                            :label="element.label"
+                            :tabindex="(index + 1)"
+                            :color="element.color ? element.color : 'primary'"
+                            :rules="element.rules"
+                            :value="element.value"
+                        ></v-checkbox>
+                    </template>
                 </v-col>
             </v-row>
-
 
         <v-divider></v-divider>
         <div class="d-flex justify-end mt-3">
@@ -98,7 +118,7 @@ export default {
         resetForm: {
             type: Boolean,
             default: false,
-        }
+        },
     },
     emits: ['close-dialog', 'save-input', 'clear-error'],
     mounted() {
@@ -124,6 +144,7 @@ export default {
             },
             elements: [],
             valid: true,
+            selectAll: false
         }
     },
     methods: {
@@ -131,34 +152,44 @@ export default {
             this.inputValue = Object.assign({}, this.defaultItem);
         },
         setElements() {
-            console.log(this.inputValue)
-            let inputs, searchResult, newObj;
+            let inputs, searchResults, newObj;
 
             inputs = Object.keys(this.inputValue);
             inputs.forEach(input => {
                 newObj = Object.assign({}, this.defaultInput);
-                if(this.fields.length > 0) searchResult = this.fields.find(x => x['name'] === input);
-                if(searchResult) {
-                    newObj = this.mergeAllElements(searchResult, newObj);
+                if(this.fields.length > 0) searchResults = this.fields.filter(x => x['name'] === input);
+                if(searchResults) {
+                    if(searchResults.length === 1) {
+                        newObj = this.mergeAllElements(searchResults[0], newObj);
+                        this.elements.push(newObj);
+                    } else {
+                        searchResults.forEach(result => {
+                            newObj = this.mergeAllElements(result, newObj);
+                            this.elements.push(newObj);
+                            newObj = Object.assign({}, this.defaultInput);
+                        })
+                    }
                 } else {
                    newObj['name'] = input;
-                   newObj['label'] = input
+                   newObj['label'] = input;
+                   this.elements.push(newObj);
                 }
-                this.elements.push(newObj);
+
             });
         },
         mergeAllElements(element, base) {
-            let changed, newObj = Object.assign({}, base), newElement = Object.assign({}, element);
+            let changed, newObj = Object.assign({}, base);
+
             changed = Object.keys(element);
             changed.forEach(input => {
                 if( input in base) {
                     delete newObj[input];
                 }
                 if(input === 'rules') {
-                    newElement[input] = this.getRules(element.rules, element.label, element.counter);
+                    newObj[input] = this.getRules(element.rules, element.label, element.counter);
                 }
             })
-            return {...newElement, ...newObj};
+            return {...newObj, ...element};
         },
         close() {
             this.$emit('close-dialog')
@@ -217,6 +248,17 @@ export default {
                 this.$refs.form.reset();
                 this.initialize();
             }
+        },
+        selectAll(value) {
+            let filtered;
+            const selectAllEl = this.elements.find(x => x.type === 'selectAll');
+
+            if(value) {
+                filtered = this.elements.filter(x => x.name === selectAllEl.name && 'value' in x);
+                filtered.forEach(el => this.inputValue[selectAllEl.name].push(el.value));
+            } else {
+                this.inputValue[selectAllEl.name] = []
+            }
         }
     }
 
@@ -227,5 +269,9 @@ export default {
 @import "../../../sass/base/variables";
     .the-form {
         font-family: $body-font-family;
+        &__selected-all--label {
+            color: var(--v-primary-base);
+            font-weight: 500;
+        }
     }
 </style>
