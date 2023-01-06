@@ -5,6 +5,11 @@
 <div class="my-8">
     <div class="am-container">
         <crud-table
+            :info="{{ Js::from([
+                'editTitleObject' => 'role',
+                'succesMessageObject' => 'role',
+                'deleteMessageObject'=> 'role'
+            ])}}"
             request="{{request()->route()->uri}}"
             :headers=" {{ Js::from( [
                     [ 'text' => '#', 'value' => 'rank'],

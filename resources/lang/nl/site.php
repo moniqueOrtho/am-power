@@ -48,5 +48,7 @@ return [
     'themes' => 'Thema|Thema\'s',
     'subscribers' => 'Abonnee|Abonnees',
     'descriptions' => 'Beschrijving|Beschrijvingen',
-    'permissions_of_role' => 'De machtigingen van :role zijn:'
+    'permissions_of_role' => 'De machtigingen van :role zijn:',
+    'all' => 'Alle',
+    'roles_of_the_permission' => 'De rollen die aan de :permission machtiging zijn gekoppeld:'
 ];

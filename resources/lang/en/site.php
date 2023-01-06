@@ -48,5 +48,7 @@ return [
     'themes' => 'Theme|Themes',
     'subscribers' => 'Subscriber|Subscribers',
     'descriptions' => 'Description|Descriptions',
-    'permissions_of_role' => 'The permissions of :role are:'
+    'permissions_of_role' => 'The permissions of :role are:',
+    'all' => 'All',
+    'roles_of_the_permission' => 'The roles associated with the :permission permission:'
 ];

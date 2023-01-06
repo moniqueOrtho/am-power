@@ -12,6 +12,7 @@
     :expanded.sync="expanded"
     :single-expand="defaultExpand.singleExpand"
     :item-key="defaultExpand.itemKey"
+    :search="search"
   >
     <template v-slot:top>
       <close-alert
@@ -45,6 +46,7 @@
                     dark
                     class="mb-2"
                     v-on="on"
+                    @click="newClicked"
                 >
                     {{labels.newItem}}
                 </v-btn>
@@ -283,11 +285,15 @@ export default {
             }
         },
 
+        newClicked() {
+            this.resetForm = true
+        },
+
         editItem (item) {
         this.editedIndex = this.ownItems.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
-        this.resetForm = false
+        this.resetForm = true
         },
 
         deleteItem (item) {
@@ -295,7 +301,7 @@ export default {
         this.editedItem = Object.assign({}, item)
         this.dialogDelete = true;
         this.deleteMessage = this.labels.deleteMessage.replace('*vue*', item[this.info.deleteMessageObject]);
-        this.resetForm = false
+        this.resetForm = true
         },
 
         dialogDeleteClosed() {
@@ -326,7 +332,7 @@ export default {
 
         close() {
         this.dialog = false
-        this.resetForm = true;
+        this.resetForm = false;
         this.$nextTick(() => {
             this.editedItem = Object.assign({}, this.defaultItem)
             this.editedIndex = -1

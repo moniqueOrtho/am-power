@@ -53,15 +53,20 @@
                         ></v-text-field>
                     </template>
                     <template v-if="element.input === 'checkbox'">
-                        <v-checkbox
-                            v-model="selectAll"
-                            hide-details
-                            v-if="element.type === 'selectAll'"
-                        >
-                            <template v-slot:label>
-                                <span class="the-form__selected-all--label">{{ element.label }}</span>
-                            </template>
-                        </v-checkbox>
+                        <template v-if="element.type === 'selectAll'">
+                            <v-divider></v-divider>
+                            <v-checkbox
+                                v-model="selectAll"
+                                hide-details
+
+                            >
+                                <template v-slot:label>
+                                    <span class="the-form__selected-all--label">{{ element.label }}</span>
+                                </template>
+                            </v-checkbox>
+
+                        </template>
+
 
                         <v-checkbox
                             v-else
@@ -178,7 +183,7 @@ export default {
             });
         },
         mergeAllElements(element, base) {
-            let changed, newObj = Object.assign({}, base);
+            let changed, newObj = Object.assign({}, base), newElement = Object.assign({}, element);
 
             changed = Object.keys(element);
             changed.forEach(input => {
@@ -186,10 +191,10 @@ export default {
                     delete newObj[input];
                 }
                 if(input === 'rules') {
-                    newObj[input] = this.getRules(element.rules, element.label, element.counter);
+                    newElement[input] = this.getRules(element.rules, element.label, element.counter);
                 }
             })
-            return {...newObj, ...element};
+            return {...newObj, ...newElement};
         },
         close() {
             this.$emit('close-dialog')
@@ -234,7 +239,6 @@ export default {
         },
         inputChanged(name) {
             if(name in this.errors) {
-                console.log(name)
                 this.$emit('clear-error', name)
             }
         }
@@ -271,7 +275,9 @@ export default {
         font-family: $body-font-family;
         &__selected-all--label {
             color: var(--v-primary-base);
-            font-weight: 500;
+            text-transform: uppercase;
+            font-weight: 300;
+            font-size: 1.25rem;
         }
     }
 </style>

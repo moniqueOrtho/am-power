@@ -26,6 +26,11 @@ class Role extends Model
         return $this->permissions()->pluck('permission');
     }
 
+    public function getPermissionIdsAttribute()
+    {
+        return $this->permissions()->pluck('id');
+    }
+
     public function hasPermission($permission): bool
     {
         if (is_string($permission)) {

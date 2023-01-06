@@ -17,6 +17,16 @@ class Permission extends Model
         return $this->belongsToMany(Role::class);
     }
 
+    public function getRolesNameAttribute()
+    {
+        return $this->roles()->pluck('role');
+    }
+
+    public function getRoleIdsAttribute()
+    {
+        return $this->roles()->pluck('id');
+    }
+
     public static function findByName(string $name): Permission
     {
 
