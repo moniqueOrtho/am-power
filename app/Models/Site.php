@@ -55,4 +55,9 @@ class Site extends Model
     {
         return $this->hasMany(Page::class);
     }
+
+    public function getMemberIdsAttribute()
+    {
+        return $this->members()->pluck('id');
+    }
 }

@@ -16,7 +16,8 @@ class UserHasRole
      */
     public function handle(Request $request, Closure $next, $role)
     {
-        if(!auth()->check() && !auth()->user()->hasRole($role)) {
+
+        if(!auth()->check() || !auth()->user()->RoleName !== $role) {
             abort(403);
         }
 

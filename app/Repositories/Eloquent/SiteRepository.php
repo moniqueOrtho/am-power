@@ -11,4 +11,10 @@ class SiteRepository extends BaseRepository implements ISite
     {
         return Site::class;
     }
+
+    public function getAllMembers($siteId)
+    {
+        $record = $this->find($siteId);
+        return $record->memberIds;
+    }
 }

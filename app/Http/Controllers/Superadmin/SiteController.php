@@ -135,10 +135,8 @@ class SiteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        $deletedId = $this->sites->find($id);
-        $deletedId->sites()->detach();
+    public function destroy($id)    {
+
 
         $this->sites->delete($id);
 
