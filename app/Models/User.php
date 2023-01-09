@@ -82,15 +82,15 @@ class User extends Authenticatable
     public function hasRole($role, string $guard = null): bool
     {
         if (is_string($role)) {
-            return $this->role->where('role', $role)->count();
+            return $this->role()->where('role', $role)->count();
         }
 
         if (is_int($role)) {
-            return $this->role->where('id', $role)->count();
+            return $this->role()->where('id', $role)->count();
         }
 
         if ($role instanceof Role) {
-            return $this->role->where('id', $role->id)->count();
+            return $this->role()->where('id', $role->id)->count();
         }
     }
 
@@ -106,9 +106,9 @@ class User extends Authenticatable
         return $role->permissions()->pluck('permission');
     }
 
-    public function hasPermissionTo($permission, $role): bool
+    public function hasPermissionTo($permission): bool
     {
-        $permissionClass = new Permission; // $this->getModel();
+        $permissionClass = new Permission;
 
         if (is_string($permission)) {
 
@@ -127,11 +127,11 @@ class User extends Authenticatable
             throw new PermissionDoesNotExist;
         }
 
-        return $this->hasPermissionViaRole($permission, $role);
+        return $this->hasPermissionViaRole($permission, $this->role_id);
     }
 
     /**
-     * Determine if the model has, via roles, the given permission.
+     * Determine if the model has, via role, the given permission.
      *
      * @param Permission $permission
      *

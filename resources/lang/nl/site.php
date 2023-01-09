@@ -50,5 +50,7 @@ return [
     'descriptions' => 'Beschrijving|Beschrijvingen',
     'permissions_of_role' => 'De machtigingen van :role zijn:',
     'all' => 'Alle',
-    'roles_of_the_permission' => 'De rollen die aan de :permission machtiging zijn gekoppeld:'
+    'roles_of_the_permission' => 'De rollen die aan de :permission machtiging zijn gekoppeld:',
+    'icons' => 'Icoon|Iconen',
+    'titles' => 'Titel|Titels'
 ];

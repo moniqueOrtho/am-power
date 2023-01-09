@@ -40,7 +40,7 @@
             v-model="dialog"
             max-width="80vw"
         >
-            <template v-slot:activator="{ on }">
+            <template v-slot:activator="{ on }" v-if="defaultCrud.create">
                 <v-btn
                     color="primary"
                     dark
@@ -106,6 +106,7 @@
         class="mr-2"
         color="primary"
         @click="editItem(item)"
+        v-if="defaultCrud.update"
       >
         mdi-pencil
       </v-icon>
@@ -113,6 +114,7 @@
         small
         color="error"
         @click="deleteItem(item)"
+        v-if="defaultCrud.delete"
       >
         mdi-delete
       </v-icon>
@@ -193,10 +195,15 @@ export default {
         expand: {
             type: [Object, Boolean],
             default: false
+        },
+        crud: {
+            type: [Object, Boolean],
+            default: false
         }
     },
     created () {
         this.initialize();
+        this.crudActions();
     },
     data() {
         return {
@@ -218,6 +225,11 @@ export default {
                 singleExpand: true,
                 itemKey: 'id',
                 text: 'expand'
+            },
+            defaultCrud: {
+                create: true,
+                update: true,
+                delete: true
             }
 
         }
@@ -276,13 +288,21 @@ export default {
 
         setExpand() {
             if(this.expand) {
-                let keys = Object.keys(this.defaultExpand);
-                keys.forEach(key => {
-                    if(key in this.expand) {
-                        this.defaultExpand[key] = this.expand[key]
-                    }
-                })
+                this.setDefault(this.defaultExpand, this.expand);
             }
+        },
+        crudActions() {
+            if(this.crud) {
+                this.setDefault(this.defaultCrud, this.crud);
+            }
+        },
+        setDefault(def, prop) {
+            let keys= Object.keys(def);
+            keys.forEach(key => {
+                if(key in prop) {
+                    def[key] = prop[key];
+                }
+            })
         },
 
         newClicked() {

@@ -51,7 +51,7 @@ class UserController extends Controller
             ];
         });
 
-        return view('superadmin.users', ['data' => $result]);
+        return view('admin.users', ['data' => $result]);
     }
 
     /**

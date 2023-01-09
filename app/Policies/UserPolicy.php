@@ -30,7 +30,7 @@ class UserPolicy
      */
     public function view(User $user)
     {
-        return ($user->hasPermissionTo('view_users', $user['role_id']));
+        return ($user->hasPermissionTo('view_users'));
     }
 
     /**
@@ -41,7 +41,7 @@ class UserPolicy
      */
     public function create(User $user, Role $role)
     {
-        return ($user->hasPermissionTo('create_'. $role->role, $user['role_id']));
+        return ($user->hasPermissionTo('create_'. $role->role));
     }
 
     /**
@@ -53,7 +53,7 @@ class UserPolicy
      */
     public function update(User $user, Role $role)
     {
-        return ($user->hasPermissionTo('update_'. $role->role, $user['role_id']));
+        return ($user->hasPermissionTo('update_'. $role->role));
     }
 
     /**
@@ -65,7 +65,7 @@ class UserPolicy
      */
     public function delete(User $user, Role $role)
     {
-        return ($user->hasPermissionTo('delete_'. $role->role, $user['role_id']));
+        return ($user->hasPermissionTo('delete_'. $role->role));
     }
 
     /**
