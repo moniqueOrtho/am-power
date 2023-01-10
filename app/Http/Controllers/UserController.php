@@ -169,6 +169,12 @@ class UserController extends Controller
 
         $this->authorize('delete', [User::class, $role]);
 
+        $deletedId = $this->users->find($id);
+
+        if($deletedId->required) {
+            return response()->json(['message' =>  __('site.cannot_delete_item', ['item' => $deletedId->name]) ], 403);
+        }
+
         $this->users->delete($id);
         return response()->json(['response' => 1 ], 200);
     }

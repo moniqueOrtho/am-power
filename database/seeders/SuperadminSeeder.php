@@ -31,6 +31,7 @@ class SuperadminSeeder extends Seeder
             'password' => Hash::make('password'), // password
             'remember_token' => Str::random(10),
             'role_id' => $role->id,
+            'required' => true,
             'created_at' => $date,
             'updated_at' => $date
         ]);

@@ -25,7 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id'
+        'role_id',
+        'required'
     ];
 
     /**
@@ -50,10 +51,10 @@ class User extends Authenticatable
     // De site where the user belongs to
     public function sites()
     {
-        return $this->belongsToMany(Site::class);
+        return $this->belongsToMany(Site::class)->withTimestamps();
     }
 
-    public function ownedSite()
+    public function ownedSites()
     {
         return $this->sites()->where('owner_id', $this->id);
     }

@@ -12,6 +12,7 @@ use App\Http\Controllers\Superadmin\{
 };
 
 use App\Http\Controllers\{
+    PageController,
     SiteController,
     UserController
 };
@@ -58,4 +59,6 @@ Route::middleware(['auth'])->group( function () {
     Route::resource( strtolower(trans_choice('site.sites', 2)), SiteController::class)->names([
         'index' => 'sites'
     ])->only(['index', 'store', 'update', 'destroy']);
+
+    Route::get('/' . strtolower(trans_choice('site.pages', 2)) . '/{siteId}', [PageController:: class, 'index'] )->name('pages');
 });

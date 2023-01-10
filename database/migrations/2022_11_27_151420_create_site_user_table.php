@@ -17,6 +17,7 @@ class CreateSiteUserTable extends Migration
             $table->id();
             $table->foreignId('site_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->index(['site_id', 'user_id']);
             $table->timestamps();
         });
     }

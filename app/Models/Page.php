@@ -18,8 +18,8 @@ class Page extends Model
         'description',
         'slug',
         'icon',
-        'head_id',
-        'sub_order'
+        'sequence',
+        'required'
     ];
 
     public function site()

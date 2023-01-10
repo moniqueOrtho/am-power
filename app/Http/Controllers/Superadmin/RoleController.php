@@ -131,7 +131,13 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+
         $deletedId = $this->roles->find($id);
+
+        if($deletedId->required) {
+            return response()->json(['message' =>  __('site.cannot_delete_item', ['item' => $deletedId->role]) ], 403);
+        }
+
         $deletedId->permissions()->detach();
 
         $this->roles->delete($id);

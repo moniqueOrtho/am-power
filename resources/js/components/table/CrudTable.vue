@@ -1,133 +1,139 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="ownItems"
-    class="elevation-1 pa-4 crud-table"
-    :no-results-text="labels.noResultText"
-    :no-data-text="labels.noDataText"
-    :footer-props="{
-        'items-per-page-text' : labels.itemsPage
-    }"
-    :show-expand="lookForExpand"
-    :expanded.sync="expanded"
-    :single-expand="defaultExpand.singleExpand"
-    :item-key="defaultExpand.itemKey"
-    :search="search"
-  >
-    <template v-slot:top>
-      <close-alert
-        :alertColor="getAlertColor"
-        :alertMessage="getAlertMessage"
-        :type="getAlertType"
-        spacing="my-3"
-        :closeAction="true"
-      ></close-alert>
-      <v-toolbar
-        flat
-      >
-      <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          :label="labels.search"
-          single-line
-          hide-details
-        ></v-text-field>
-        <v-spacer></v-spacer>
-
-        <!-- This is the form dialog with button -->
-
-        <v-dialog
-            v-model="dialog"
-            max-width="80vw"
+    <div class="crud-table">
+        <div class="light1" v-if="tableSelect.title !== ''">
+            <h4 class="text-h4 navigation__title mb-0">{{tableSelect.title}}</h4>
+        </div>
+        <v-data-table
+        :headers="headers"
+        :items="ownItems"
+        class="elevation-1 pa-4 my-8"
+        :no-results-text="labels.noResultText"
+        :no-data-text="labels.noDataText"
+        :footer-props="{
+            'items-per-page-text' : labels.itemsPage
+        }"
+        :show-expand="lookForExpand"
+        :expanded.sync="expanded"
+        :single-expand="defaultExpand.singleExpand"
+        :item-key="defaultExpand.itemKey"
+        :search="search"
         >
-            <template v-slot:activator="{ on }" v-if="defaultCrud.create">
-                <v-btn
-                    color="primary"
-                    dark
-                    class="mb-2"
-                    v-on="on"
-                    @click="newClicked"
+            <template v-slot:top>
+            <close-alert
+                :alertColor="getAlertColor"
+                :alertMessage="getAlertMessage"
+                :type="getAlertType"
+                spacing="my-3"
+                :closeAction="true"
+            ></close-alert>
+            <v-toolbar
+                flat
+            >
+            <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                :label="labels.search"
+                single-line
+                hide-details
+                ></v-text-field>
+                <v-spacer></v-spacer>
+
+                <!-- This is the form dialog with button -->
+
+                <v-dialog
+                    v-model="dialog"
+                    max-width="80vw"
                 >
-                    {{labels.newItem}}
-                </v-btn>
+                    <template v-slot:activator="{ on }" v-if="defaultCrud.create">
+                        <v-btn
+                            color="primary"
+                            dark
+                            class="mb-2"
+                            v-on="on"
+                            @click="newClicked"
+                        >
+                            {{labels.newItem}}
+                        </v-btn>
+                    </template>
+
+                    <v-card :loading="dataLoading">
+                        <TheForm
+                        :default-item="editedItem"
+                        :formTitle="formTitle"
+                        :fields="fields"
+                        @close-dialog="close"
+                        @save-input="save"
+                        :labels="labels"
+                        :errors="errors"
+                        @clear-error="clearError"
+                        :reset-form="resetForm"
+                        />
+                    </v-card>
+                </v-dialog>
+
+                <!-- This is de delete dialog and is handled with the dialogDelete Method -->
+                <DeleteDialog
+                :dialogDelete="dialogDelete"
+                :title="deleteMessage"
+                :labels="labels"
+                @dialog-closed="dialogDeleteClosed"
+                @delete-confirmed="deleteItemConfirm"
+                />
+
+            </v-toolbar>
             </template>
 
-            <v-card :loading="dataLoading">
-                <TheForm
-                :default-item="editedItem"
-                :formTitle="formTitle"
-                :fields="fields"
-                @close-dialog="close"
-                @save-input="save"
-                :labels="labels"
-                :errors="errors"
-                @clear-error="clearError"
-                :reset-form="resetForm"
-                />
-            </v-card>
-        </v-dialog>
+            <!-- Make rank number bold -->
+            <template v-slot:item.rank="{ item }">
+                <td class="font-weight-bold">{{ item.rank }}</td>
+            </template>
 
-         <!-- This is de delete dialog and is handled with the dialogDelete Method -->
-        <DeleteDialog
-          :dialogDelete="dialogDelete"
-          :title="deleteMessage"
-          :labels="labels"
-          @dialog-closed="dialogDeleteClosed"
-          @delete-confirmed="deleteItemConfirm"
-        />
+            <template v-slot:expanded-item="{ headers, item }" v-if="lookForExpand">
+            <td :colspan="headers.length" v-html="expandText(item)">
+            </td>
+            </template>
 
-      </v-toolbar>
-    </template>
+            <!-- Icons on the table -->
+            <template v-slot:item.gender="{ item }">
+            <v-icon
 
-    <!-- Make rank number bold -->
-    <template v-slot:item.rank="{ item }">
-        <td class="font-weight-bold">{{ item.rank }}</td>
-    </template>
+                class="mr-2"
+                color="primary"
+            >
+                {{item.gender === 'male' ? 'mdi-gender-male' : 'mdi-gender-female'}}
+            </v-icon>
+            </template>
 
-    <template v-slot:expanded-item="{ headers, item }" v-if="lookForExpand">
-      <td :colspan="headers.length" v-html="expandText(item)">
-      </td>
-    </template>
+            <template v-slot:item.actions="{ item }">
+            <v-icon
+                small
+                class="mr-2"
+                color="primary"
+                @click="editItem(item)"
+                v-if="defaultCrud.update"
+            >
+                mdi-pencil
+            </v-icon>
+            <v-icon
+                small
+                color="error"
+                @click="deleteItem(item)"
+                v-if="defaultCrud.delete"
+            >
+                mdi-delete
+            </v-icon>
+            </template>
+            <!-- <template v-slot:no-data>
+            <v-btn
+                color="primary"
+                @click="initialize"
+            >
+                Reset
+            </v-btn>
+            </template> -->
+        </v-data-table>
+    </div>
 
-    <!-- Icons on the table -->
-    <template v-slot:item.gender="{ item }">
-      <v-icon
-
-        class="mr-2"
-        color="primary"
-      >
-        {{item.gender === 'male' ? 'mdi-gender-male' : 'mdi-gender-female'}}
-      </v-icon>
-    </template>
-
-    <template v-slot:item.actions="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        color="primary"
-        @click="editItem(item)"
-        v-if="defaultCrud.update"
-      >
-        mdi-pencil
-      </v-icon>
-      <v-icon
-        small
-        color="error"
-        @click="deleteItem(item)"
-        v-if="defaultCrud.delete"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
-    <!-- <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
-    </template> -->
-  </v-data-table>
 </template>
 
 <script>
@@ -199,6 +205,15 @@ export default {
         crud: {
             type: [Object, Boolean],
             default: false
+        },
+        tableSelect: {
+            type: Object,
+            default: () =>{
+                return {
+                title: '',
+                items: []
+                }
+            }
         }
     },
     created () {

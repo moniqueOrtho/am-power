@@ -20,9 +20,9 @@ class CreateSubpagesTable extends Migration
             $table->string('title', 250);
             $table->string('subtitle', 250)->nullable();
             $table->text('description')->nullable();
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('icon', 50);
-            $table->integer('sequence');
+            $table->integer('sequence')->default(0);
         });
     }
 

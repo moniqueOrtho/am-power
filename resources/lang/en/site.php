@@ -7,7 +7,7 @@ return [
     'login_welcome' => 'Login to :attribute',
     'email' => 'Email',
     'logout' => 'Log out',
-    'pages' => 'Page|Pages',
+    'pages' => 'Page|Pages|Pages',
     'posts' => 'Post|Posts',
     'sites' => 'Site|Sites',
     'roles' => 'Role|Roles',
@@ -52,5 +52,6 @@ return [
     'all' => 'All',
     'roles_of_the_permission' => 'The roles associated with the :permission permission:',
     'icons' => 'Icon|Icons',
-    'titles' => 'Title|Titles'
+    'titles' => 'Title|Titles',
+    'cannot_delete_item' => 'You cannot delete :item!'
 ];

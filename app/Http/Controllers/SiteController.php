@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SiteResource;
+use App\Repositories\Contracts\IPage;
 use App\Repositories\Contracts\IRole;
 use App\Repositories\Contracts\ISite;
 use App\Repositories\Contracts\IUser;
@@ -16,12 +17,15 @@ class SiteController extends Controller
     protected $sites;
     protected $users;
     protected $roles;
+    protected $pages;
+    protected $defaultPages = ['home', 'contact'];
 
-    public function __construct(ISite $sites, IUser $users, IRole $roles)
+    public function __construct(ISite $sites, IUser $users, IRole $roles, IPage $pages)
     {
        $this->sites = $sites;
        $this->users = $users;
        $this->roles = $roles;
+       $this->pages = $pages;
     }
 
     /**
@@ -98,6 +102,17 @@ class SiteController extends Controller
                 'colors' => $request['colors'] ?? null,
                 'owner_id'=> $request['owner_id']
             ]);
+
+            foreach ($this->defaultPages as $page) {
+                $this->pages->create([
+                    'site_id' => $newSite->id,
+                    'name' => $page,
+                    'title' => ucfirst($page),
+                    'slug' => $page == 'home' ? $newSite->slug : $newSite->slug . "/" . $page,
+                    'required' => true,
+                ]);
+            }
+
             return new SiteResource($newSite);
         } else {
             return response()->json(['message', __('site.input_not_valid')], 400);
@@ -153,6 +168,14 @@ class SiteController extends Controller
 
         // Authorize request
         $this->authorize('delete', Site::class);
+
+        // Find Pages and destroy
+        $pages = $this->pages->findWhere('site_id', $id);
+        if($pages) {
+            $pages->each(function ($page) {
+                $this->pages->delete($page->id);
+            });
+        }
 
         $this->sites->delete($id);
 

@@ -12,4 +12,10 @@ class RoleRepository extends BaseRepository implements IRole
     {
         return Role::class;
     }
+
+    public function isItemRequired($id)
+    {
+        $result = $this->find($id);
+        return $result->required;
+    }
 }

@@ -38,41 +38,38 @@
 
 @section('content')
 
-<div class="my-8">
-    <div class="am-container">
-        <crud-table
-            request="{{request()->route()->uri}}"
-            :headers=" {{ Js::from( $headers ) }}"
-            :items="{{ Js::from($data) }}"
-            :default-item=" {{ Js::from( $defaultItem ) }} "
-            :labels="{{ Js::from( [
-                'search' => __('site.search'),
-                'cancel' => __('site.cancel'),
-                'noResultText' => __('site.no result text'),
-                'noDataText' => __('site.no_data_text'),
-                'itemsPage' => __('site.items_per_p'),
-                'newItem' => trans_choice('site.new i', 2) . " " . trans_choice('site.sites', 1),
-                'editItem' => __('site.edit'),
-                'save' => __('site.save'),
-                'succesMessage' => __('site.succes_message'),
-                'updateMessage' => __('site.update_message'),
-                'required' => __('site.is_required'),
-                'emailInvalid' => __('site.email_invalid'),
-                'urlInvalid' => __('site.url_invalid'),
-                'maxCounter' => __('site.error_count_vue'),
-                'deleteMessage' => __('site.delete_message_vue'),
-                'deleteSuccessful' => __('site.delete_successful')
-            ]) }}"
-            :fields="{{ Js::from( $fields) }}"
-            :crud="{{ Js::from([
-                'create' => auth()->user()->hasPermissionTo('create_site'),
-                'update' => auth()->user()->hasPermissionTo('update_site'),
-                'delete' => auth()->user()->hasPermissionTo('delete_site'),
-            ])}}"
-        >
-        </crud-table>
-    </div>
-
+<div class="am-container">
+    <crud-table
+        request="{{request()->route()->uri}}"
+        :headers=" {{ Js::from( $headers ) }}"
+        :items="{{ Js::from($data) }}"
+        :default-item=" {{ Js::from( $defaultItem ) }} "
+        :labels="{{ Js::from( [
+            'search' => __('site.search'),
+            'cancel' => __('site.cancel'),
+            'noResultText' => __('site.no result text'),
+            'noDataText' => __('site.no_data_text'),
+            'itemsPage' => __('site.items_per_p'),
+            'newItem' => trans_choice('site.new i', 2) . " " . trans_choice('site.sites', 1),
+            'editItem' => __('site.edit'),
+            'save' => __('site.save'),
+            'succesMessage' => __('site.succes_message'),
+            'updateMessage' => __('site.update_message'),
+            'required' => __('site.is_required'),
+            'emailInvalid' => __('site.email_invalid'),
+            'urlInvalid' => __('site.url_invalid'),
+            'maxCounter' => __('site.error_count_vue'),
+            'deleteMessage' => __('site.delete_message_vue'),
+            'deleteSuccessful' => __('site.delete_successful')
+        ]) }}"
+        :fields="{{ Js::from( $fields) }}"
+        :crud="{{ Js::from([
+            'create' => auth()->user()->hasPermissionTo('create_site'),
+            'update' => auth()->user()->hasPermissionTo('update_site'),
+            'delete' => auth()->user()->hasPermissionTo('delete_site'),
+        ])}}"
+    >
+    </crud-table>
 </div>
 
 

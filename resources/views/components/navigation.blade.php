@@ -1,5 +1,7 @@
 @php
     use Illuminate\Support\Facades\Route;
+
+    $sites = auth()->user()->ownedSites;
     $navs = collect(
         [
             [
@@ -42,7 +44,7 @@
                 'name' => 'pages',
                 'perm'  => 'page',
                 'label' => trans_choice('site.pages', 2),
-                'link' => '#'
+                'link' => route('pages', ['siteId' => $sites->first()])
             ],
             [
                 'name' => 'posts',
@@ -120,11 +122,13 @@
             </nav>
 
     </div>
-    <div class="am-container">
 
+    @if ($route != 'pages' || $sites->count() <= 1)
+
+        <div class="am-container light1">
             <h4 class="text-h4 navigation__title mb-0">{{trans_choice('site.' . $route, 2)}}</h4>
-
-    </div>
+        </div>
+    @endif
 
     <div id="overlay">
         <v-overlay z-index="500">

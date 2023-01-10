@@ -19,6 +19,7 @@ class CreateSectionsTable extends Migration
             $table->string('title', 250);
             $table->string('subtitle', 250)->nullable();
             $table->json('body');
+            $table->string('icon', 50)->nullable();
             $table->morphs('sectionable');
             $table->timestamps();
         });

@@ -7,7 +7,7 @@ return [
     'login_welcome' => 'Log in op :attribute',
     'email' => 'E-mail',
     'logout' => 'Uitloggen',
-    'pages' => 'Pagina|Pagina\'s',
+    'pages' => 'Pagina|Pagina\'s|paginas',
     'posts' => 'Blog|Blogs',
     'sites' => 'Website|Websites',
     'roles' => 'Rol|Rollen',
@@ -52,5 +52,6 @@ return [
     'all' => 'Alle',
     'roles_of_the_permission' => 'De rollen die aan de :permission machtiging zijn gekoppeld:',
     'icons' => 'Icoon|Iconen',
-    'titles' => 'Titel|Titels'
+    'titles' => 'Titel|Titels',
+    'cannot_delete_item' => 'U kunt :item niet verwijderen!'
 ];

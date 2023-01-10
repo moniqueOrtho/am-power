@@ -19,15 +19,16 @@ class CreateRolesTable extends Migration
             $table->id();
             $table->string('role', 25)->unique();
             $table->text('description')->nullable();
+            $table->boolean('required')->default(false);
             $table->timestamps();
         });
 
         $date = Carbon::now()->format('Y-m-d H:i:s');
 
         DB::table('roles')->insert([
-            ['role' => 'superadmin', 'created_at' => $date, 'updated_at' => $date],
-            ['role' => 'admin', 'created_at' => $date, 'updated_at' => $date],
-            ['role' => 'subscriber', 'created_at' => $date, 'updated_at' => $date],
+            ['role' => 'subscriber', 'created_at' => $date, 'updated_at' => $date, 'required' => true],
+            ['role' => 'admin', 'created_at' => $date, 'updated_at' => $date, 'required' => true],
+            ['role' => 'superadmin', 'created_at' => $date, 'updated_at' => $date, 'required' => true]
         ]);
     }
 

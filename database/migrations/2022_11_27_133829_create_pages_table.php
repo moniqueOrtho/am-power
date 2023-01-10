@@ -20,8 +20,10 @@ class CreatePagesTable extends Migration
             $table->string('title', 250);
             $table->string('subtitle', 250)->nullable();
             $table->text('description')->nullable();
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('icon', 50)->nullable();
+            $table->integer('sequence')->default(0);
+            $table->boolean('required')->default(false);
             $table->timestamps();
         });
     }
