@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\PageResource;
 use App\Repositories\Contracts\IPage;
 use App\Repositories\Eloquent\Criteria\EagerLoad;
 use App\Repositories\Eloquent\Criteria\LatestFirst;
@@ -24,11 +25,15 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($siteId)
-    {
+    public function index(Request $request, $siteId)    {
+
         $result = $this->pages->withCriteria([
             new LatestFirst()
         ])->findWhere('site_id', $siteId);
+
+        if($request->ajax()) {
+            return PageResource::collection($result);
+        }
 
         $result = $result->map(function($page) {
             $data = [
@@ -44,6 +49,18 @@ class PageController extends Controller
             return $data;
         });
 
-        return view('admin.pages', ['data' => $result, 'siteId' => $siteId ]);
+        $sites = null;
+
+        if($siteId > 0) {
+            $ownSites = auth()->user()->ownedSites;
+            $sites = $ownSites->map(function ($site){
+                return [
+                    'text' => $site->title,
+                    'value' => $site->id
+                ];
+            });
+        }
+
+        return view('admin.pages', ['data' => $result, 'siteId' => $siteId, 'sites' => $sites ]);
     }
 }

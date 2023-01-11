@@ -12,14 +12,15 @@ class UserRepository extends BaseRepository implements IUser
         return User::class;
     }
 
-    public function findMembers($role)
+    public function findMembers($role, $siteId)
     {
         if(auth()->user()->hasRole('superadmin')) {
             return $this->findWhere('role_id', $role->id);
         } else {
             return $this->model
-                ->has('sites')
-                ->where('owner_id', auth()->user()->id)
+                ->whereHas('sites', function($query) use ($siteId) {
+                    $query->where('site_id', $siteId);
+                })
                 ->where('role_id', $role->id)
                 ->get();
         }

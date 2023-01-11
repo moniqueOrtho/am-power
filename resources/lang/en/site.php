@@ -8,6 +8,7 @@ return [
     'email' => 'Email',
     'logout' => 'Log out',
     'pages' => 'Page|Pages|Pages',
+    'pages_slug' => 'pages',
     'posts' => 'Post|Posts',
     'sites' => 'Site|Sites',
     'roles' => 'Role|Roles',

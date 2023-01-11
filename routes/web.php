@@ -52,13 +52,13 @@ Route::middleware(['auth', 'role:superadmin'])->group( function () {
 });
 
 Route::middleware(['auth'])->group( function () {
-    Route::resource(strtolower(trans_choice('site.users', 2)), UserController::class)->names([
-        'index' => 'users'
-    ])->only(['index', 'store', 'update', 'destroy']);
+    Route::resource(strtolower(trans_choice('site.users', 2)), UserController::class)->only(['store', 'update', 'destroy']);
 
     Route::resource( strtolower(trans_choice('site.sites', 2)), SiteController::class)->names([
         'index' => 'sites'
     ])->only(['index', 'store', 'update', 'destroy']);
 
-    Route::get('/' . strtolower(trans_choice('site.pages', 2)) . '/{siteId}', [PageController:: class, 'index'] )->name('pages');
+    Route::get('/' . strtolower(trans_choice('site.users', 2)) . '/{siteId}' , [UserController::class, 'index'] )->name('users');
+
+    Route::get('/' . __('site.pages_slug') . '/{siteId}' , [PageController::class, 'index'] )->name('pages');
 });

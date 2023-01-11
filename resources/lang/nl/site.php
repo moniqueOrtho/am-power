@@ -8,6 +8,7 @@ return [
     'email' => 'E-mail',
     'logout' => 'Uitloggen',
     'pages' => 'Pagina|Pagina\'s|paginas',
+    'pages_slug' => 'paginas',
     'posts' => 'Blog|Blogs',
     'sites' => 'Website|Websites',
     'roles' => 'Rol|Rollen',

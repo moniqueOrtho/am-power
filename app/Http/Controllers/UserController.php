@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\Contracts\IRole;
+use App\Repositories\Contracts\ISite;
 use App\Repositories\Contracts\IUser;
 use App\Repositories\Eloquent\Criteria\EagerLoad;
 use App\Repositories\Eloquent\Criteria\LatestFirst;
@@ -16,11 +17,13 @@ class UserController extends Controller
 
     protected $users;
     protected $roles;
+    protected $sites;
 
-    public function __construct(IUser $users, IRole $roles)
+    public function __construct(IUser $users, IRole $roles, ISite $sites)
     {
        $this->users = $users;
        $this->roles = $roles;
+       $this->sites = $sites;
     }
 
     /**
@@ -28,7 +31,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()    {
+    public function index($siteId)    {
 
 
         $this->authorize('view', User::class);
@@ -37,7 +40,7 @@ class UserController extends Controller
 
         $result = $this->users->withCriteria([
             new LatestFirst()
-        ])->findMembers($role);
+        ])->findMembers($role, $siteId);
 
         $result = $result->map(function($user) {
             return [

@@ -2,19 +2,20 @@
     use Illuminate\Support\Facades\Route;
 
     $sites = auth()->user()->ownedSites;
+
     $navs = collect(
         [
             [
                 'name' => 'admins',
                 'perm'  => 'admin',
                 'label' => trans_choice('site.admin', 2),
-                'link' => route('users')
+                'link' => route('users', ['siteId' => $sites->isNotEmpty() ? $sites->first() : 0])
             ],
             [
                 'name' => 'subscriber',
                 'perm'  => 'subscriber',
                 'label' => trans_choice('site.subscribers', 2),
-                'link' => route('users')
+                'link' => route('users', ['siteId' => $sites->isNotEmpty() ? $sites->first() : 0])
             ],
             [
                 'name' => 'sites',
@@ -44,7 +45,7 @@
                 'name' => 'pages',
                 'perm'  => 'page',
                 'label' => trans_choice('site.pages', 2),
-                'link' => route('pages', ['siteId' => $sites->first()])
+                'link' => route('pages', ['siteId' => $sites->isNotEmpty() ? $sites->first() : 0])
             ],
             [
                 'name' => 'posts',
@@ -124,7 +125,6 @@
     </div>
 
     @if ($route != 'pages' || $sites->count() <= 1)
-
         <div class="am-container light1">
             <h4 class="text-h4 navigation__title mb-0">{{trans_choice('site.' . $route, 2)}}</h4>
         </div>
