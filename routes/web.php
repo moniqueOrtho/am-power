@@ -54,6 +54,8 @@ Route::middleware(['auth', 'role:superadmin'])->group( function () {
 Route::middleware(['auth'])->group( function () {
     Route::resource(strtolower(trans_choice('site.users', 2)), UserController::class)->only(['store', 'update', 'destroy']);
 
+    Route::resource( __('site.pages_slug'), PageController::class)->only(['store', 'update', 'destroy']);
+
     Route::resource( strtolower(trans_choice('site.sites', 2)), SiteController::class)->names([
         'index' => 'sites'
     ])->only(['index', 'store', 'update', 'destroy']);

@@ -22,6 +22,7 @@ class PageResource extends JsonResource
             'description' => $this->description,
             'slug' => $this->slug,
             'icon' => $this->icon,
+            'expand' => '<p class="font-weight-bold py-2 mb-0 primary--text">' .$this->title . ':</p><p><span class="text-decoration-underline">'. trans_choice('site.subtitles', 1) . ':</span><span> ' . $this->subtitle . '</span></p><p><span class="text-decoration-underline">'. trans_choice('site.descriptions', 1) . ':</span><span> ' . $this->description . '</span></p>'
         ];
     }
 }

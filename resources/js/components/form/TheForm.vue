@@ -52,6 +52,25 @@
                             @input="inputChanged(element.name)"
                         ></v-text-field>
                     </template>
+                    <template v-if="element.input === 'textarea'">
+                        <v-textarea
+                            outlined
+                            v-model="inputValue[element.name]"
+                            :label="element.label"
+                            :tabindex="(index + 1)"
+                            clear-icon="mdi-eraser"
+                            :type="element.type"
+                            :rules="element.rules"
+                            :counter="element.counter"
+                            :row-height="element.rowHeight ? element.rowHeight : 15"
+                            :rows="element.rows ? element.rows : 2"
+                            clearable
+                            background-color="grey lighten-4"
+                            :required="element.required"
+                            :error-messages="element.name in errors ? errors[element.name][0] : '' "
+                            @input="inputChanged(element.name)"
+                        ></v-textarea>
+                    </template>
                     <template v-if="element.input === 'checkbox'">
                         <template v-if="element.type === 'selectAll'">
                             <v-divider></v-divider>

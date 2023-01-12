@@ -116,6 +116,16 @@
                 </v-icon>
                 </template>
 
+                <template v-slot:item.icon="{ item }">
+                    <v-icon
+
+                        class="mr-2"
+                        :color="item.icon !== null ? 'primary': 'grey1'"
+                    >
+                        {{item.icon !== null ? item.icon : 'mdi-help-circle'}}
+                    </v-icon>
+                </template>
+
                 <template v-slot:item.actions="{ item }">
                 <v-icon
                     small
@@ -226,7 +236,8 @@ export default {
                 title: '',
                 label: '',
                 items: [],
-                defaultInput: ''
+                defaultInput: '',
+                request: ''
                 }
             }
         }
@@ -410,6 +421,7 @@ export default {
         async store(data) {
             this.dataLoading = true;
             this.resetForm = false;
+            if(this.tableSelect.request !== '') data[this.tableSelect.request] = this.tableSwitch;
             this.resetMessages();
             try {
                     if (this.editedIndex > -1) {

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Policies\PagePolicy;
 use App\Policies\SitePolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -16,7 +17,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         User::class => UserPolicy::class,
-        Site::class => SitePolicy::class
+        Site::class => SitePolicy::class,
+        Page::class => PagePolicy::class
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 

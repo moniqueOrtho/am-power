@@ -61,8 +61,11 @@ class User extends Authenticatable
 
     public function isOwnerOfSite($site)
     {
+        if ($site instanceof Site) {
+            $site = $site->id;
+        }
         return (bool)$this->sites()
-                ->where('id', $site->id)
+                ->where('site_id', $site)
                 ->where('owner_id', $this->id)
                 ->count();
     }
