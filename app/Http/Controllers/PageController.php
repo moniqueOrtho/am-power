@@ -42,6 +42,7 @@ class PageController extends Controller
         $result = $result->map(function($page) {
             $data = [
                 'id' => $page->id,
+                'url' => '/' . strtolower(trans_choice('site.pages', 1)) . '/' . $page->id,
                 'name' => $page->name,
                 'title' => $page->title,
                 'subtitle' => $page->subtitle,
@@ -67,6 +68,19 @@ class PageController extends Controller
         }
 
         return view('admin.pages', ['data' => $result, 'siteId' => $siteId, 'sites' => $sites ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $page = $this->pages->find($id);
+
+        return view('admin.page', ['page' => $page]);
     }
 
     /**

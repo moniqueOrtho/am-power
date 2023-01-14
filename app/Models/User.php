@@ -146,5 +146,11 @@ class User extends Authenticatable
         return $permission->roles()->where('id', $roleId)->count();
     }
 
-
+    /**
+     * Get the images for a user
+     *
+     */
+    Public function images() {
+        return $this->hasMany(Image::class);
+    }
 }

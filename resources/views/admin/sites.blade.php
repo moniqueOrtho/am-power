@@ -1,7 +1,6 @@
 @extends('layouts.page')
 
 @php
-
     $headers = [
         [ 'text' => '#', 'value' => 'rank'],
         [ 'text' => trans_choice('site.themes', 1), 'value' => 'theme'],
@@ -13,6 +12,7 @@
     $defaultItem = [
         'theme' => '',
         'name' => '',
+        'title' => '',
         'slug' => '',
         'lang' => '',
     ];
@@ -20,6 +20,7 @@
     $fields = [
         [ 'name' => 'theme', 'label' => trans_choice('site.themes', 1), 'counter' => 20, 'rules' => ['required', 'max-counter'], 'required' => true ],
         [ 'name' => 'name', 'label' => trans_choice('site.names', 1) ],
+        [ 'name' => 'title', 'label' => trans_choice('site.titles', 1) ],
         [ 'name' => 'slug', 'label' => 'url', 'rules' => ['required', 'url'], 'required' => true ],
         [ 'name' => 'lang', 'label' => trans_choice('site.lang', 1), 'input' => 'select', 'rules' => 'required', 'items' => [['text' => 'EN', 'value' => 'en'], ['text' => 'NL', 'value' => 'nl']] ],
 

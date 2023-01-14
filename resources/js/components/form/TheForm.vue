@@ -145,7 +145,7 @@ export default {
         },
     },
     emits: ['close-dialog', 'save-input', 'clear-error'],
-    mounted() {
+    created() {
         this.initialize();
         this.setElements();
     },
@@ -177,7 +177,6 @@ export default {
         },
         setElements() {
             let inputs, searchResults, newObj;
-
             inputs = Object.keys(this.inputValue);
             inputs.forEach(input => {
                 newObj = Object.assign({}, this.defaultInput);

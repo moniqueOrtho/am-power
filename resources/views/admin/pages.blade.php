@@ -1,9 +1,15 @@
-@extends('layouts.page')
+@extends('layouts.edit')
 
 @section('content')
 
 <crud-table
     request="{{'/' . __('site.pages_slug')}}"
+    :crud="{{ Js::from([
+        'view' => auth()->user()->hasPermissionTo('create_page'),
+        'create' => auth()->user()->hasPermissionTo('create_page'),
+        'update' => auth()->user()->hasPermissionTo('update_page'),
+        'delete' => auth()->user()->hasPermissionTo('delete_page'),
+    ])}}"
     :headers=" {{ Js::from( [
             [ 'text' => '#', 'value' => 'rank'],
             [ 'text' => '', 'value' => 'data-table-expand'],
@@ -11,7 +17,7 @@
             [ 'text' => trans_choice('site.names', 1), 'value' => 'name'],
             [ 'text' => trans_choice('site.titles', 1), 'value' => 'title' ],
             [ 'text' => 'url', 'value' => 'slug'],
-            [ 'text' => trans_choice('site.actions', 2), 'value' => 'actions', 'sortable' => false]
+            [ 'text' => trans_choice('site.actions', 2), 'value' => 'actions', 'sortable' => false, 'align' => 'center']
         ]
     ) }}"
     :items="{{ Js::from($data) }}"

@@ -11,15 +11,17 @@ class Navigation extends Component
      * @var string open or closed
      */
      public $state;
+     public $header;
 
     /**
      * Create a new component instance.
      * @param string $state
      * @return void
      */
-    public function __construct($state )
+    public function __construct($state, $header)
     {
         $this->state = $state;
+        $this->header = $header;
     }
 
     /**

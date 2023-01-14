@@ -52,7 +52,9 @@ Route::middleware(['auth', 'role:superadmin'])->group( function () {
 });
 
 Route::middleware(['auth'])->group( function () {
-    Route::resource(strtolower(trans_choice('site.users', 2)), UserController::class)->only(['store', 'update', 'destroy']);
+    Route::resource(strtolower(trans_choice('site.users', 2)), UserController::class)->names([
+        'index' => 'users'
+    ])->only(['index', 'store', 'update', 'destroy']);
 
     Route::resource( __('site.pages_slug'), PageController::class)->only(['store', 'update', 'destroy']);
 
@@ -60,7 +62,9 @@ Route::middleware(['auth'])->group( function () {
         'index' => 'sites'
     ])->only(['index', 'store', 'update', 'destroy']);
 
-    Route::get('/' . strtolower(trans_choice('site.users', 2)) . '/{siteId}' , [UserController::class, 'index'] )->name('users');
+    Route::get('/' . strtolower(trans_choice('site.subscribers', 2)) . '/{siteId}' , [UserController::class, 'indexSubscribers'] )->name('subscribers');
 
     Route::get('/' . __('site.pages_slug') . '/{siteId}' , [PageController::class, 'index'] )->name('pages');
+
+    Route::get('/' . strtolower(trans_choice('site.pages', 1)) . '/{id}', [PageController::class, 'show']);
 });

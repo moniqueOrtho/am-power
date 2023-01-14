@@ -26,7 +26,7 @@
     <body>
         <v-app id="app">
             <div class="light2 am-fill-height">
-                <x-navigation state='open' :menu-button="true" />
+                <x-navigation state='open' :header="true" :menu-button="true" />
                 <v-main>
                     @yield('content')
                 </v-main>

@@ -16,6 +16,7 @@ class PageResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'url' => '/' . strtolower(trans_choice('site.pages', 1)) . '/' . $this->id,
             'name' => $this->name,
             'title' => $this->title,
             'subtitle' => $this->subtitle,

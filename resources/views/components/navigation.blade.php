@@ -9,13 +9,13 @@
                 'name' => 'admins',
                 'perm'  => 'admin',
                 'label' => trans_choice('site.admin', 2),
-                'link' => route('users', ['siteId' => $sites->isNotEmpty() ? $sites->first() : 0])
+                'link' => route('users')
             ],
             [
                 'name' => 'subscriber',
                 'perm'  => 'subscriber',
                 'label' => trans_choice('site.subscribers', 2),
-                'link' => route('users', ['siteId' => $sites->isNotEmpty() ? $sites->first() : 0])
+                'link' => route('subscribers', ['siteId' => $sites->isNotEmpty() ? $sites->first() : 0])
             ],
             [
                 'name' => 'sites',
@@ -124,7 +124,7 @@
 
     </div>
 
-    @if ($route != 'pages' || $sites->count() <= 1)
+    @if ( $header || $sites->count() <= 1 )
         <div class="am-container light1">
             <h4 class="text-h4 navigation__title mb-0">{{trans_choice('site.' . $route, 2)}}</h4>
         </div>

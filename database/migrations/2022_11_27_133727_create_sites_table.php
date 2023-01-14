@@ -23,6 +23,8 @@ class CreateSitesTable extends Migration
             $table->string('lang', 4)->default('nl');
             $table->string('theme', 50);
             $table->json('colors')->nullable();
+            $table->json('logo')->nullable();
+            $table->json('favicon')->nullable();
             $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();
         });

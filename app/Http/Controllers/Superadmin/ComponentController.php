@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Superadmin;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ComponentResource;
@@ -47,6 +48,10 @@ class ComponentController extends Controller
      */
     public function store(Request $request)
     {
+        //Automatically add theme to name
+        if(! Str::contains($request['name'], $request['theme'])) {
+          $request['name'] = $request['theme'] . $request['name'];
+        }
         // Validate request
         $validated = $this->validateRequest($request);
 
@@ -71,7 +76,12 @@ class ComponentController extends Controller
      */
     public function update(Request $request, $id)
     {
-         // Validate request
+        //Automatically add theme to name
+        if(! Str::contains($request['name'], $request['theme'])) {
+            $request['name'] = $request['theme'] . $request['name'];
+        }
+
+        // Validate request
          $validated = $this->validateRequest($request, $id);
 
          // Create User with relationships

@@ -40,8 +40,13 @@ class PermissionSeeder extends Seeder
             $date = Carbon::now()->format('Y-m-d H:i:s');
             $role = Role::where('role', $data['role'])->firstOrFail();
             foreach($data['permissions'] as $perm) {
-                $result = Permission::firstOrCreate(['permission'=> $perm, 'created_at' => $date, 'updated_at' => $date]);
-                $role->permissions()->attach($result->id);
+                $permissionClass = new Permission;
+                $permission = $permissionClass->where('permission', $perm)->first();
+                if($permission == null) {
+                    $permission = $permissionClass->create(['permission'=> $perm, 'created_at' => $date, 'updated_at' => $date]);
+                }
+
+                $role->permissions()->attach($permission->id);
             }
         });
     }

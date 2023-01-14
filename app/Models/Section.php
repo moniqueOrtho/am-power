@@ -13,8 +13,22 @@ class Section extends Model
         'name',
         'title',
         'subtitle',
-        'body'
+        'sequence',
+        'body',
+        'text',
+        'icon',
+        'sectionable_id',
+        'sectionable_type'
     ];
+
+     /**
+     * Get all the images for the section
+     *
+     */
+    public function images()
+    {
+        return $this->belongsToMany(Image::class);
+    }
 
     public function sectionable()
     {

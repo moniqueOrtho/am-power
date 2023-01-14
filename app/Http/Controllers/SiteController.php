@@ -45,8 +45,12 @@ class SiteController extends Controller
                 'theme' => $site->theme,
                 'id' => $site->id,
                 'name' => $site->name,
+                'title' => $site->title,
+                'subtitle' => $site->subtitle,
+                'description' => $site->description,
                 'slug' => $site->slug,
                 'lang' => $site->lang,
+                'colors' => $site->colors,
             ];
             if(auth()->user()->hasRole('superadmin')) {
                 $data['owner_name'] = $site->owner->name;
@@ -100,6 +104,8 @@ class SiteController extends Controller
                 'lang' => $request['lang'],
                 'theme' => $request['theme'] ?? null,
                 'colors' => $request['colors'] ?? null,
+                'logo' => $request['logo'] ?? null,
+                'favicon' => $request['favicon'] ?? null,
                 'owner_id'=> $request['owner_id']
             ]);
 
@@ -128,6 +134,8 @@ class SiteController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $site = $this->sites->find($id);
+
         // Authorize request
         $this->authorize('update', Site::class);
 
@@ -139,16 +147,19 @@ class SiteController extends Controller
 
             $updated = $this->sites->update($id, [
                 'name' => $request['name'],
-                'title' => $request['title'] ?? null,
-                'subtitle' => $request['subtitle'] ?? null,
-                'description' => $request['description'] ?? null,
+                'title' => $request['title'],
+                'subtitle' => $request['subtitle'],
+                'description' => $request['description'],
                 'slug' => $request['slug'],
                 'lang' => $request['lang'],
                 'theme' => $request['theme'],
-                'colors' => $request['colors'] ?? null
+                'colors' => $request['colors'],
+                'logo' => $request['logo'],
+                'favicon' => $request['favicon'],
+                'owner_id' => $request['owner_id'] ?? $site->owner_id
             ]);
-            if(isset($request['owner_id'])) {
-                $updated->users()->sync($request['owner_id']);
+            if(isset($request['owner_id']) && $site->owner_id != $request['owner_id']) {
+                $updated->members()->sync($request['owner_id']);
             }
 
             return new SiteResource($updated);
@@ -196,7 +207,9 @@ class SiteController extends Controller
             'slug' => ['required', 'string', 'not_regex:/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/', $url],
             'lang' => ['nullable', 'string', 'max:4'],
             'theme' => ['required', 'string', 'max:50'],
-            'colors' => ['json', 'nullable']
+            'colors' => ['json', 'nullable'],
+            'logo' => ['json', 'nullable'],
+            'favicon' => ['json', 'nullable']
         ]);
         return true;
     }

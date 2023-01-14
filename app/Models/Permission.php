@@ -27,6 +27,11 @@ class Permission extends Model
         return $this->roles()->pluck('id');
     }
 
+    public function permissionExist(string $name):bool
+    {
+        return self::where('permission', $name)->count();
+    }
+
     public static function findByName(string $name): Permission
     {
 

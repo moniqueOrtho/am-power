@@ -31,7 +31,32 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($siteId)    {
+    public function index()    {
+
+        $this->authorize('view', User::class);
+
+        $role = $this->getEditedRoles();
+
+        $result = $this->users->withCriteria([
+            new LatestFirst()
+        ])->findMembers($role, 0);
+
+        $result = $result->map(function($user) {
+            return [
+                'id' => $user->id,
+                'gender' => $user->gender,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => Carbon::parse($user->created_at)->format('d/m/Y')
+            ];
+        });
+
+        return view('admin.users', ['data' => $result]);
+    }
+
+    public function indexSubscribers($siteId)    {
 
 
         $this->authorize('view', User::class);

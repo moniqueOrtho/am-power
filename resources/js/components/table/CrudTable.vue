@@ -127,23 +127,34 @@
                 </template>
 
                 <template v-slot:item.actions="{ item }">
-                <v-icon
-                    small
-                    class="mr-2"
-                    color="primary"
-                    @click="editItem(item)"
-                    v-if="defaultCrud.update"
-                >
-                    mdi-pencil
-                </v-icon>
-                <v-icon
-                    small
-                    color="error"
-                    @click="deleteItem(item)"
-                    v-if="defaultCrud.delete"
-                >
-                    mdi-delete
-                </v-icon>
+                    <v-icon
+                        small
+                        class="mr-2"
+                        color="primary"
+                        @click="editItem(item)"
+                        v-if="defaultCrud.update"
+                    >
+                        mdi-pencil
+                    </v-icon>
+                    <v-btn
+                        v-if="defaultCrud.view"
+                        icon
+                        color="secondary"
+                        :href="item.url"
+                        x-small
+                        class="mr-2"
+                    >
+                        <v-icon>mdi-text-box-plus</v-icon>
+                    </v-btn>
+
+                    <v-icon
+                        small
+                        color="error"
+                        @click="deleteItem(item)"
+                        v-if="defaultCrud.delete"
+                    >
+                        mdi-delete
+                    </v-icon>
                 </template>
                 <!-- <template v-slot:no-data>
                 <v-btn
@@ -270,6 +281,7 @@ export default {
                 text: 'expand'
             },
             defaultCrud: {
+                view: false,
                 create: true,
                 update: true,
                 delete: true
@@ -353,6 +365,7 @@ export default {
         },
 
         editItem (item) {
+            console.log(item);
         this.editedIndex = this.ownItems.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
@@ -460,18 +473,16 @@ export default {
         async tableMustChange() {
             // console.log(`${this.request}/${this.tableSwitch}`); return;
             try {
-                const newData = await axios.get(`/${this.request}/${this.tableSwitch}`, {
+                const newData = await axios.get(`${this.request}/${this.tableSwitch}`, {
                     body: {},
                     headers: { "X-Requested-With": "XMLHttpRequest",
                     },
                 });
-                console.log(newData.data.data)
                 this.initialize(newData.data.data);
             } catch (error) {
                 console.log(error)
             }
-            console.log(this.request)
-        }
+        },
     },
     watch: {
         dialog (val) {

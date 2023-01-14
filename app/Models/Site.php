@@ -18,6 +18,8 @@ class Site extends Model
         'lang',
         'theme',
         'colors',
+        'logo',
+        'favicon',
         'owner_id'
     ];
 
