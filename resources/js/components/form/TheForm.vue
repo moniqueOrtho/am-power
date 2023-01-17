@@ -23,7 +23,7 @@
                             v-model="inputValue[element.name]"
                             outlined
                             :tabindex="(index + 1)"
-                            :items="element.items"
+                            :items="getItems(element.items)"
                             item-text="text"
                             item-value="value"
                             :label="element.label"
@@ -258,6 +258,16 @@ export default {
         inputChanged(name) {
             if(name in this.errors) {
                 this.$emit('clear-error', name)
+            }
+        }
+    },
+    computed: {
+        getItems() {
+            return (items) => {
+                if(typeof items === 'object') {
+                    items = Object.values(items);
+                }
+                return items;
             }
         }
     },

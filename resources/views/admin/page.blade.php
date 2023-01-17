@@ -4,6 +4,9 @@
 
 <h1>Dit is pagina {{$page->title}}</h1>
 <p>{{$page->description}}</p>
+<section-maker>
+
+</section-maker>
 
 
 

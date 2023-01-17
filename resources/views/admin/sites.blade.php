@@ -18,7 +18,7 @@
     ];
 
     $fields = [
-        [ 'name' => 'theme', 'label' => trans_choice('site.themes', 1), 'counter' => 20, 'rules' => ['required', 'max-counter'], 'required' => true ],
+        [ 'name' => 'theme', 'label' => trans_choice('site.themes', 1), 'input' => 'select', 'rules' => 'required', 'items' => $themes],
         [ 'name' => 'name', 'label' => trans_choice('site.names', 1) ],
         [ 'name' => 'title', 'label' => trans_choice('site.titles', 1) ],
         [ 'name' => 'slug', 'label' => 'url', 'rules' => ['required', 'url'], 'required' => true ],

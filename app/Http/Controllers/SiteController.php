@@ -76,7 +76,32 @@ class SiteController extends Controller
             });
         }
 
-        return view('admin.sites', ['data' => $result, 'admins' => $allAdmins ]);
+
+        $themes = collect(scandir( resource_path() . '/js/components/themes'));
+        $themes = $themes->filter(function($theme) {
+            return $theme != '.' && $theme != '..';
+        });
+
+        $themes = $themes->map( function($theme) {
+            return [
+                'text' => $theme,
+                'value' => $theme
+            ];
+        });
+
+        // $themes = [];
+        // $themes = scandir( resource_path() . '/js/components/themes');
+        // $themes = array_filter($themes, function($theme) {
+        //     return $theme != '.' && $theme != '..';
+        // });
+
+        // $themes = array_map( function($theme) {
+        //     return [
+        //         'text' => $theme,
+        //         'value' => $theme
+        //     ];
+        // }, $themes);
+        return view('admin.sites', ['data' => $result, 'admins' => $allAdmins, 'themes' => $themes ]);
     }
 
     /**
