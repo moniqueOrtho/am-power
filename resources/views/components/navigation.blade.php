@@ -36,12 +36,6 @@
                 'link' => route('permissions')
             ],
             [
-                'name' => 'components',
-                'perm'  => 'component',
-                'label' => trans_choice('site.components', 2),
-                'link' => route('components')
-            ],
-            [
                 'name' => 'pages',
                 'perm'  => 'page',
                 'label' => trans_choice('site.pages', 2),

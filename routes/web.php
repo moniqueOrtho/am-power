@@ -45,9 +45,6 @@ Route::middleware(['auth', 'role:superadmin'])->group( function () {
     Route::resource('permissions', PermissionController::class)->names([
         'index' => 'permissions'
     ])->only(['index', 'store', 'update', 'destroy']);
-    Route::resource('components', ComponentController::class)->names([
-        'index' => 'components'
-    ])->only(['index', 'store', 'update', 'destroy']);
 
 });
 

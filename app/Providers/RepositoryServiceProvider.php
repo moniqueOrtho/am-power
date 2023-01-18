@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\Contracts\{
-    IComponent,
     IPage,
     IPost,
     ISection,
@@ -16,7 +15,6 @@ use App\Repositories\Contracts\{
 };
 
 use App\Repositories\Eloquent\{
-    ComponentRepository,
     PageRepository,
     PostRepository,
     SectionRepository,
@@ -46,7 +44,6 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind(IComponent::class, ComponentRepository::class);
         $this->app->bind(IPage::class, PageRepository::class);
         $this->app->bind(IPost::class, PostRepository::class);
         $this->app->bind(ISection::class, SectionRepository::class);
