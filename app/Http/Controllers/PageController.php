@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\PageResource;
+use App\Http\Resources\ViewPageResource;
 use App\Repositories\Contracts\IPage;
 use App\Repositories\Contracts\ISite;
 use App\Repositories\Eloquent\Criteria\EagerLoad;
@@ -78,9 +79,15 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        $page = $this->pages->find($id);
+        $result = $this->pages->withCriteria([
+            new EagerLoad(['site', 'sections', 'subpages'])
+        ])->find($id);
 
-        return view('admin.page', ['page' => $page]);
+        $component = $result->site->theme;
+
+        $page = new ViewPageResource($result);
+
+        return view('admin.page', ['page' => $page, 'component' => $component]);
     }
 
     /**

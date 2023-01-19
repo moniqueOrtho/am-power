@@ -11,7 +11,7 @@ export default new Vuetify({
                 primary: '#8672C0',
                 //secondary: '#e78856',
                 secondary: '#E9B049', // sunray yellow
-                gold: '#C69963', // gold
+                tertiary: '#C69963', // gold
                 //secondary: '#533f8d', // donker paars
                 accent: '#15102c', //'#533f8d',
 

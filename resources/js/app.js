@@ -39,7 +39,8 @@ Vue.component('card-top', require('./components/cards/CardTop.vue').default);
 Vue.component('icon-input', require('./components/form/IconInput.vue').default);
 Vue.component('btn-pressed', require('./components/buttons/BtnPressed.vue').default);
 Vue.component('CrudTable', require('./components/table/CrudTable.vue').default);
-Vue.component('SectionMaker', require('./components/sections/SectionMaker.vue').default);
+Vue.component('chic', require('./components/sections/Chic.vue').default);
+Vue.component('playful', require('./components/sections/Playful.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

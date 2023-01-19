@@ -16,8 +16,10 @@
 @import 'components/page-curl';
 
 // Layouts
-@import 'layout/navigation';
 @import 'layout/layouts';
+@import 'layout/navigation';
+@import 'layout/typography';
+
 
 // Pages
 @import 'pages/login';

@@ -2,19 +2,12 @@
 
 @section('content')
 
-<h1>Dit is pagina {{$page->title}}</h1>
-<p>{{$page->description}}</p>
-<section-maker>
+    <component
+        is="{{$component}}"
+        :page="{{ Js::from($page) }}"
+    >
 
-</section-maker>
-
-
-
-
-
-
-
-
+    </component>
 
 @endsection
 

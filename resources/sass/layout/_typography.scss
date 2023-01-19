@@ -1,0 +1,24 @@
+%chic-heading {
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 400;
+}
+
+.chic__heading-1 {
+    @extend %chic-heading;
+}
+
+.chic__heading-2 {
+    @extend %chic-heading;
+}
+
+.chic__heading-3 {
+    @extend %chic-heading;
+}
+
+.chic__heading-4 {
+    @extend %chic-heading;
+    font-size: 1.25rem;
+
+    &--light { color: var(--v-light1-base) }
+    &--dark { color: var(--v-grey1-base) }
+}

@@ -24,7 +24,7 @@ class Page extends Model
 
     public function site()
     {
-        return BelongsTo(Site::class);
+        return $this->BelongsTo(Site::class);
     }
 
     public function subpages()
