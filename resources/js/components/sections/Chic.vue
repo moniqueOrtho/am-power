@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import ChicFeatures from './chic/ChicFeatures.vue';
+import ChicFeatures from './chic/TheFeatures.vue';
 export default {
     components: {ChicFeatures},
     props: {

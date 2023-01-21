@@ -18,7 +18,7 @@
             :dark="defaultFab.dark"
             :light="defaultFab.light"
             fab
-
+            @click="bigActivatorClicked"
             >
             <v-icon v-if="fab">{{ defaultFab.open }}</v-icon>
             <v-icon v-else>{{ defaultFab.closed }}</v-icon>
@@ -32,6 +32,7 @@
             :light="defaultFab.light"
             small
             :color="editor.color"
+            @click="actionsBtnClicked(editor)"
         >
             <v-icon>{{ editor.icon }}</v-icon>
         </v-btn>
@@ -68,15 +69,19 @@ export default {
         hover: {
             type: Boolean,
             default: false
-        }
+        },
     },
+    emits: ['big-activator', 'action-btn'],
     data() {
         return {
             defaultFab : { color: 'primary', open: 'mdi-close', closed: 'mdi-account-circle', dark: false, light: true },
             fab: false,
             defaultEditors: [
                 {name: 'add', color: 'accent', icon: 'mdi-plus'},
-                {name: 'delete', color: 'error', icon: 'mdi-delete'}
+                {name: 'delete', color: 'error', icon: 'mdi-delete'},
+                {name: 'title', color: 'primary', icon: 'mdi-format-annotation-plus'},
+                {name: 'subtitle', color: 'secondary', icon: 'mdi-subtitles'},
+                {name: 'view', color: 'success', icon: 'mdi-eye'},
             ],
             editors: [],
             right: false,
@@ -103,8 +108,13 @@ export default {
                 if(find) this.editors.push(find);
             })
         },
-    }
-
+        bigActivatorClicked() {
+            this.$emit('big-activator', this.fab);
+        },
+        actionsBtnClicked(data) {
+            this.$emit('action-btn', data);
+        }
+    },
 }
 </script>
 
