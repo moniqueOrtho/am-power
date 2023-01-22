@@ -56,7 +56,7 @@ export default {
         },
         direction: {
             type: String,
-            default: 'left'// Posibilities: 'right', 'bottom' and 'top'
+            default: 'right'// Posibilities: 'left', 'bottom' and 'top'
         },
         transition: {
             type: String,
@@ -74,7 +74,7 @@ export default {
     emits: ['big-activator', 'action-btn'],
     data() {
         return {
-            defaultFab : { color: 'primary', open: 'mdi-close', closed: 'mdi-account-circle', dark: false, light: true },
+            defaultFab : { color: 'primary', open: 'mdi-close', closed: 'mdi-pencil-box-multiple', dark: false, light: true },
             fab: false,
             defaultEditors: [
                 {name: 'add', color: 'accent', icon: 'mdi-plus'},

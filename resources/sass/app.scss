@@ -18,12 +18,14 @@
 // Layouts
 @import 'layout/layouts';
 @import 'layout/navigation';
-@import 'layout/typography';
 
 
 // Pages
 @import 'pages/login';
 
+// Themes
+@import 'themes/typography';
+@import 'themes/animations';
 
 
 

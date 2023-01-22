@@ -1,0 +1,33 @@
+.pulsate {
+    animation: pulsate 1s infinite;
+}
+
+@keyframes pulsate {
+    0% {
+        transform: scale(1);
+        box-shadow: none;
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 1rem 4rem rgba(var(--black), .25);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: none;
+    }
+}
+
+@-webkit-keyframes pulsate {
+    0% {
+        transform: scale(1);
+        box-shadow: none;
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 1rem 4rem rgba(var(--black), .25);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: none;
+    }
+}

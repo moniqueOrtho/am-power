@@ -413,6 +413,13 @@ $breakpoint argument choices
   transform: rotate(135deg);
 }
 
+.login {
+  font-family: "Lexend", arial, sans-serif !important;
+  background: url(/images/map.jpg?74416897048e39fc2423753904a122f4);
+  background-size: cover;
+  background-position: center;
+}
+
 .chic__heading-4, .chic__heading-3, .chic__heading-2, .chic__heading-1 {
   font-family: "Josefin Sans", sans-serif;
   font-weight: 400;
@@ -444,9 +451,21 @@ $breakpoint argument choices
   color: var(--v-grey1-base);
 }
 
-.login {
-  font-family: "Lexend", arial, sans-serif !important;
-  background: url(/images/map.jpg?74416897048e39fc2423753904a122f4);
-  background-size: cover;
-  background-position: center;
+.pulsate {
+  animation: pulsate 1s infinite;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 1rem 4rem rgba(var(--black), 0.25);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: none;
+  }
 }
