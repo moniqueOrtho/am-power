@@ -18,9 +18,9 @@
 </template>
 
 <script>
-import ChicFeatures from './chic/TheFeatures.vue';
+import TheFeatures from './chic/TheFeatures.vue';
 export default {
-    components: {ChicFeatures},
+    components: {TheFeatures},
     props: {
         page : {
             type: Object,
@@ -29,7 +29,7 @@ export default {
     },
     data() {
         return {
-            sections: ['ChicFeatures'],
+            sections: ['TheFeatures'],
             colors: {
                 primary: '#c69963',
                 //secondary: '#e78856',

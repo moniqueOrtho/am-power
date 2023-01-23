@@ -26,9 +26,7 @@
             :key="index"
             :id="feature.id"
             >
-            <button class="close-btn" @click="deleteItem">
-                <v-icon color="error" class="close-btn__icon">mdi-delete</v-icon>
-            </button>
+            <curl-btn :obj="feature" @curl-action="curlClicked"></curl-btn>
 
                 <v-menu
                     offset-y
@@ -56,12 +54,7 @@
                             hide-details
                         ></v-text-field>
                     </div>
-
-
                 </v-menu>
-
-
-
                 <h4 class="chic__heading-4 chic__heading-4--dark" contenteditable @blur="featureTitleIsChanged">{{ feature.title }}</h4>
                 <div class="feature-maker__text" contenteditable @blur="featureTextIsChanged">{{ feature.text }}</div>
             </div>
@@ -87,8 +80,9 @@
 <script>
 import ChicFeatures from "../../themes/chic/TheFeatures.vue";
 import EditorMenu from "../../tools/EditorMenu.vue";
+import CurlBtn from "../../buttons/CurlBtn.vue";
 export default {
-    components: {ChicFeatures, EditorMenu},
+    components: {ChicFeatures, EditorMenu, CurlBtn},
     created() {
         this.initialize();
     },
@@ -171,8 +165,12 @@ export default {
             if(index > -1) this.section.features[index]['text'] = e.target.innerText;
             this.changed = true;
         },
-        deleteItem() {
-
+        curlClicked(data) {
+            const index = this.section.features.findIndex(x => x.id === data.id);
+            if(index > -1) {
+                this.section.features.splice(index, 1);
+                this.changed = true;
+            }
         }
     }
 
@@ -241,65 +239,7 @@ export default {
         bottom: 1rem;
         right: 0;
     }
-    .close-btn {
-        position: absolute;
-        right: 0;
-        top: 0;
-        height: 2.4rem;
-        width: 2.4rem;
-        display: flex;
-        align-items: end;
-        justify-content: start;
-        border: none;
-        text-decoration: none;
-        background :
-		linear-gradient(
-			45deg,
-			#fff,
-			#f3f3f3 45%,
-			#ddd 50%,
-			#aaa 50%,
-			#bbb 56%,
-			#ccc 62%,
-			#f3f3f3 80%,
-			#fff 100%
-		);
-	    box-shadow : 0 0 10px rgba(0, 0, 0, .5);
-	    transition: all .5s ease;
-        &::before,
-        &::after {
-            content: '';
-            position: absolute;
-            z-index: -1;
-            left: 12.5%;
-            bottom: 5.8%;
-            width: 70%;
-            max-width: 300px;
-            max-height: 100px;
-            height: 55%;
-            box-shadow: 0 12px 15px rgba(0, 0, 0, .3);
-            transform: skew(-10deg) rotate(-6deg);
-        }
 
-        &::after {
-            left: auto;
-            right: 5.8%;
-            bottom: auto;
-            top: 14.16%;
-            transform: skew(-15deg) rotate(-84deg);
-        }
-
-        &:hover {
-            width: 3rem;
-            height: 3rem;
-        }
-        &:hover:before,
-        &:hover:after {
-            box-shadow: 0 24px 30px rgba(0, 0, 0, .3);
-        }
-
-
-    }
 
     [contenteditable] {
         outline: 0px solid transparent;
