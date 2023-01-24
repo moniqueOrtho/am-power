@@ -17,12 +17,10 @@ class CreateSectionsTable extends Migration
             $table->id();
             $table->integer('sequence')->default(0);
             $table->string('component');
-            $table->string('name', 50);
-            $table->string('title', 250);
+            $table->string('title', 250)->nullable();
             $table->string('subtitle', 250)->nullable();
             $table->json('body')->nullable();
-            $table->json('text');
-            $table->string('icon', 50)->nullable();
+            $table->longText('text')->nullable();
             $table->morphs('sectionable');
             $table->timestamps();
         });

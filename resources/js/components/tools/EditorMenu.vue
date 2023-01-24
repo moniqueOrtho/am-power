@@ -34,7 +34,10 @@
             :color="editor.color"
             @click="actionsBtnClicked(editor)"
         >
-            <v-icon>{{ editor.icon }}</v-icon>
+            <font-awesome-icon class="fa__icon" :icon="editor.icon" v-if="editor.icon.search('fa-') > -1" />
+
+            <v-icon v-if="editor.icon.search('mdi-')  > -1">{{ editor.icon }}</v-icon>
+            <span class="editor-menu__opp-icon" v-if="editor.opp"></span>
         </v-btn>
 
         </v-speed-dial>
@@ -77,11 +80,13 @@ export default {
             defaultFab : { color: 'primary', open: 'mdi-close', closed: 'mdi-pencil-box-multiple', dark: false, light: true },
             fab: false,
             defaultEditors: [
-                {name: 'add', color: 'accent', icon: 'mdi-plus'},
-                {name: 'delete', color: 'error', icon: 'mdi-delete'},
-                {name: 'title', color: 'primary', icon: 'mdi-format-annotation-plus'},
-                {name: 'subtitle', color: 'secondary', icon: 'mdi-subtitles'},
-                {name: 'view', color: 'success', icon: 'mdi-eye'},
+                {name: 'add', color: 'accent', icon: 'mdi-plus', opp: false},
+                {name: 'delete', color: 'error', icon: 'mdi-delete', opp: false},
+                {name: 'title', color: 'primary', icon: 'fas fa-heading', opp: false},
+                {name: 'no-title', color: 'primary', icon: 'fas fa-heading', opp: true},
+                {name: 'subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: false},
+                {name: 'no-subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: true},
+                {name: 'view', color: 'success', icon: 'mdi-eye', opp: false},
             ],
             editors: [],
             right: false,
@@ -115,12 +120,39 @@ export default {
             this.$emit('action-btn', data);
         }
     },
+    watch: {
+        actions() {
+            this.editors = [];
+            this.setActionbuttons();
+        }
+    }
 }
 </script>
 
-<style ang="scss" scoped>
-    .editor-menu {
+<style lang="scss" scoped>
+    .fa__icon {
+            font-size: 1.25rem;
+    }
 
+    .editor-menu {
+        &__opp-icon {
+            position: absolute;
+            top: -9px;
+            left: 0px;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            &::after {
+                content: "";
+                position: absolute;
+                top: 6px;
+                left: 35px;
+                border-top: 3px solid var(--v-light1-base);
+                width: 40px;
+                transform: rotate(135deg);
+                transform-origin: 0% 0%;
+            }
+        }
     }
 
 </style>

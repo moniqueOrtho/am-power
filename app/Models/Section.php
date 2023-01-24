@@ -10,13 +10,11 @@ class Section extends Model
     use HasFactory;
 
     protected $fillable=[
-        'name',
         'title',
         'subtitle',
         'sequence',
         'body',
         'text',
-        'icon',
         'sectionable_id',
         'sectionable_type'
     ];

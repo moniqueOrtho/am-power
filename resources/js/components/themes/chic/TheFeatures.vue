@@ -1,9 +1,9 @@
 <template>
     <section id="chic-features" class="chic-features">
         <div class="d-flex justify-center" v-if="title">
-            <h2 class="chic__heading-2 chic-features__heading">{{ title }}</h2>
+            <h2 class="chic__heading-2 chic-features__heading" :style="styleHeading">{{ title }}</h2>
         </div>
-        <div class="chic-features__container">
+        <div class="chic-features__container" :style="styleContainer">
             <div
             class="feature"
             v-for="(feature, index) in features"
@@ -36,6 +36,14 @@ export default {
     created() {
        this.initialize();
     },
+    computed: {
+        styleContainer() {
+            return this.title ? {margin: '0 0 9rem 0'} : {margin: '9rem 0'};
+        },
+        styleHeading() {
+            return this.title ? { margin: '4.5rem 0'} : {margin: '0 0 4.5rem 0'}
+        }
+    },
     methods: {
         initialize() {
             if('title' in this.section && this.section.title !== null) this.title = this.section.title;
@@ -52,7 +60,6 @@ export default {
         grid-column: center-start / center-end;
 
         &__container {
-            margin: 0 0 9rem 0;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
             grid-gap: 3.75rem;
@@ -60,7 +67,6 @@ export default {
         }
 
         &__heading {
-            margin: 4.5rem 0;
             border: 2px dotted transparent;
         }
 

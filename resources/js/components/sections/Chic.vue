@@ -6,7 +6,8 @@
         <component
             v-for="(section, index) in sections"
             :key="index"
-            :is="section"
+            :is="section.component"
+            :data="section"
         ></component>
         <div class="chic__item chic__item--5 primary">story pictures</div>
         <div class="chic__item chic__item--6 secondary">story content</div>
@@ -29,7 +30,9 @@ export default {
     },
     data() {
         return {
-            sections: ['TheFeatures'],
+            sections: [
+                {component: 'TheFeatures', title: null, subtitle: null, body: null, text: null}
+            ],
             colors: {
                 primary: '#c69963',
                 //secondary: '#e78856',

@@ -17,11 +17,11 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faUserSecret, faEye, faUserCircle, faEyeSlash, faKey, faCheck, faArrowRightFromBracket, faCircleCheck, faCircleExclamation, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faUserSecret, faEye, faUserCircle, faEyeSlash, faKey, faCheck, faArrowRightFromBracket, faCircleCheck, faCircleExclamation, faXmark, faHeading } from '@fortawesome/free-solid-svg-icons'
 
 
 /* add icons to the library */
-library.add(faUserSecret, faEye, faUserCircle, faKey, faEyeSlash, faCheck, faArrowRightFromBracket, faCircleCheck, faCircleExclamation, faXmark)
+library.add(faUserSecret, faEye, faUserCircle, faKey, faEyeSlash, faCheck, faArrowRightFromBracket, faCircleCheck, faCircleExclamation, faXmark, faHeading)
 
 /**
  * The following block of code may be used to automatically register your

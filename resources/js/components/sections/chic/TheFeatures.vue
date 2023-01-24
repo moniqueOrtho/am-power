@@ -2,7 +2,7 @@
     <div class="features-maker">
         <div class="editor-menu__container">
             <editor-menu
-            :actions="['add', 'title', 'subtitle']"
+            :actions="actions"
             :position="{top: true, right: false, bottom: false, left: true}"
             @big-activator="bigActivatorClicked"
             @action-btn="actionBtnClicked"
@@ -10,15 +10,10 @@
             </editor-menu>
         </div>
 
-        <div class="d-flex justify-center" v-if="maker">
-            <h2
-                class="chic__heading-2 features-maker__heading"
-                role="textbox"
-                contenteditable
-                @blur="titleIsChanged"
-            >{{ section.title }}</h2>
+        <div class="d-flex justify-center" v-if="maker && title">
+            <input type="text" placeholder="Title" v-model="section.title" class="chic__heading-2 features-maker__heading" :style="styleHeading">
         </div>
-        <div class="features-maker__container" v-if="maker">
+        <div class="features-maker__container" v-if="maker" :style="styleContainer">
             <div
 
             class="feature-maker"
@@ -62,7 +57,7 @@
 
 
         </div>
-        <ChicFeatures :section="section" v-else/>
+        <TheFeatures :section="section" v-else/>
         <div class="save-btn__container" v-if="changed && maker">
             <div class="pulsate" >
                 <v-fab-transition>
@@ -78,11 +73,17 @@
 </template>
 
 <script>
-import ChicFeatures from "../../themes/chic/TheFeatures.vue";
+import TheFeatures from "../../themes/chic/TheFeatures.vue";
 import EditorMenu from "../../tools/EditorMenu.vue";
 import CurlBtn from "../../buttons/CurlBtn.vue";
 export default {
-    components: {ChicFeatures, EditorMenu, CurlBtn},
+    components: {TheFeatures, EditorMenu, CurlBtn},
+    props: {
+        data: {
+            type: Object,
+            required: true
+        }
+    },
     created() {
         this.initialize();
     },
@@ -101,14 +102,34 @@ export default {
                 subtitle: null,
                 features: []
             },
-            changed: false
+            changed: false,
+            actions: ['add', 'title'],
+            title: false,
+            subtitle: false,
+        }
+    },
+    computed: {
+        styleContainer() {
+            return this.title ? {margin: '0 0 9rem 0'} : {margin: '9rem 0'};
+        },
+        styleHeading() {
+            let obj = this.title ? { margin: '4.5rem 0'} : {margin: '0 0 4.5rem 0'}
+            if(!this.data.title && this.section.title === 'Title') obj['color'] = '#A9A9AC'
+
+            return obj;
         }
     },
     methods: {
         initialize() {
-            this.section.title = 'Onze kracht';
-            this.title = true;
-            this.section.subtitle = null;
+            if(this.data.title) {
+                this.section.title = this.data.title;
+                this.title = true;
+            }
+            if(this.data.subtitle) {
+                this.section.subtitle = this.data.subtitle;
+                this.subtitle = true;
+            }
+
             this.section.features = [...this.features];
         },
         bigActivatorClicked(closed) {
@@ -124,8 +145,11 @@ export default {
                     this.addFeature();
                     break;
                 case 'title':
-                    this.addTitle();
+                    this.addTitle(action.name);
                     break;
+                case 'no-title':
+                    this.deleteTitle(action.name);
+                break;
                 case 'subtitle':
                     this.addSubtitle();
                     break;
@@ -141,9 +165,24 @@ export default {
             let feature = { id:`feature-${this.section.features.length}`, title: `feature ${this.section.features.length + 1}`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'};
             this.section.features.push(feature);
         },
-        addTitle() {
+        addTitle(title) {
+            this.title = true;
+            let index = this.actions.indexOf(title);
+            if(index > -1) {
+                this.$set(this.actions, index, 'no-title');
+            }
+        },
+        deleteTitle(title) {
+            this.title = false;
+            let index = this.actions.indexOf(title);
+            if(index > -1) {
+                this.$set(this.actions, index, 'title');
+            }
+            if(this.section.title) {
+                this.section.title = null;
+                this.changed = true;
+            }
 
-            this.changed = true;
         },
         addSubtitle() {
 
@@ -185,12 +224,12 @@ export default {
 
 
         &__heading {
-            margin: 4.5rem 0;
             border: 2px dotted var(--v-grey1-base);
+            height: 46px;
+            border-radius: 4px;
         }
 
         &__container {
-            margin: 0 0 9rem 0;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
             grid-auto-rows: min-content;
