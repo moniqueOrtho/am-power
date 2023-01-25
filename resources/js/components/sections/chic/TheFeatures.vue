@@ -6,12 +6,13 @@
             :position="{top: true, right: false, bottom: false, left: true}"
             @big-activator="bigActivatorClicked"
             @action-btn="actionBtnClicked"
+            :labels="labels"
             >
             </editor-menu>
         </div>
 
         <div class="d-flex justify-center" v-if="maker && title">
-            <input type="text" placeholder="Title" v-model="section.title" class="chic__heading-2 features-maker__heading" :style="styleHeading">
+            <input @focus="deleteFocus" type="text" placeholder="Title" v-model="section.title" class="features-maker__heading" :style="styleHeading">
         </div>
         <div class="features-maker__container" v-if="maker" :style="styleContainer">
             <div
@@ -20,6 +21,7 @@
             v-for="(feature, index) in section.features"
             :key="index"
             :id="feature.id"
+            @click="makerClicked(feature.id)"
             >
             <curl-btn :obj="feature" @curl-action="curlClicked"></curl-btn>
 
@@ -35,6 +37,7 @@
                         icon
                         v-bind="attrs"
                         v-on="on"
+                        @click="makerClicked(feature.id)"
                         >
                             <v-icon size="2.8rem">{{ feature.icon ? feature.icon : 'mdi-shape-plus' }}</v-icon>
                         </v-btn>
@@ -58,15 +61,21 @@
 
         </div>
         <TheFeatures :section="section" v-else/>
-        <div class="save-btn__container" v-if="changed && maker">
-            <div class="pulsate" >
-                <v-fab-transition>
-                <v-btn color="primary" fab dark >
-                    <v-icon> mdi-content-save </v-icon>
-                </v-btn>
-                </v-fab-transition>
-            </div>
-        </div>
+        <v-tooltip left v-if="changed && maker">
+            <template v-slot:activator="{ on, attrs }">
+                <div class="save-btn__container">
+                    <div class="pulsate" >
+                        <v-fab-transition>
+                        <v-btn color="primary" fab dark v-bind="attrs" v-on="on">
+                            <v-icon> mdi-content-save </v-icon>
+                        </v-btn>
+                        </v-fab-transition>
+                    </div>
+                </div>
+            </template>
+            <span>{{ this.labels.save }}</span>
+        </v-tooltip>
+
 
     </div>
 
@@ -82,6 +91,18 @@ export default {
         data: {
             type: Object,
             required: true
+        },
+        labels: {
+            type: Object,
+            default: () => {
+                return {
+                    feature: 'Feature',
+                    add: 'Add',
+                    title: 'Title',
+                    save: 'Save',
+                    noTitle: 'No title'
+                }
+            }
         }
     },
     created() {
@@ -91,11 +112,11 @@ export default {
         return {
             maker: false,
             features: [
-                {id:"feature-0", title: 'feature 1', icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'},
-                {id:"feature-1", title: 'feature 2', icon: '', text: 'Voluptatum mollitia quae. Vero ipsum sapiente molestias accusamus rerum sed a eligendi aut quia.'},
-                {id:"feature-2", title: 'feature 3', icon: '', text: 'Tenetur distinctio necessitatibus pariatur voluptatibus quidem consequatur harum.'},
-                {id:"feature-3", title: 'feature 4', icon: '', text: 'Vero ipsum sapiente molestias accusamus rerum. Lorem, ipsum dolor sit amet consectetur adipisicing elit.'},
-                {id:"feature-4", title: 'feature 5', icon: '', text: 'Quidem consequatur harum, voluptatum mollitia quae. Tenetur distinctio necessitatibus pariatur voluptatibus.'},
+                {id:"feature-0", title: `${this.labels.feature} 1`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'},
+                {id:"feature-1", title: `${this.labels.feature} 2`, icon: '', text: 'Voluptatum mollitia quae. Vero ipsum sapiente molestias accusamus rerum sed a eligendi aut quia.'},
+                {id:"feature-2", title: `${this.labels.feature} 3`, icon: '', text: 'Tenetur distinctio necessitatibus pariatur voluptatibus quidem consequatur harum.'},
+                {id:"feature-3", title: `${this.labels.feature} 4`, icon: '', text: 'Vero ipsum sapiente molestias accusamus rerum. Lorem, ipsum dolor sit amet consectetur adipisicing elit.'},
+                {id:"feature-4", title: `${this.labels.feature} 5`, icon: '', text: 'Quidem consequatur harum, voluptatum mollitia quae. Tenetur distinctio necessitatibus pariatur voluptatibus.'},
             ],
             section: {
                 title: null,
@@ -106,6 +127,7 @@ export default {
             actions: ['add', 'title'],
             title: false,
             subtitle: false,
+            focusedId: null
         }
     },
     computed: {
@@ -117,6 +139,14 @@ export default {
             if(!this.data.title && this.section.title === 'Title') obj['color'] = '#A9A9AC'
 
             return obj;
+        },
+        titleChanged() {
+            return this.section.title;
+        }
+    },
+    watch: {
+        titleChanged() {
+            this.changed = this.section.title.length > 0
         }
     },
     methods: {
@@ -133,10 +163,10 @@ export default {
             this.section.features = [...this.features];
         },
         bigActivatorClicked(closed) {
+            this.deleteFocus();
             this.maker = ! closed;
         },
         actionBtnClicked(action) {
-            console.log(action)
             switch (action.name) {
                 case 'view':
                     this.viewBtn();
@@ -161,18 +191,21 @@ export default {
             this.maker = false;
         },
         addFeature() {
+            this.deleteFocus();
             this.changed = true;
-            let feature = { id:`feature-${this.section.features.length}`, title: `feature ${this.section.features.length + 1}`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'};
+            let feature = { id:`feature-${this.section.features.length}`, title: `${this.labels.feature} ${this.section.features.length + 1}`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'};
             this.section.features.push(feature);
         },
         addTitle(title) {
             this.title = true;
+            this.deleteFocus();
             let index = this.actions.indexOf(title);
             if(index > -1) {
                 this.$set(this.actions, index, 'no-title');
             }
         },
         deleteTitle(title) {
+            this.deleteFocus();
             this.title = false;
             let index = this.actions.indexOf(title);
             if(index > -1) {
@@ -187,10 +220,6 @@ export default {
         addSubtitle() {
 
             his.changed = true;
-        },
-        titleIsChanged(e) {
-            this.section.title = e.target.innerText;
-            this.changed = true;
         },
         featureTitleIsChanged(e) {
             const feature = e.target.parentElement.id;
@@ -210,7 +239,22 @@ export default {
                 this.section.features.splice(index, 1);
                 this.changed = true;
             }
-        }
+        },
+        deleteFocus() {
+            if(this.focusedId) {
+                let old = document.getElementById(this.focusedId);
+                old.style.removeProperty('border');
+                old.style.removeProperty('box-shadow');
+            }
+        },
+        makerClicked(id) {
+            this.deleteFocus();
+            let newEl = document.getElementById(id);
+            newEl.style.cssText = `border: 1px solid var(--v-primary-base);
+                box-shadow: 0 0 3px var(--v-primary-base);`
+            this.focusedId = id;
+        },
+
     }
 
 
@@ -224,9 +268,33 @@ export default {
 
 
         &__heading {
+            font-family: "Josefin Sans", sans-serif;
+            font-weight: 400;
             border: 2px dotted var(--v-grey1-base);
             height: 46px;
             border-radius: 4px;
+            width: 50%;
+            font-size: 1.75rem;
+            text-align: center;
+            &::-webkit-input-placeholder {
+                font-family: "Josefin Sans", sans-serif;
+            }
+            &:-ms-input-placeholder {
+                font-family: "Josefin Sans", sans-serif;
+            }
+            &:-moz-placeholder {
+                font-family: "Josefin Sans", sans-serif;
+            }
+
+
+            &:focus {
+                outline-offset: 0px;
+                outline: none;
+                border: 1px solid var(--v-primary-base);
+                box-shadow: 0 0 3px var(--v-primary-base);
+                -moz-box-shadow: 0 0 3px var(--v-primary-base);
+                -webkit-box-shadow: 0 0 3px var(--v-primary-base);
+            }
         }
 
         &__container {

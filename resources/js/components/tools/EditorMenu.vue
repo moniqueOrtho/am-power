@@ -24,21 +24,35 @@
             <v-icon v-else>{{ defaultFab.closed }}</v-icon>
             </v-btn>
         </template>
-        <v-btn
+        <v-tooltip
+            :bottom="position.top && (direction === 'right' || direction === 'left')"
+            :top="position.bottom && (direction === 'right' || direction === 'left')"
+            :left="position.right && (direction === 'top' || direction === 'bottom')"
+            :right="position.left && (direction === 'top' || direction === 'bottom')"
             v-for="(editor, index) in editors"
             :key="index"
-            fab
-            :dark="defaultFab.dark"
-            :light="defaultFab.light"
-            small
-            :color="editor.color"
-            @click="actionsBtnClicked(editor)"
         >
-            <font-awesome-icon class="fa__icon" :icon="editor.icon" v-if="editor.icon.search('fa-') > -1" />
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn
 
-            <v-icon v-if="editor.icon.search('mdi-')  > -1">{{ editor.icon }}</v-icon>
-            <span class="editor-menu__opp-icon" v-if="editor.opp"></span>
-        </v-btn>
+                    fab
+                    :dark="defaultFab.dark"
+                    :light="defaultFab.light"
+                    small
+                    :color="editor.color"
+                    @click="actionsBtnClicked(editor)"
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                    <font-awesome-icon class="fa__icon" :icon="editor.icon" v-if="editor.icon.search('fa-') > -1" />
+
+                    <v-icon v-if="editor.icon.search('mdi-')  > -1">{{ editor.icon }}</v-icon>
+                    <span class="editor-menu__opp-icon" v-if="editor.opp"></span>
+                </v-btn>
+            </template>
+            <span>{{ editor.tip }}</span>
+        </v-tooltip>
+
 
         </v-speed-dial>
     </div>
@@ -73,6 +87,18 @@ export default {
             type: Boolean,
             default: false
         },
+        labels: {
+            type: Object,
+            default: () => {
+                return {
+                    feature: 'Feature',
+                    add: 'Add',
+                    title: 'Title',
+                    save: 'Save',
+                    noTitle: 'No title'
+                }
+            }
+        }
     },
     emits: ['big-activator', 'action-btn'],
     data() {
@@ -80,10 +106,10 @@ export default {
             defaultFab : { color: 'primary', open: 'mdi-close', closed: 'mdi-pencil-box-multiple', dark: false, light: true },
             fab: false,
             defaultEditors: [
-                {name: 'add', color: 'accent', icon: 'mdi-plus', opp: false},
+                {name: 'add', color: 'accent', icon: 'mdi-plus', opp: false, tip: this.labels.add},
                 {name: 'delete', color: 'error', icon: 'mdi-delete', opp: false},
-                {name: 'title', color: 'primary', icon: 'fas fa-heading', opp: false},
-                {name: 'no-title', color: 'primary', icon: 'fas fa-heading', opp: true},
+                {name: 'title', color: 'primary', icon: 'fas fa-heading', opp: false, tip: this.labels.title},
+                {name: 'no-title', color: 'primary', icon: 'fas fa-heading', opp: true, tip: this.labels.noTitle},
                 {name: 'subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: false},
                 {name: 'no-subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: true},
                 {name: 'view', color: 'success', icon: 'mdi-eye', opp: false},

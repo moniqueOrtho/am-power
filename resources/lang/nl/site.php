@@ -54,6 +54,9 @@ return [
     'roles_of_the_permission' => 'De rollen die aan de :permission machtiging zijn gekoppeld:',
     'icons' => 'Icoon|Iconen',
     'titles' => 'Titel|Titels',
+    'no_title' => 'Geen titel',
     'cannot_delete_item' => 'U kunt :item niet verwijderen!',
-    'subtitles' => 'Ondertitel|Ondertitels'
+    'subtitles' => 'Ondertitel|Ondertitels',
+    'features' => 'Kenmerk|Kenmerken',
+    'add' => 'Toevoegen'
 ];

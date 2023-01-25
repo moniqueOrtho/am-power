@@ -8,6 +8,7 @@
             :key="index"
             :is="section.component"
             :data="section"
+            :labels="labels"
         ></component>
         <div class="chic__item chic__item--5 primary">story pictures</div>
         <div class="chic__item chic__item--6 secondary">story content</div>
@@ -26,13 +27,22 @@ export default {
         page : {
             type: Object,
             required: true
+        },
+        labels: {
+            type: Object,
+            default: () => {
+                return {
+                    feature: 'Feature',
+                    add: 'Add',
+                    title: 'Title',
+                    save: 'Save',
+                    noTitle: 'No title'
+                }
+            }
         }
     },
     data() {
         return {
-            sections: [
-                {component: 'TheFeatures', title: null, subtitle: null, body: null, text: null}
-            ],
             colors: {
                 primary: '#c69963',
                 //secondary: '#e78856',
@@ -44,7 +54,7 @@ export default {
 
                 grey1: '#54483A',
                 grey2: '#6D5D4B',
-            }
+            },
         }
     },
     created() {
@@ -57,6 +67,13 @@ export default {
             keys.forEach(key => {
                 this.$vuetify.theme.themes.light[key] = this.colors[key];
             });
+        }
+    },
+    computed: {
+        sections() {
+            return [
+                {component: 'TheFeatures', title: null, subtitle: null, body: null, text: null}
+            ]
         }
     }
 

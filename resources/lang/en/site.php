@@ -54,6 +54,9 @@ return [
     'roles_of_the_permission' => 'The roles associated with the :permission permission:',
     'icons' => 'Icon|Icons',
     'titles' => 'Title|Titles',
+    'no_title' => 'No Title',
     'cannot_delete_item' => 'You cannot delete :item!',
-    'subtitles' => 'Subtitle|Subtitles'
+    'subtitles' => 'Subtitle|Subtitles',
+    'features' => 'Feature|Features',
+    'add' => 'Add'
 ];
