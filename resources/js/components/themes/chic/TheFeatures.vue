@@ -57,7 +57,6 @@ export default {
 
 <style lang="scss" scoped>
     .chic-features {
-        grid-column: center-start / center-end;
 
         &__container {
             display: grid;

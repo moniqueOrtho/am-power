@@ -1,28 +1,29 @@
 <template>
-    <div class="chic light1">
-        <div class="chic__item chic__item--1 primary">sidebar</div>
-        <div class="chic__item chic__item--2 grey1">header</div>
-        <div class="chic__item chic__item--3 tertiary">realtors</div>
+    <div class="chic white">
         <component
-            v-for="(section, index) in sections"
-            :key="index"
+            v-for="(section, index) in sections" :key="index"
             :is="section.component"
             :data="section"
             :labels="labels"
+            :class="section.class"
         ></component>
-        <div class="chic__item chic__item--5 primary">story pictures</div>
-        <div class="chic__item chic__item--6 secondary">story content</div>
-        <div class="chic__item chic__item--7 tertiary">homes</div>
-        <div class="chic__item chic__item--8 grey1">gallery</div>
-        <div class="chic__item chic__item--9 tertiary">footer</div>
     </div>
 
 </template>
 
 <script>
 import TheFeatures from './chic/TheFeatures.vue';
+import ContentRight from '../themes/chic/ContentRight.vue';
+import PicturesLeft from '../themes/chic/PicturesLeft.vue';
+import TheFooter from '../themes/chic/TheFooter.vue';
+import HeaderOne from '../themes/chic/HeaderOne.vue';
+import HeaderTwo from '../themes/chic/HeaderTwo.vue';
+import TheGallery from '../themes/chic/TheGallery.vue';
+import TheHomes from '../themes/chic/TheHomes.vue';
+import TheSidebar from '../themes/chic/TheSidebar.vue';
+
 export default {
-    components: {TheFeatures},
+    components: {TheFeatures, ContentRight, PicturesLeft, TheFooter, HeaderOne, HeaderTwo, TheGallery, TheHomes, TheSidebar},
     props: {
         page : {
             type: Object,
@@ -43,6 +44,17 @@ export default {
     },
     data() {
         return {
+            sections: [
+                {component: 'TheSidebar', class:'chic__item chic__the-sidebar primary', title: null, subtitle: null, body: null, text: null},
+                {component: 'HeaderOne', class:'chic__item chic__header-one grey1', title: null, subtitle: null, body: null, text: null},
+                {component: 'HeaderTwo', class:'chic__item chic__header-two tertiary', title: null, subtitle: null, body: null, text: null},
+                {component: 'TheFeatures', class:'chic__the-features', title: null, subtitle: null, body: null, text: null},
+                {component: 'PicturesLeft', class:'chic__pictures-left primary', title: null, subtitle: null, body: null, text: null},
+                {component: 'ContentRight', class:'chic__content-right light1', title: null, subtitle: null, body: null, text: null},
+                {component: 'TheHomes', class:'chic__item chic__the-homes tertiary', title: null, subtitle: null, body: null, text: null},
+                {component: 'TheGallery', class:'chic__item chic__the-gallery grey1', title: null, subtitle: null, body: null, text: null},
+                {component: 'TheFooter', class:'chic__item chic__the-footer tertiary', title: null, subtitle: null, body: null, text: null},
+            ],
             colors: {
                 primary: '#c69963',
                 //secondary: '#e78856',
@@ -69,13 +81,6 @@ export default {
             });
         }
     },
-    computed: {
-        sections() {
-            return [
-                {component: 'TheFeatures', title: null, subtitle: null, body: null, text: null}
-            ]
-        }
-    }
 
 }
 </script>
@@ -87,44 +92,48 @@ export default {
         grid-template-rows: 80vh auto 40vw repeat(3, min-content);
         grid-template-columns: [sidebar-start] 5rem [sidebar-end full-start] minmax(3.75rem, 1fr) [center-start] repeat(8, [col-start] minmax(min-content, 9rem)  [col-end]) [center-end] minmax(3.75rem, 1fr) [full-end];
 
+        &__the-sidebar {
+            grid-column: sidebar-start / sidebar-end;
+            grid-row: 1 / -1;
+        }
+
+        &__header-one {
+            grid-column: full-start / col-end 6;
+        }
+
+        &__header-two {
+            grid-column: col-start 7 / full-end;
+        }
+
+        &__the-features {
+                grid-column: center-start / center-end;
+            }
+
+        &__pictures-left {
+            grid-column: full-start / col-end 4;
+        }
+
+        &__content-right {
+            grid-column: col-start 5 / full-end;
+        }
+
+        &__the-homes {
+            grid-column: center-start / center-end;
+        }
+
+        &__the-gallery {
+            grid-column: full-start / full-end;
+        }
+
+        &__the-footer {
+            grid-column: full-start / full-end;
+        }
+
+
+
         &__item {
             padding: 40px;
             font-size: 2rem;
-            &--1 {
-                grid-column: sidebar-start / sidebar-end;
-                grid-row: 1 / -1;
-            }
-
-            &--2 {
-                grid-column: full-start / col-end 6;
-
-            }
-
-            &--3 {
-                grid-column: col-start 7 / full-end;
-
-            }
-
-            &--5 {
-                grid-column: full-start / col-end 4;
-
-            }
-
-            &--6 {
-                grid-column: col-start 5 / full-end;
-
-            }
-
-            &--7 {
-                grid-column: center-start / center-end;
-
-            }
-
-            &--8,
-            &--9 {
-                grid-column: full-start / full-end;
-
-            }
 
         }
     }

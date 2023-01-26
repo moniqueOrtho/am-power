@@ -263,7 +263,6 @@ export default {
 
 <style lang="scss" scoped>
     .features-maker {
-        grid-column: center-start / center-end;
         position: relative;
 
 

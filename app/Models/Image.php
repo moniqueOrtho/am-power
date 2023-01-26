@@ -11,7 +11,7 @@ class Image extends Model
 
     protected $fillable = [
         'user_id',
-        'src',
+        'name',
         'alt',
         'upload_successful',
         'disk'
@@ -26,12 +26,4 @@ class Image extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get all the sections for the image
-     *
-     */
-    public function sections()
-    {
-        return $this->belongsToMany(Section::class);
-    }
 }

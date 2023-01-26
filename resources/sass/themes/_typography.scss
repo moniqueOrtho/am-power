@@ -27,11 +27,24 @@
 
 .chic__heading-3 {
     @extend %chic-heading;
+    font-size: 1rem;
+    color: var(--v-primary-base);
+    text-transform: uppercase;
 }
 
 .chic__heading-4 {
     @extend %chic-heading;
     font-size: 1.25rem;
+
+    &--light { color: var(--v-light1-base) }
+    &--dark { color: var(--v-grey1-base) }
+}
+
+.chic__subheading-2 {
+    @extend %chic-heading;
+    font-size: 2.5rem;
+    font-style: italic;
+    line-height: 1;
 
     &--light { color: var(--v-light1-base) }
     &--dark { color: var(--v-grey1-base) }

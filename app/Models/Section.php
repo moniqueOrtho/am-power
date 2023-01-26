@@ -19,15 +19,6 @@ class Section extends Model
         'sectionable_type'
     ];
 
-     /**
-     * Get all the images for the section
-     *
-     */
-    public function images()
-    {
-        return $this->belongsToMany(Image::class);
-    }
-
     public function sectionable()
     {
         return $this->morphTo();

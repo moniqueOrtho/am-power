@@ -420,7 +420,25 @@ $breakpoint argument choices
   background-position: center;
 }
 
-.chic__heading-4, .chic__heading-3, .chic__heading-2, .chic__heading-1 {
+.pulsate {
+  animation: pulsate 1s infinite;
+}
+
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 1rem 4rem rgba(var(--black), 0.25);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+}
+.chic__subheading-2, .chic__heading-4, .chic__heading-3, .chic__heading-2, .chic__heading-1 {
   font-family: "Josefin Sans", sans-serif;
   font-weight: 400;
 }
@@ -441,6 +459,12 @@ $breakpoint argument choices
     border-top: 1px solid var(--v-grey1-base);
   }
 }
+.chic__heading-3 {
+  font-size: 1rem;
+  color: var(--v-primary-base);
+  text-transform: uppercase;
+}
+
 .chic__heading-4 {
   font-size: 1.25rem;
 }
@@ -451,21 +475,29 @@ $breakpoint argument choices
   color: var(--v-grey1-base);
 }
 
-.pulsate {
-  animation: pulsate 1s infinite;
+.chic__subheading-2 {
+  font-size: 2.5rem;
+  font-style: italic;
+  line-height: 1;
+}
+.chic__subheading-2--light {
+  color: var(--v-light1-base);
+}
+.chic__subheading-2--dark {
+  color: var(--v-grey1-base);
 }
 
-@keyframes pulsate {
-  0% {
-    transform: scale(1);
-    box-shadow: none;
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 1rem 4rem rgba(var(--black), 0.25);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: none;
-  }
+.chic__btn {
+  background-color: var(--v-primary-base);
+  color: white;
+  border: none;
+  border-radius: 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  padding: 1.125rem 1.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chic__btn:hover {
+  background-color: var(--v-secondary-base);
 }
