@@ -3,9 +3,13 @@
         <component
             v-for="(section, index) in sections" :key="index"
             :is="section.component"
+            :sequence="index"
             :data="section"
             :labels="labels"
             :class="section.class"
+            :succes-message="succesIndex === index ? labels.sectionSaved : ''"
+            :error-message="errorIndex === index ? labels.sectionNotSaved : ''"
+            @save-section="saveSection"
         ></component>
     </div>
 
@@ -37,7 +41,9 @@ export default {
                     add: 'Add',
                     title: 'Title',
                     save: 'Save',
-                    noTitle: 'No title'
+                    noTitle: 'No title',
+                    sectionSaved: 'Section has been saved successful!',
+                    sectionNotSaved: 'Paragraph has not been saved'
                 }
             }
         }
@@ -67,11 +73,14 @@ export default {
                 grey1: '#54483A',
                 grey2: '#6D5D4B',
             },
+            succesIndex: -1,
+            errorIndex: -1
         }
     },
     created() {
-        console.log(this.page);
+        //console.log(this.page);
         this.setColors();
+        this.setSections();
     },
     methods: {
         setColors() {
@@ -79,8 +88,50 @@ export default {
             keys.forEach(key => {
                 this.$vuetify.theme.themes.light[key] = this.colors[key];
             });
+        },
+        setSections() {
+            let index, keys, section;
+            if(Object.keys(this.page.sections).length > 0) {
+                for(index in this.page.sections) {
+                    section = this.page.sections[index]
+                    keys = Object.keys(section);
+                    keys.forEach(k => {
+                        this.sections[this.page.sections[index].sequence][k] = section[k];
+                    })
+                }
+            }
+        },
+        resetMessages() {
+            this.succesIndex = -1;
+            this.errorIndex = -1;
+        },
+        setSavedSection(data, key) {
+            let index = this.sections.findIndex(s => s[key] === data[key])
+            this.sections[index] = data;
+        },
+        async saveSection(section) {
+            this.resetMessages();
+            let newSection;
+            newSection = Object.assign({}, section);
+
+            try {
+                if(section.id) {
+                    const updated = await axios.put(`/sections/${section.id}`, newSection);
+                    this.succesIndex = stored.sequence;
+                    this.setSavedSection(updated, 'id');
+                } else {
+                    const stored = await axios.post(`/pages/${this.page.id}/sections`, newSection);
+                    this.succesIndex = stored.sequence;
+                    this.setSavedSection(stored, 'sequence');
+                }
+
+            } catch (error) {
+                console.log(error);
+                if(error) this.errorIndex = section.sequence;
+            }
         }
     },
+
 
 }
 </script>

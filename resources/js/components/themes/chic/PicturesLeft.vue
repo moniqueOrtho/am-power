@@ -28,9 +28,6 @@ export default {
         return result
       }
     },
-    created() {
-        console.log(this.convertHex(this.$vuetify.theme.themes.light.primary, 50))
-    },
     computed: {
         cssVars() {
             return {

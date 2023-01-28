@@ -58,5 +58,8 @@ return [
     'cannot_delete_item' => 'You cannot delete :item!',
     'subtitles' => 'Subtitle|Subtitles',
     'features' => 'Feature|Features',
-    'add' => 'Add'
+    'add' => 'Add',
+    'sections' => 'Section|Sections',
+    'section_saved' => 'Section has been saved successful!',
+    'section_not_saved' => 'Paragraph has not been saved',
 ];

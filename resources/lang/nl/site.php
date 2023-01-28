@@ -58,5 +58,8 @@ return [
     'cannot_delete_item' => 'U kunt :item niet verwijderen!',
     'subtitles' => 'Ondertitel|Ondertitels',
     'features' => 'Kenmerk|Kenmerken',
-    'add' => 'Toevoegen'
+    'add' => 'Toevoegen',
+    'sections' => 'Paragraaf|Paragrafen',
+    'section_saved' => 'Paragraaf is opgeslagen!',
+    'section_not_saved' => 'Paragraaf is niet opgeslagen!',
 ];

@@ -11,4 +11,15 @@ class PageRepository extends BaseRepository implements IPage
     {
         return Page::class;
     }
+
+    public function addSection($pageId, array $data)
+    {
+        // Get the page for which we want to create a section
+        $page = $this->find($pageId);
+
+        // Create the section for the page
+        $section = $page->sections()->create($data);
+
+        return $section;
+    }
 }

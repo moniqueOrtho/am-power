@@ -48,8 +48,21 @@ export default {
         initialize() {
             if('title' in this.section && this.section.title !== null) this.title = this.section.title;
             if('subtitle' in this.section && this.section.subtitle !== null) this.subtitle = this.section.subtitle;
-            if('features' in this.section && this.section.features !== null) this.features = [ ...this.section.features ];
+            if('body' in this.section && this.section.body !== null && this.isJson(this.section.body)) {
+                this.features = JSON.parse(this.section.body);
+            } else {
+                this.features = this.section.body;
+            }
+        },
+        isJson(str) {
+            try {
+                JSON.parse(str);
+            } catch (e) {
+                return false;
+            }
+            return true;
         }
+
     }
 
 }

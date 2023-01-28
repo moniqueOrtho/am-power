@@ -18,7 +18,7 @@
             <div
 
             class="feature-maker"
-            v-for="(feature, index) in section.features"
+            v-for="(feature, index) in section.body"
             :key="index"
             :id="feature.id"
             @click="makerClicked(feature.id)"
@@ -66,7 +66,7 @@
                 <div class="save-btn__container">
                     <div class="pulsate" >
                         <v-fab-transition>
-                        <v-btn color="primary" fab dark v-bind="attrs" v-on="on">
+                        <v-btn color="primary" fab dark v-bind="attrs" v-on="on" @click.stop="save">
                             <v-icon> mdi-content-save </v-icon>
                         </v-btn>
                         </v-fab-transition>
@@ -75,6 +75,16 @@
             </template>
             <span>{{ this.labels.save }}</span>
         </v-tooltip>
+        <div class="message__container">
+            <close-alert
+                :alertColor="getAlertColor"
+                :alertMessage="getAlertMessage"
+                :type="getAlertType"
+                spacing="my-3 ml-8"
+                :closeAction="true"
+            ></close-alert>
+        </div>
+
 
 
     </div>
@@ -85,12 +95,25 @@
 import TheFeatures from "../../themes/chic/TheFeatures.vue";
 import EditorMenu from "../../tools/EditorMenu.vue";
 import CurlBtn from "../../buttons/CurlBtn.vue";
+import CloseAlert from "../../alerts/CloseAlert.vue";
 export default {
-    components: {TheFeatures, EditorMenu, CurlBtn},
+    components: {TheFeatures, EditorMenu, CurlBtn, CloseAlert},
     props: {
+        sequence: {
+            type: Number,
+            required: true
+        },
         data: {
             type: Object,
             required: true
+        },
+        successMessage: {
+            type: String,
+            default: ''
+        },
+        errorMessage: {
+            type: String,
+            default: ''
         },
         labels: {
             type: Object,
@@ -105,6 +128,7 @@ export default {
             }
         }
     },
+    emits: ['save-section'],
     created() {
         this.initialize();
     },
@@ -142,7 +166,17 @@ export default {
         },
         titleChanged() {
             return this.section.title;
-        }
+        },
+        getAlertColor() {
+            return this.errorMessage ? 'red-me' : 'green-me';
+        },
+        getAlertMessage() {
+            console.log('message')
+            return this.errorMessage ? this.errorMessage : this.succesMessage;
+        },
+        getAlertType() {
+            return this.errorMessage ? 'error' : 'success';
+        },
     },
     watch: {
         titleChanged() {
@@ -159,8 +193,11 @@ export default {
                 this.section.subtitle = this.data.subtitle;
                 this.subtitle = true;
             }
-
-            this.section.features = [...this.features];
+            if(this.data.body) {
+                this.section.body = JSON.parse(this.data.body);
+            } else {
+                this.section.body = [...this.features];
+            }
         },
         bigActivatorClicked(closed) {
             this.deleteFocus();
@@ -193,8 +230,8 @@ export default {
         addFeature() {
             this.deleteFocus();
             this.changed = true;
-            let feature = { id:`feature-${this.section.features.length}`, title: `${this.labels.feature} ${this.section.features.length + 1}`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'};
-            this.section.features.push(feature);
+            let feature = { id:`feature-${this.section.body.length}`, title: `${this.labels.feature} ${this.section.body.length + 1}`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'};
+            this.section.body.push(feature);
         },
         addTitle(title) {
             this.title = true;
@@ -223,20 +260,20 @@ export default {
         },
         featureTitleIsChanged(e) {
             const feature = e.target.parentElement.id;
-            let index = this.section.features.findIndex(x => x.id === feature);
-            if(index > -1) this.section.features[index]['title'] = e.target.innerText;
+            let index = this.section.body.findIndex(x => x.id === feature);
+            if(index > -1) this.section.body[index]['title'] = e.target.innerText;
             this.changed = true;
         },
         featureTextIsChanged(e) {
             const feature = e.target.parentElement.id;
-            let index = this.section.features.findIndex(x => x.id === feature);
-            if(index > -1) this.section.features[index]['text'] = e.target.innerText;
+            let index = this.section.body.findIndex(x => x.id === feature);
+            if(index > -1) this.section.body[index]['text'] = e.target.innerText;
             this.changed = true;
         },
         curlClicked(data) {
-            const index = this.section.features.findIndex(x => x.id === data.id);
+            const index = this.section.body.findIndex(x => x.id === data.id);
             if(index > -1) {
-                this.section.features.splice(index, 1);
+                this.section.body.splice(index, 1);
                 this.changed = true;
             }
         },
@@ -254,6 +291,21 @@ export default {
                 box-shadow: 0 0 3px var(--v-primary-base);`
             this.focusedId = id;
         },
+        save() {
+            let text = this.section.body.map((s) => {
+                return `<h6 class="text-h6">${s.title}</h6><p>${s.text}</p>`
+            });
+            this.$emit('save-section', {
+                id : this.data === null ? null : this.data.id,
+                sequence: this.sequence,
+                component: 'TheFeatures',
+                title: this.section.title,
+                subtitle: this.section.subtitle,
+                body: JSON.stringify(this.section.body),
+                text: text.toString()
+
+            });
+        }
 
     }
 
@@ -346,6 +398,12 @@ export default {
         right: 0;
     }
 
+    .message__container {
+        position: absolute;
+        bottom: 1rem;
+        right: 0;
+        width: 100%;
+    }
 
     [contenteditable] {
         outline: 0px solid transparent;

@@ -13,9 +13,11 @@ use App\Http\Controllers\Superadmin\{
 
 use App\Http\Controllers\{
     PageController,
+    SectionController,
     SiteController,
     UserController
 };
+use App\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,4 +66,9 @@ Route::middleware(['auth'])->group( function () {
     Route::get('/' . __('site.pages_slug') . '/{siteId}' , [PageController::class, 'index'] )->name('pages');
 
     Route::get('/' . strtolower(trans_choice('site.pages', 1)) . '/{id}', [PageController::class, 'show']);
+
+    //Sections
+    Route::post('/pages/{pageId}/sections', [SectionController::class, 'store']);
+    Route::put('/sections/{id}', [SectionController::class, 'update']);
+    Route::delete('/sections/{id}', [SectionController::class, 'destroy']);
 });

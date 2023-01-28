@@ -10,7 +10,9 @@
             'add' => __('site.add'),
             'title' => trans_choice('site.titles', 1),
             'noTitle' => __('site.no_title'),
-            'save' => __('site.save')
+            'save' => __('site.save'),
+            'sectionSaved' => __('site.section_saved'),
+            'sectionNotSaved'=> __('site.section_not_saved')
         ])}}"
     >
 

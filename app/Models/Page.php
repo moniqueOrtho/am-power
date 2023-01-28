@@ -34,6 +34,7 @@ class Page extends Model
 
     public function sections()
     {
-        return $this->morphMany(Section::class, 'sectionable');
+        return $this->morphMany(Section::class, 'sectionable')
+            ->orderBy('sequence', 'asc');
     }
 }
