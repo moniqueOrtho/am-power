@@ -17,13 +17,13 @@
         <div class="features-maker__container" v-if="maker" :style="styleContainer">
             <div
 
-            class="feature-maker"
-            v-for="(feature, index) in section.body"
-            :key="index"
-            :id="feature.id"
-            @click="makerClicked(feature.id)"
+                class="feature-maker"
+                v-for="(feature, index) in section.body"
+                :key="index"
+                :id="feature.id"
+                @click="makerClicked(feature.id)"
             >
-            <curl-btn :obj="feature" @curl-action="curlClicked"></curl-btn>
+                <curl-btn :obj="feature" @curl-action="curlClicked"></curl-btn>
 
                 <v-menu
                     offset-y
@@ -61,12 +61,21 @@
 
         </div>
         <TheFeatures :section="section" v-else/>
+        <div class="message__container">
+            <close-alert
+                :alertColor="getAlertColor"
+                :alert-message="getAlertMessage"
+                :type="getAlertType"
+                spacing="my-3"
+                :closeAction="true"
+            ></close-alert>
+        </div>
         <v-tooltip left v-if="changed && maker">
             <template v-slot:activator="{ on, attrs }">
                 <div class="save-btn__container">
                     <div class="pulsate" >
                         <v-fab-transition>
-                        <v-btn color="primary" fab dark v-bind="attrs" v-on="on" @click.stop="save">
+                        <v-btn color="primary" fab dark v-bind="attrs" v-on="on" @click="save">
                             <v-icon> mdi-content-save </v-icon>
                         </v-btn>
                         </v-fab-transition>
@@ -75,15 +84,7 @@
             </template>
             <span>{{ this.labels.save }}</span>
         </v-tooltip>
-        <div class="message__container">
-            <close-alert
-                :alertColor="getAlertColor"
-                :alertMessage="getAlertMessage"
-                :type="getAlertType"
-                spacing="my-3 ml-8"
-                :closeAction="true"
-            ></close-alert>
-        </div>
+
 
 
 
@@ -107,11 +108,11 @@ export default {
             type: Object,
             required: true
         },
-        successMessage: {
+        success: {
             type: String,
             default: ''
         },
-        errorMessage: {
+        error: {
             type: String,
             default: ''
         },
@@ -128,7 +129,7 @@ export default {
             }
         }
     },
-    emits: ['save-section'],
+    emits: ['save-section', 'delete-message'],
     created() {
         this.initialize();
     },
@@ -145,7 +146,7 @@ export default {
             section: {
                 title: null,
                 subtitle: null,
-                features: []
+                body: []
             },
             changed: false,
             actions: ['add', 'title'],
@@ -168,19 +169,21 @@ export default {
             return this.section.title;
         },
         getAlertColor() {
-            return this.errorMessage ? 'red-me' : 'green-me';
+            return this.error ? 'red-me' : 'green-me';
         },
         getAlertMessage() {
-            console.log('message')
-            return this.errorMessage ? this.errorMessage : this.succesMessage;
+            let message = '';
+            if(this.error) message = this.error;
+            if(this.success) message = this.success;
+            return message;
         },
         getAlertType() {
-            return this.errorMessage ? 'error' : 'success';
+            return this.error ? 'error' : 'success';
         },
     },
     watch: {
         titleChanged() {
-            this.changed = this.section.title.length > 0
+            this.changed = this.section.title.length > 0 && !this.data.title
         }
     },
     methods: {
@@ -188,6 +191,7 @@ export default {
             if(this.data.title) {
                 this.section.title = this.data.title;
                 this.title = true;
+                this.setRightTitleBtn('title', 'no-title');
             }
             if(this.data.subtitle) {
                 this.section.subtitle = this.data.subtitle;
@@ -200,8 +204,10 @@ export default {
             }
         },
         bigActivatorClicked(closed) {
-            this.deleteFocus();
             this.maker = ! closed;
+            if(this.error || this.success) {
+                this.$emit('delete-message');
+            }
         },
         actionBtnClicked(action) {
             switch (action.name) {
@@ -233,21 +239,21 @@ export default {
             let feature = { id:`feature-${this.section.body.length}`, title: `${this.labels.feature} ${this.section.body.length + 1}`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'};
             this.section.body.push(feature);
         },
+        setRightTitleBtn(title, newbtn) {
+            let index = this.actions.indexOf(title);
+            if(index > -1) {
+                this.$set(this.actions, index, newbtn);
+            }
+        },
         addTitle(title) {
             this.title = true;
             this.deleteFocus();
-            let index = this.actions.indexOf(title);
-            if(index > -1) {
-                this.$set(this.actions, index, 'no-title');
-            }
+            this.setRightTitleBtn(title, 'no-title');
         },
         deleteTitle(title) {
             this.deleteFocus();
             this.title = false;
-            let index = this.actions.indexOf(title);
-            if(index > -1) {
-                this.$set(this.actions, index, 'title');
-            }
+            this.setRightTitleBtn(title, 'title');
             if(this.section.title) {
                 this.section.title = null;
                 this.changed = true;
@@ -292,6 +298,8 @@ export default {
             this.focusedId = id;
         },
         save() {
+            this.changed = false;
+            this.maker = false;
             let text = this.section.body.map((s) => {
                 return `<h6 class="text-h6">${s.title}</h6><p>${s.text}</p>`
             });

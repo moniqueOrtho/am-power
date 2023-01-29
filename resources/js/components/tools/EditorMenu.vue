@@ -168,6 +168,7 @@ export default {
             height: 40px;
             width: 40px;
             border-radius: 50%;
+            z-index: 50;
             &::after {
                 content: "";
                 position: absolute;

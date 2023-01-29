@@ -7,9 +7,10 @@
             :data="section"
             :labels="labels"
             :class="section.class"
-            :succes-message="succesIndex === index ? labels.sectionSaved : ''"
-            :error-message="errorIndex === index ? labels.sectionNotSaved : ''"
+            :success="succesIndex === index ? labels.sectionSaved : ''"
+            :error="errorIndex === index ? labels.sectionNotSaved : ''"
             @save-section="saveSection"
+            @delete-message="resetMessages"
         ></component>
     </div>
 
@@ -90,14 +91,11 @@ export default {
             });
         },
         setSections() {
-            let index, keys, section;
+            let index, section;
             if(Object.keys(this.page.sections).length > 0) {
                 for(index in this.page.sections) {
                     section = this.page.sections[index]
-                    keys = Object.keys(section);
-                    keys.forEach(k => {
-                        this.sections[this.page.sections[index].sequence][k] = section[k];
-                    })
+                    this.setData(section, section.sequence);
                 }
             }
         },
@@ -105,9 +103,15 @@ export default {
             this.succesIndex = -1;
             this.errorIndex = -1;
         },
+        setData(data, sectionIndex) {
+            let keys = Object.keys(data);
+            keys.forEach(k => {
+                this.sections[sectionIndex][k] = data[k];
+            })
+        },
         setSavedSection(data, key) {
             let index = this.sections.findIndex(s => s[key] === data[key])
-            this.sections[index] = data;
+            this.setData(data, index);
         },
         async saveSection(section) {
             this.resetMessages();
@@ -117,12 +121,12 @@ export default {
             try {
                 if(section.id) {
                     const updated = await axios.put(`/sections/${section.id}`, newSection);
-                    this.succesIndex = stored.sequence;
-                    this.setSavedSection(updated, 'id');
+                    this.succesIndex = updated.data.data.sequence;
+                    this.setSavedSection(updated.data.data, 'id');
                 } else {
                     const stored = await axios.post(`/pages/${this.page.id}/sections`, newSection);
-                    this.succesIndex = stored.sequence;
-                    this.setSavedSection(stored, 'sequence');
+                    this.succesIndex = stored.data.data.sequence;
+                    this.setSavedSection(stored.data.data, 'sequence');
                 }
 
             } catch (error) {
