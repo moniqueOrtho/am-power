@@ -12,7 +12,9 @@
             'noTitle' => __('site.no_title'),
             'save' => __('site.save'),
             'sectionSaved' => __('site.section_saved'),
-            'sectionNotSaved'=> __('site.section_not_saved')
+            'sectionNotSaved'=> __('site.section_not_saved'),
+            'happyCustomers' => __('site.happy_customers'),
+            'bestDecision' => __('site.best_decision')
         ])}}"
     >
 

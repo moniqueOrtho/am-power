@@ -62,4 +62,6 @@ return [
     'sections' => 'Paragraaf|Paragrafen',
     'section_saved' => 'Paragraaf is opgeslagen!',
     'section_not_saved' => 'Paragraaf is niet opgeslagen!',
+    'happy_customers' => 'Tevreden klant',
+    'best_decision' => 'De beste beslissing voor ons bedrijf!'
 ];

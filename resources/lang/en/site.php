@@ -62,4 +62,6 @@ return [
     'sections' => 'Section|Sections',
     'section_saved' => 'Section has been saved successful!',
     'section_not_saved' => 'Paragraph has not been saved',
+    'happy_customers' => 'Happy customer',
+    'best_decision' => 'The best decision for our company!'
 ];

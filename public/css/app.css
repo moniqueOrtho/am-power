@@ -171,6 +171,35 @@ $breakpoint argument choices
   right: 0;
 }
 
+.editor__box {
+  border: 2px dotted var(--v-grey1-base);
+  border-radius: 4px;
+  padding: 0.75rem;
+}
+.editor__box::-webkit-input-placeholder {
+  font-family: "Josefin Sans", sans-serif;
+}
+.editor__box:-ms-input-placeholder {
+  font-family: "Josefin Sans", sans-serif;
+}
+.editor__box:-moz-placeholder {
+  font-family: "Josefin Sans", sans-serif;
+}
+.editor__box:focus {
+  outline-offset: 0px;
+  outline: none;
+  border: 1px solid var(--v-primary-base);
+  box-shadow: 0 0 3px var(--v-primary-base);
+  -moz-box-shadow: 0 0 3px var(--v-primary-base);
+  -webkit-box-shadow: 0 0 3px var(--v-primary-base);
+}
+.editor__box--title {
+  width: 50%;
+}
+.editor__box--subtitle {
+  width: 100%;
+}
+
 .nav-layout {
   background-color: #E4D8C6;
 }

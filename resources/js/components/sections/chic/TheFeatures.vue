@@ -1,18 +1,16 @@
 <template>
     <div class="features-maker">
-        <div class="editor-menu__container">
-            <editor-menu
-            :actions="actions"
-            :position="{top: true, right: false, bottom: false, left: true}"
-            @big-activator="bigActivatorClicked"
-            @action-btn="actionBtnClicked"
-            :labels="labels"
-            >
-            </editor-menu>
-        </div>
+        <editor-menu
+        :actions="actions"
+        :position="{top: true, right: false, bottom: false, left: true}"
+        @big-activator="bigActivatorClicked"
+        @action-btn="actionBtnClicked"
+        :labels="labels"
+        >
+        </editor-menu>
 
         <div class="d-flex justify-center" v-if="maker && title">
-            <input @focus="deleteFocus" type="text" placeholder="Title" v-model="section.title" class="features-maker__heading" :style="styleHeading">
+            <input @focus="deleteFocus" type="text" :placeholder="labels.title" v-model="section.title" class="features-maker__heading" :style="styleHeading">
         </div>
         <div class="features-maker__container" v-if="maker" :style="styleContainer">
             <div
@@ -364,13 +362,7 @@ export default {
             align-items: start;
         }
     }
-    .editor-menu {
-        &__container {
-            position: absolute;
-            top: 0;
-            left: -16px;
-        }
-    }
+
     .feature-maker {
         display: grid;
         grid-template-columns: min-content 1fr;

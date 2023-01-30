@@ -5,10 +5,10 @@
             :is="section.component"
             :sequence="index"
             :data="section"
-            :labels="labels"
+            :labels="text"
             :class="section.class"
-            :success="succesIndex === index ? labels.sectionSaved : ''"
-            :error="errorIndex === index ? labels.sectionNotSaved : ''"
+            :success="succesIndex === index ? text.sectionSaved : ''"
+            :error="errorIndex === index ? text.sectionNotSaved : ''"
             @save-section="saveSection"
             @delete-message="resetMessages"
         ></component>
@@ -18,7 +18,7 @@
 
 <script>
 import TheFeatures from './chic/TheFeatures.vue';
-import ContentRight from '../themes/chic/ContentRight.vue';
+import ContentRight from './chic/ContentRight.vue';
 import PicturesLeft from '../themes/chic/PicturesLeft.vue';
 import TheFooter from '../themes/chic/TheFooter.vue';
 import HeaderOne from '../themes/chic/HeaderOne.vue';
@@ -36,17 +36,7 @@ export default {
         },
         labels: {
             type: Object,
-            default: () => {
-                return {
-                    feature: 'Feature',
-                    add: 'Add',
-                    title: 'Title',
-                    save: 'Save',
-                    noTitle: 'No title',
-                    sectionSaved: 'Section has been saved successful!',
-                    sectionNotSaved: 'Paragraph has not been saved'
-                }
-            }
+            required: false
         }
     },
     data() {
@@ -75,12 +65,25 @@ export default {
                 grey2: '#6D5D4B',
             },
             succesIndex: -1,
-            errorIndex: -1
+            errorIndex: -1,
+            text: {
+                feature: 'Feature',
+                add: 'Add',
+                title: 'Title',
+                subtitle: 'Subtitle',
+                save: 'Save',
+                noTitle: 'No title',
+                sectionSaved: 'Section has been saved successful!',
+                sectionNotSaved: 'Paragraph has not been saved',
+                happyCustomers: 'Happy customers',
+                bestDecision: 'The best decision for our company!'
+            }
         }
     },
     created() {
         //console.log(this.page);
         this.setColors();
+        this.setLabels();
         this.setSections();
     },
     methods: {
@@ -89,6 +92,12 @@ export default {
             keys.forEach(key => {
                 this.$vuetify.theme.themes.light[key] = this.colors[key];
             });
+        },
+        setLabels() {
+            if(this.labels) {
+                let keys = Object.keys(this.labels);
+                keys.forEach(k => this.text[k] = this.labels[k]);
+            }
         },
         setSections() {
             let index, section;

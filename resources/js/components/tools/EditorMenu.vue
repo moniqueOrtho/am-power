@@ -1,5 +1,5 @@
 <template>
-    <div class="editor-menu">
+    <div class="editor-menu" :class="getMenuContainerClass">
         <v-speed-dial
         v-model="fab"
         absolute
@@ -61,6 +61,10 @@
 <script>
 export default {
     props: {
+        container: {
+            type: Boolean,
+            default: true
+        },
         activator : {
             type: [Object, Boolean],
             default: false
@@ -151,6 +155,18 @@ export default {
             this.editors = [];
             this.setActionbuttons();
         }
+    },
+    computed: {
+        getMenuContainerClass() {
+            let position = ''
+            if(this.container) {
+                if(this.position.top & this.position.left) position = 'editor-menu--top-left';
+                if(this.position.top & this.position.right) position = 'editor-menu--top-right';
+                if(this.position.bottom & this.position.left) position = 'editor-menu--bottom-left';
+                if(this.position.bottom & this.position.right) position = 'editor-menu--bottom-right';
+            }
+            return position;
+        }
     }
 }
 </script>
@@ -161,6 +177,33 @@ export default {
     }
 
     .editor-menu {
+
+        &--top-left {
+            position: absolute;
+            top: 0;
+            left: -16px;
+
+        }
+        &--top-right {
+            position: absolute;
+            top: 0;
+            right: -16px;
+
+        }
+
+        &--bottom-left {
+            position: absolute;
+            bottom: 0;
+            left: -16px;
+
+        }
+        &--bottom-right {
+            position: absolute;
+            bottom: 0;
+            right: -16px;
+
+        }
+
         &__opp-icon {
             position: absolute;
             top: -9px;

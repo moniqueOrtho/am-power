@@ -1,0 +1,32 @@
+.editor {
+    &__box {
+        border: 2px dotted var(--v-grey1-base);
+        border-radius: 4px;
+        padding: 0.75rem;
+        &::-webkit-input-placeholder {
+            font-family: "Josefin Sans", sans-serif;
+        }
+        &:-ms-input-placeholder {
+            font-family: "Josefin Sans", sans-serif;
+        }
+        &:-moz-placeholder {
+            font-family: "Josefin Sans", sans-serif;
+        }
+
+        &:focus {
+            outline-offset: 0px;
+            outline: none;
+            border: 1px solid var(--v-primary-base);
+            box-shadow: 0 0 3px var(--v-primary-base);
+            -moz-box-shadow: 0 0 3px var(--v-primary-base);
+            -webkit-box-shadow: 0 0 3px var(--v-primary-base);
+        }
+        &--title {
+            width: 50%;
+        }
+
+        &--subtitle {
+            width: 100%;
+        }
+    }
+}
