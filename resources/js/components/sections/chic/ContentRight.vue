@@ -10,10 +10,49 @@
         :labels="labels"
         >
         </editor-menu>
-        <input class="chic__heading-3 mb-5 editor__box editor__box--title" v-model="section.title" :placeholder="text.title"  @focus="deleteFocus">
-        <textarea class="chic__subheading-2 chic__subheading-2--dark mb-8 editor__box editor__box--subtitle" v-model="section.subtitle" :placeholder="text.subtitle"  @focus="deleteFocus" rows="2"></textarea>
+        <input class="chic__heading-3 mb-5 editor__box editor__box--title" v-model="section.title" :placeholder="text.title"  @focus="deleteFocus" v-if="title">
+        <textarea class="chic__subheading-2 chic__subheading-2--dark mb-8 editor__box editor__box--subtitle" v-model="section.subtitle" :placeholder="text.subtitle"  @focus="deleteFocus" rows="2" v-if="subtitle"></textarea>
         <p class="story__text mb-10 mb-8 editor__box" contenteditable>{{ section.text }}</p>
-        <button class="chic__btn">{{ section.body.button }}</button>
+        <v-menu
+            offset-y
+            :close-on-content-click="false"
+            v-for="button in this.section.body"
+            :key="button.button"
+        >
+            <template v-slot:activator="{ on, attrs }">
+                <button
+                    class="chic__btn"
+                    :class="button.class"
+                    v-bind="attrs"
+                    v-on="on"
+                >{{ button.text }}</button>
+            </template>
+            <div class="section-maker__v-menu">
+                <v-text-field
+                    v-model="button.text"
+                    class="pa-2"
+                    :label="text.text"
+                    outlined
+                    hide-details
+                ></v-text-field>
+                <v-text-field
+                    v-model="button.url"
+                    class="pa-2"
+                    label="link"
+                    outlined
+                    hide-details
+                ></v-text-field>
+                <v-select
+                    v-model="button.class"
+                    :items="classItems"
+                    class="pa-2"
+                    :label="`${text.button} ${text.layout.toLowerCase()}`"
+                    outlined
+                    hide-details
+                ></v-select>
+
+            </div>
+        </v-menu>
     </div>
 </template>
 
@@ -56,9 +95,7 @@ export default {
                 title: '',
                 subtitle: '',
                 text: '',
-                body: {
-                    button: 'Find your own home'
-                }
+                body: []
             },
             text: {
                 add: 'Add',
@@ -67,13 +104,20 @@ export default {
                 save: 'Save',
                 noTitle: 'No title',
                 happyCustomers: 'Happy customers',
-                bestDecision: 'The best decision for our company!'
+                bestDecision: 'The best decision for our company!',
+                moreReviews: 'More reviews',
+                text: 'Text',
+                button: 'Button',
+                layout: 'Layout',
+                new2: 'New',
+                closed: 'Closed'
             },
             changed: false,
-            actions: ['add', 'no-title'],
+            actions: ['button', 'no-title', 'no-subtitle'],
             title: false,
             subtitle: false,
-            focusedId: null
+            focusedId: null,
+
         }
     },
     computed: {
@@ -89,6 +133,12 @@ export default {
         getAlertType() {
             return this.error ? 'error' : 'success';
         },
+        classItems() {
+            return [ {text : this.text.closed, value : 'chic__btn--filled'}, {text : 'Open', value : 'chic__btn--open'}]
+        },
+        defaultButton() {
+            return { button: 'btn-1', text: `${this.text.new2} ${this.text.button.toLowerCase()}`, url: '', class:"chic__btn--filled" }
+        }
     },
     methods: {
         initialize() {
@@ -100,6 +150,8 @@ export default {
 
             if(this.data.body) {
                 this.section.body = JSON.parse(this.data.body);
+            } else {
+                this.section.body.push(this.defaultButton);
             }
 
             this.section.text = this.data.text ? this.data.text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus. Quidem consequatur harum volupta!';
@@ -119,12 +171,6 @@ export default {
         },
         actionBtnClicked(action) {
             switch (action.name) {
-                case 'view':
-                    this.viewBtn();
-                    break;
-                case 'add':
-                    this.addFeature();
-                    break;
                 case 'title':
                     this.addTitle(action.name);
                     break;
@@ -155,6 +201,7 @@ export default {
         },
         addTitle(title) {
             this.title = true;
+            this.section.title = this.text.happyCustomers;
             this.deleteFocus();
             this.setRightTitleBtn(title, 'no-title');
         },

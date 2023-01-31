@@ -57,11 +57,17 @@ return [
     'no_title' => 'Geen titel',
     'cannot_delete_item' => 'U kunt :item niet verwijderen!',
     'subtitles' => 'Ondertitel|Ondertitels',
+    'no_subtitle' => 'Geen ondertitel',
     'features' => 'Kenmerk|Kenmerken',
     'add' => 'Toevoegen',
     'sections' => 'Paragraaf|Paragrafen',
     'section_saved' => 'Paragraaf is opgeslagen!',
     'section_not_saved' => 'Paragraaf is niet opgeslagen!',
     'happy_customers' => 'Tevreden klant',
-    'best_decision' => 'De beste beslissing voor ons bedrijf!'
+    'best_decision' => 'De beste beslissing voor ons bedrijf!',
+    'more_reviews' => 'Meer reviews',
+    'texts' => 'Tekst|Teksten',
+    'buttons' => 'Knop|Knopen',
+    'layout' => 'Lay-out',
+    'closed' => 'Gesloten'
 ];

@@ -73,10 +73,17 @@ export default {
                 subtitle: 'Subtitle',
                 save: 'Save',
                 noTitle: 'No title',
+                noSubtitle: 'No subtitle',
                 sectionSaved: 'Section has been saved successful!',
                 sectionNotSaved: 'Paragraph has not been saved',
                 happyCustomers: 'Happy customers',
-                bestDecision: 'The best decision for our company!'
+                bestDecision: 'The best decision for our company!',
+                moreReviews: 'More reviews',
+                text: 'Text',
+                button: 'Button',
+                layout: 'Layout',
+                new2: 'new',
+                closed: 'Closed'
             }
         }
     },

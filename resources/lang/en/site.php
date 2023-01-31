@@ -57,11 +57,17 @@ return [
     'no_title' => 'No Title',
     'cannot_delete_item' => 'You cannot delete :item!',
     'subtitles' => 'Subtitle|Subtitles',
+    'no_subtitle' => 'No subtitle',
     'features' => 'Feature|Features',
     'add' => 'Add',
     'sections' => 'Section|Sections',
     'section_saved' => 'Section has been saved successful!',
     'section_not_saved' => 'Paragraph has not been saved',
     'happy_customers' => 'Happy customer',
-    'best_decision' => 'The best decision for our company!'
+    'best_decision' => 'The best decision for our company!',
+    'more_reviews' => 'More reviews',
+    'texts' => 'Text|Texts',
+    'buttons' => 'Button|Buttons',
+    'layout' => 'Layout',
+    'closed' => 'Closed'
 ];

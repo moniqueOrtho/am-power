@@ -443,6 +443,12 @@ $breakpoint argument choices
   transform: rotate(135deg);
 }
 
+.section-maker__v-menu {
+  display: grid;
+  align-content: center;
+  background-color: var(--v-primary-lighten4);
+}
+
 .login {
   font-family: "Lexend", arial, sans-serif !important;
   background: url(/images/map.jpg?74416897048e39fc2423753904a122f4);
@@ -518,16 +524,44 @@ $breakpoint argument choices
 }
 
 .chic__btn {
-  background-color: var(--v-primary-base);
-  color: white;
-  border: none;
   border-radius: 0;
   font-size: 1rem;
   text-transform: uppercase;
   padding: 1.125rem 1.875rem;
   cursor: pointer;
+  overflow: hidden;
   transition: all 0.2s;
+  outline: none;
+  z-index: 1;
 }
-.chic__btn:hover {
+.chic__btn--filled {
+  background-color: var(--v-primary-base);
+  color: white !important;
+  border: 2px solid var(--v-primary-base);
+}
+.chic__btn--filled:hover {
   background-color: var(--v-secondary-base);
+}
+.chic__btn--open {
+  color: var(--v-primary-base);
+  border: 2px solid var(--v-primary-base);
+  position: relative;
+}
+.chic__btn--open:hover {
+  color: white;
+}
+.chic__btn--open:hover::before {
+  top: 0;
+}
+.chic__btn--open::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 100%;
+  left: 0;
+  bottom: 0;
+  background-color: var(--v-primary-base);
+  z-index: -1;
+  -webkit-transition: top 0.09s ease-in;
 }

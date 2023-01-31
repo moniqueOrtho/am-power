@@ -114,9 +114,10 @@ export default {
                 {name: 'delete', color: 'error', icon: 'mdi-delete', opp: false},
                 {name: 'title', color: 'primary', icon: 'fas fa-heading', opp: false, tip: this.labels.title},
                 {name: 'no-title', color: 'primary', icon: 'fas fa-heading', opp: true, tip: this.labels.noTitle},
-                {name: 'subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: false},
-                {name: 'no-subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: true},
+                {name: 'subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: false, tip: this.labels.subtitle},
+                {name: 'no-subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: true, tip: this.labels.noSubtitle},
                 {name: 'view', color: 'success', icon: 'mdi-eye', opp: false},
+                {name: 'button', color: 'accent', icon: 'mdi-card-outline' , opp: false, tip: `${this.labels.button} ${this.labels.add.toLowerCase()}`}
             ],
             editors: [],
             right: false,

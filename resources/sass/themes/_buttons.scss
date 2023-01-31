@@ -1,15 +1,49 @@
 .chic__btn {
-    background-color: var(--v-primary-base);
-    color: white;
-    border: none;
     border-radius: 0;
     font-size: 1rem;
     text-transform: uppercase;
     padding: 1.125rem 1.875rem;
     cursor: pointer;
+    overflow:hidden;
     transition: all .2s;
+    outline: none;
+    z-index: 1;
 
-    &:hover {
-        background-color: var(--v-secondary-base);
+    &--filled {
+        background-color: var(--v-primary-base);
+        color: white !important;
+        border: 2px solid var(--v-primary-base);
+        &:hover {
+            background-color: var(--v-secondary-base);
+
+        }
     }
+
+    &--open {
+        color: var(--v-primary-base);
+        border: 2px solid var(--v-primary-base);
+        position: relative;
+        &:hover {
+            color: white;
+            &::before {
+                top: 0;
+            }
+        }
+        &::before {
+            content: "";
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            top: 100%;
+            left: 0;
+            bottom: 0;
+            background-color: var(--v-primary-base);
+            z-index: -1;
+            -webkit-transition: top 0.09s ease-in;
+        }
+
+    }
+
+
 }
+

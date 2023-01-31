@@ -10,11 +10,19 @@
             'add' => __('site.add'),
             'title' => trans_choice('site.titles', 1),
             'noTitle' => __('site.no_title'),
+            'subtitle' => trans_choice('site.titles', 1),
+            'noSubtitle' => __('site.no_subtitle'),
             'save' => __('site.save'),
             'sectionSaved' => __('site.section_saved'),
             'sectionNotSaved'=> __('site.section_not_saved'),
             'happyCustomers' => __('site.happy_customers'),
-            'bestDecision' => __('site.best_decision')
+            'bestDecision' => __('site.best_decision'),
+            'moreReviews' => __('site.more_reviews'),
+            'text' => trans_choice('site.texts', 1),
+            'button' => trans_choice('site.buttons', 1),
+            'layout' => __('site.layout'),
+            'new2' => trans_choice('site.new i', 2),
+            'closed' => __('site.closed'),
         ])}}"
     >
 
