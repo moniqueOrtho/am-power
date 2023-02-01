@@ -1,5 +1,5 @@
 <template>
-    <div class="story">
+    <div :class="contentManager">
         <editor-menu
         :container="false"
         direction="left"
@@ -10,49 +10,90 @@
         :labels="labels"
         >
         </editor-menu>
-        <input class="chic__heading-3 mb-5 editor__box editor__box--title" v-model="section.title" :placeholder="text.title"  @focus="deleteFocus" v-if="title">
-        <textarea class="chic__subheading-2 chic__subheading-2--dark mb-8 editor__box editor__box--subtitle" v-model="section.subtitle" :placeholder="text.subtitle"  @focus="deleteFocus" rows="2" v-if="subtitle"></textarea>
-        <p class="story__text mb-10 mb-8 editor__box" contenteditable>{{ section.text }}</p>
-        <v-menu
-            offset-y
-            :close-on-content-click="false"
-            v-for="button in this.section.body"
-            :key="button.button"
-        >
-            <template v-slot:activator="{ on, attrs }">
-                <button
-                    class="chic__btn"
-                    :class="button.class"
-                    v-bind="attrs"
-                    v-on="on"
-                >{{ button.text }}</button>
-            </template>
-            <div class="section-maker__v-menu">
-                <v-text-field
-                    v-model="button.text"
-                    class="pa-2"
-                    :label="text.text"
-                    outlined
-                    hide-details
-                ></v-text-field>
-                <v-text-field
-                    v-model="button.url"
-                    class="pa-2"
-                    label="link"
-                    outlined
-                    hide-details
-                ></v-text-field>
-                <v-select
-                    v-model="button.class"
-                    :items="classItems"
-                    class="pa-2"
-                    :label="`${text.button} ${text.layout.toLowerCase()}`"
-                    outlined
-                    hide-details
-                ></v-select>
+        <input class="chic__heading-3 mb-5 editor__box editor__box--title" v-model="section.title" :placeholder="text.title"  v-if="title && maker">
+        <textarea class="chic__subheading-2 chic__subheading-2--dark mb-8 editor__box editor__box--subtitle" v-model="section.subtitle" :placeholder="text.subtitle" rows="2" v-if="subtitle && maker"></textarea>
+        <p
+            class="story__text mb-10 mb-8 editor__box"
+            contenteditable
+            v-if="maker"
+            ref="editable"
+            @blur="textIsChanged()"
+        >{{ section.text }}</p>
+        <div class="story__button-container" v-if="maker">
+            <div class="story__button"
+                v-for="button in this.section.body"
+                :key="button.id"
+                :id="button.id"
+            >
+                <div class="curl-btn__container">
+                    <curl-btn :obj="button" @curl-action="curlClicked"></curl-btn>
+                </div>
 
+                <v-menu
+                    offset-y
+                    :close-on-content-click="false"
+                >
+                    <template v-slot:activator="{ on, attrs }">
+                        <button
+                            class="chic__btn"
+                            :class="button.class"
+                            v-bind="attrs"
+                            v-on="on"
+                        >{{ button.text }}</button>
+                    </template>
+                    <div class="section-maker__v-menu">
+                        <v-text-field
+                            v-model="button.text"
+                            class="pa-2"
+                            :label="text.text"
+                            outlined
+                            hide-details
+                        ></v-text-field>
+                        <v-text-field
+                            v-model="button.url"
+                            class="pa-2"
+                            label="link"
+                            outlined
+                            hide-details
+                        ></v-text-field>
+                        <v-select
+                            v-model="button.class"
+                            :items="classItems"
+                            class="pa-2"
+                            :label="`${text.button} ${text.layout.toLowerCase()}`"
+                            outlined
+                            hide-details
+                        ></v-select>
+
+                    </div>
+                </v-menu>
             </div>
-        </v-menu>
+
+        </div>
+        <content-right :data="section" v-if="!maker"></content-right>
+        <div class="message__container message__container--right">
+            <close-alert
+                :alertColor="getAlertColor"
+                :alert-message="getAlertMessage"
+                :type="getAlertType"
+                spacing="my-3"
+                :closeAction="true"
+            ></close-alert>
+        </div>
+        <v-tooltip left v-if="changed && maker">
+            <template v-slot:activator="{ on, attrs }">
+                <div class="save-btn__container save-btn__container--right">
+                    <div class="pulsate" >
+                        <v-fab-transition>
+                        <v-btn color="primary" fab dark v-bind="attrs" v-on="on" @click="save">
+                            <v-icon> mdi-content-save </v-icon>
+                        </v-btn>
+                        </v-fab-transition>
+                    </div>
+                </div>
+            </template>
+            <span>{{ this.labels.save }}</span>
+        </v-tooltip>
     </div>
 </template>
 
@@ -60,8 +101,9 @@
 import EditorMenu from "../../tools/EditorMenu.vue";
 import CurlBtn from "../../buttons/CurlBtn.vue";
 import CloseAlert from "../../alerts/CloseAlert.vue";
+import ContentRight from "../../themes/chic/ContentRight.vue";
 export default {
-    components: {EditorMenu, CurlBtn, CloseAlert},
+    components: {EditorMenu, CurlBtn, CloseAlert, ContentRight},
     props: {
         sequence: {
             type: Number,
@@ -117,10 +159,13 @@ export default {
             title: false,
             subtitle: false,
             focusedId: null,
-
+            maker: false
         }
     },
     computed: {
+        contentManager() {
+            return this.maker ? 'story' : 'story__viewer';
+        },
         getAlertColor() {
             return this.error ? 'red-me' : 'green-me';
         },
@@ -133,11 +178,14 @@ export default {
         getAlertType() {
             return this.error ? 'error' : 'success';
         },
+        defaultSubtitle() {
+            return `“${this.text.bestDecision}”`
+        },
         classItems() {
             return [ {text : this.text.closed, value : 'chic__btn--filled'}, {text : 'Open', value : 'chic__btn--open'}]
         },
         defaultButton() {
-            return { button: 'btn-1', text: `${this.text.new2} ${this.text.button.toLowerCase()}`, url: '', class:"chic__btn--filled" }
+            return { id: `btn-${this.section.body.length}`, text: `${this.text.new2} ${this.text.button.toLowerCase()}`, url: '', class:"chic__btn--filled" }
         }
     },
     methods: {
@@ -145,7 +193,7 @@ export default {
             this.section.title = this.data.title ? this.data.title : this.text.happyCustomers;
             this.title = true;
 
-            this.section.subtitle = this.data.subtitle ? this.data.subtitle : `“${this.text.bestDecision}”`;
+            this.section.subtitle = this.data.subtitle ? this.data.subtitle : this.defaultSubtitle;
             this.subtitle = true;
 
             if(this.data.body) {
@@ -178,20 +226,17 @@ export default {
                     this.deleteTitle(action.name);
                 break;
                 case 'subtitle':
-                    this.addSubtitle();
+                    this.addSubtitle(action.name);
                     break;
+                case 'no-subtitle':
+                    this.deleteSubtitle(action.name);
+                break;
+                case 'button':
+                    this.addButton();
+                break;
                 default:
                     break;
             }
-        },
-        viewBtn() {
-            this.maker = false;
-        },
-        addFeature() {
-            this.deleteFocus();
-            this.changed = true;
-            let feature = { id:`feature-${this.section.body.length}`, title: `${this.labels.feature} ${this.section.body.length + 1}`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'};
-            this.section.body.push(feature);
         },
         setRightTitleBtn(title, newbtn) {
             let index = this.actions.indexOf(title);
@@ -202,33 +247,37 @@ export default {
         addTitle(title) {
             this.title = true;
             this.section.title = this.text.happyCustomers;
-            this.deleteFocus();
             this.setRightTitleBtn(title, 'no-title');
         },
         deleteTitle(title) {
-            this.deleteFocus();
             this.title = false;
             this.setRightTitleBtn(title, 'title');
             if(this.section.title) {
                 this.section.title = null;
                 this.changed = true;
             }
-
         },
-        addSubtitle() {
-
-            his.changed = true;
-        },
-        featureTitleIsChanged(e) {
-            const feature = e.target.parentElement.id;
-            let index = this.section.body.findIndex(x => x.id === feature);
-            if(index > -1) this.section.body[index]['title'] = e.target.innerText;
+        addSubtitle(title) {
+            this.subtitle = true;
+            this.section.subtitle = this.defaultSubtitle
+            this.setRightTitleBtn(title, 'no-subtitle');
             this.changed = true;
+
         },
-        featureTextIsChanged(e) {
-            const feature = e.target.parentElement.id;
-            let index = this.section.body.findIndex(x => x.id === feature);
-            if(index > -1) this.section.body[index]['text'] = e.target.innerText;
+        deleteSubtitle(title) {
+            this.subtitle = false;
+            this.setRightTitleBtn(title, 'subtitle');
+            if(this.section.subtitle) {
+                this.section.subtitle = null;
+                this.changed = true;
+            }
+        },
+        addButton() {
+            this.section.body.push(this.defaultButton);
+        },
+        textIsChanged() {
+            let text = this.$refs.editable.innerText;
+            this.section.text = text;
             this.changed = true;
         },
         curlClicked(data) {
@@ -237,20 +286,6 @@ export default {
                 this.section.body.splice(index, 1);
                 this.changed = true;
             }
-        },
-        deleteFocus() {
-            if(this.focusedId) {
-                let old = document.getElementById(this.focusedId);
-                old.style.removeProperty('border');
-                old.style.removeProperty('box-shadow');
-            }
-        },
-        makerClicked(id) {
-            this.deleteFocus();
-            let newEl = document.getElementById(id);
-            newEl.style.cssText = `border: 1px solid var(--v-primary-base);
-                box-shadow: 0 0 3px var(--v-primary-base);`
-            this.focusedId = id;
         },
         save() {
             this.changed = false;
@@ -282,12 +317,31 @@ export default {
         align-content: center;
         justify-items: start;
         position: relative;
-
+        &__viewer {
+            position: relative;
+            display: flex;
+        }
 
         &__text {
             font-size: 1rem;
             font-style: italic;
         }
+
+        &__button-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 11rem);
+            grid-row-gap: 1rem;
+            align-items: center;
+            align-content: start;
+            justify-content: space-between;
+        }
+
+        &__button {
+            position: relative;
+        }
     }
+
+
 
 </style>

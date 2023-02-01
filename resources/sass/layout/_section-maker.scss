@@ -6,3 +6,29 @@
 
     }
 }
+
+.message__container {
+    position: absolute;
+    bottom: 1rem;
+    width: 100%;
+    &--right {
+        right: 0;
+    }
+
+    &--left {
+        left: 0;
+    }
+}
+
+.save-btn__container {
+    position: absolute;
+    bottom: 1rem;
+    &--right {
+        right: 0;
+    }
+
+    &--left {
+        left: 0;
+    }
+
+}

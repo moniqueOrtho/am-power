@@ -1,8 +1,9 @@
 <template>
-    <button class="curl-btn" :class="getButtonClass" @click="btnClicked">
-        <v-icon :color="color" class="curl-btn__icon">{{ icon }}</v-icon>
-    </button>
-
+    <div class="curl-btn__container">
+        <button class="curl-btn" :class="getButtonClass" @click="btnClicked">
+            <v-icon :color="color" class="curl-btn__icon">{{ icon }}</v-icon>
+        </button>
+    </div>
 </template>
 
 <script>
@@ -42,6 +43,12 @@ export default {
 
 <style lang="scss" scoped>
     .curl-btn {
+        &__container {
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 10;
+        }
         position: absolute;
         right: 0;
         top: 0;
@@ -81,7 +88,7 @@ export default {
             max-width: 300px;
             max-height: 100px;
             height: 55%;
-            box-shadow: 0 12px 15px rgba(0, 0, 0, .3);
+            // box-shadow: 0 12px 15px rgba(0, 0, 0, .3);
             transform: skew(-10deg) rotate(-6deg);
         }
 

@@ -449,6 +449,29 @@ $breakpoint argument choices
   background-color: var(--v-primary-lighten4);
 }
 
+.message__container {
+  position: absolute;
+  bottom: 1rem;
+  width: 100%;
+}
+.message__container--right {
+  right: 0;
+}
+.message__container--left {
+  left: 0;
+}
+
+.save-btn__container {
+  position: absolute;
+  bottom: 1rem;
+}
+.save-btn__container--right {
+  right: 0;
+}
+.save-btn__container--left {
+  left: 0;
+}
+
 .login {
   font-family: "Lexend", arial, sans-serif !important;
   background: url(/images/map.jpg?74416897048e39fc2423753904a122f4);
@@ -533,6 +556,7 @@ $breakpoint argument choices
   transition: all 0.2s;
   outline: none;
   z-index: 1;
+  text-align: center;
 }
 .chic__btn--filled {
   background-color: var(--v-primary-base);

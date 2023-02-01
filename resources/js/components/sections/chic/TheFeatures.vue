@@ -59,7 +59,7 @@
 
         </div>
         <TheFeatures :section="section" v-else/>
-        <div class="message__container">
+        <div class="message__container message__container--right">
             <close-alert
                 :alertColor="getAlertColor"
                 :alert-message="getAlertMessage"
@@ -70,7 +70,7 @@
         </div>
         <v-tooltip left v-if="changed && maker">
             <template v-slot:activator="{ on, attrs }">
-                <div class="save-btn__container">
+                <div class="save-btn__container save-btn__container--right">
                     <div class="pulsate" >
                         <v-fab-transition>
                         <v-btn color="primary" fab dark v-bind="attrs" v-on="on" @click="save">
@@ -391,18 +391,6 @@ export default {
             background-color: var(--v-primary-lighten4);
             height: 7rem;
         }
-    }
-    .save-btn__container {
-        position: absolute;
-        bottom: 1rem;
-        right: 0;
-    }
-
-    .message__container {
-        position: absolute;
-        bottom: 1rem;
-        right: 0;
-        width: 100%;
     }
 
     [contenteditable] {

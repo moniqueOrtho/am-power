@@ -1,24 +1,32 @@
 <template>
     <div class="story">
-        <h3 class="chic__heading-3 mb-5">{{ section.title }}</h3>
-        <h2 class="chic__subheading-2 chic__subheading-2--dark mb-8">&ldquo;{{ section.subtitle }}&rdquo;</h2>
+        <h3 class="chic__heading-3 mb-5" v-if="section.title">{{ section.title }}</h3>
+        <h2 class="chic__subheading-2 chic__subheading-2--dark mb-8" v-if="section.subtitle">{{ section.subtitle }}</h2>
         <p class="story__text mb-10 mb-8">{{ section.text }}</p>
-        <button class="chic__btn">{{ section.body.button }}</button>
+        <div class="story__button-container">
+            <a
+                v-for="button in this.section.body"
+                :key="button.button"
+                class="chic__btn"
+                :class="button.class"
+                :href="button.href"
+            >{{ button.text }}</a>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            section: {
-                title: 'Happy Customers',
-                subtitle: 'The best decision of our lives',
-                text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus. Quidem consequatur harum volupta!',
-                body: {
-                    button: 'Find your own home'
-                }
-            }
+    props: {
+        data: {
+            type: Object,
+            required: true
+        }
+    },
+    computed: {
+        section() {
+            let data = Object.assign({}, this.data);
+            return data;
         }
     }
 
@@ -36,6 +44,16 @@ export default {
         &__text {
             font-size: 1rem;
             font-style: italic;
+        }
+
+        &__button-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 11rem);
+            grid-row-gap: 1rem;
+            align-items: center;
+            align-content: start;
+            justify-content: space-between;
         }
     }
 
