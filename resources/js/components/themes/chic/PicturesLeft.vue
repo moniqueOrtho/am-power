@@ -1,6 +1,6 @@
 <template>
     <div class="story__pictures" :style="cssVars">
-        <img :src="image.src" :alt="image.alt" :class="image.class" v-for="(image, index) in images" :key="index">
+        <img :src="image.src" :alt="image.alt" :class="image.class" v-for="(image, index) in this.section.body.images" :key="index">
     </div>
 </template>
 
@@ -9,13 +9,15 @@ import image1 from "../../../../images/laptop-en-koffie.jpg";
 import image2 from "../../../../images/vrouw-met-laptop.jpg";
 import image0 from "../../../../images/wood.jpg";
 export default {
+    props: {
+        data: {
+            type: Object,
+            required: true
+        }
+    },
     data() {
         return {
-            background: image0,
-            images: [
-                {src : image1, alt:'Laptop en koffie', class: 'story__img--1'},
-                {src : image2, alt:'Tevreden vrouw met laptop', class: 'story__img--2'}
-            ]
+
         }
     },
     methods: {
@@ -29,11 +31,26 @@ export default {
       }
     },
     computed: {
+        section() {
+            let data = {};
+            if(this.data.body !== null) {
+                data = Object.assign({}, this.data);
+            } else {
+                data['body'] = {
+                    background: image0,
+                    images: [
+                        {src : image1, alt:'Laptop en koffie', class: 'story__img--1'},
+                        {src : image2, alt:'Tevreden vrouw met laptop', class: 'story__img--2'}
+                    ]
+                }
+            }
+            return data;
+        },
         cssVars() {
             return {
                 '--color': this.convertHex(this.$vuetify.theme.themes.light.primary, 50),
                 '--color2': this.convertHex(this.$vuetify.theme.themes.light.tertiary, 50),
-                '--url': `url(${this.background})`
+                '--url': `url(${this.section.body.background})`
             }
         }
     }

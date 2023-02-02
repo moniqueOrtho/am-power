@@ -69,5 +69,14 @@ return [
     'texts' => 'Text|Texts',
     'buttons' => 'Button|Buttons',
     'layout' => 'Layout',
-    'closed' => 'Closed'
+    'closed' => 'Closed',
+    'rotate' => 'Rotate',
+    'rotate_clockwise' => 'Rotate clockwise',
+    'rotate_counter_clockwise' => 'Rotate counter clockwise',
+    'flip_horizontal' => 'Flip horizontal',
+    'flip_vertical' => 'Flip vertical',
+    'crop' => 'Crop',
+    'maximize' => 'Maximize',
+    'Free stencil' => 'Free stencil',
+    'reset' => 'Reset'
 ];

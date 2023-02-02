@@ -11,19 +11,19 @@
         :open-on-hover="hover"
         :transition="transition"
         >
-        <template v-slot:activator>
-            <v-btn
-            v-model="fab"
-            :color="defaultFab.color"
-            :dark="defaultFab.dark"
-            :light="defaultFab.light"
-            fab
-            @click="bigActivatorClicked"
-            >
-            <v-icon v-if="fab">{{ defaultFab.open }}</v-icon>
-            <v-icon v-else>{{ defaultFab.closed }}</v-icon>
-            </v-btn>
-        </template>
+            <template v-slot:activator>
+                <v-btn
+                v-model="fab"
+                :color="defaultFab.color"
+                :dark="defaultFab.dark"
+                :light="defaultFab.light"
+                fab
+                @click="bigActivatorClicked"
+                >
+                <v-icon v-if="fab">{{ defaultFab.open }}</v-icon>
+                <v-icon v-else>{{ defaultFab.closed }}</v-icon>
+                </v-btn>
+            </template>
         <v-tooltip
             :bottom="position.top && (direction === 'right' || direction === 'left')"
             :top="position.bottom && (direction === 'right' || direction === 'left')"
@@ -99,7 +99,16 @@ export default {
                     add: 'Add',
                     title: 'Title',
                     save: 'Save',
-                    noTitle: 'No title'
+                    noTitle: 'No title',
+                    subtitle: 'subtitle',
+                    noSubtitle: 'No subtitle',
+                    button: 'Button',
+                    rotateCounterClockwise: 'Rotate counter clockwise',
+                    rotateClockwise: 'Rotate clockwise',
+                    flipHorizontal: 'Flip horizontal',
+                    flipVertical: 'Flip vertical',
+                    reset: 'Reset',
+                    edit: 'Edit'
                 }
             }
         }
@@ -117,7 +126,13 @@ export default {
                 {name: 'subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: false, tip: this.labels.subtitle},
                 {name: 'no-subtitle', color: 'secondary', icon: 'mdi-subtitles', opp: true, tip: this.labels.noSubtitle},
                 {name: 'view', color: 'success', icon: 'mdi-eye', opp: false},
-                {name: 'button', color: 'accent', icon: 'mdi-card-outline' , opp: false, tip: `${this.labels.button} ${this.labels.add.toLowerCase()}`}
+                {name: 'button', color: 'accent', icon: 'mdi-card-outline' , opp: false, tip: `${this.labels.button} ${this.labels.add.toLowerCase()}`},
+                { name: 'rotate-clockwise', icon: 'mdi-reload', color: 'accent', tip: this.labels.rotateClockwise, opp: false },
+                { name: 'rotate-counter-clockwise', icon: 'mdi-restore', color: 'accent lighten-1', tip: this.labels.rotateCounterClockwise, opp: false },
+                { name: 'flip-horizontal', icon: 'mdi-flip-horizontal', color: 'accent lighten-1', tip: this.labels.flipHorizontal, opp: false  },
+                { name: 'flip-vertical', icon: 'mdi-flip-vertical', color: 'accent lighten-1', tip: this.labels.flipVertical, opp: false },
+                { name: 'reset', icon: 'mdi-image-off', color: 'error', tip: this.labels.reset, opp: false  },
+                { name: 'edit', icon: 'mdi-pencil', color: 'accent', tip: this.labels.edit, opp: false }
             ],
             editors: [],
             right: false,

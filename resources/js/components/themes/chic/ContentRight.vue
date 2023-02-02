@@ -49,7 +49,7 @@ export default {
         &__button-container {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(auto-fill, 11rem);
+            grid-template-columns: repeat(auto-fill, 12rem);
             grid-row-gap: 1rem;
             align-items: center;
             align-content: start;

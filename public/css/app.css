@@ -200,6 +200,10 @@ $breakpoint argument choices
   width: 100%;
 }
 
+[contenteditable] {
+  outline: 0px solid transparent;
+}
+
 .nav-layout {
   background-color: #E4D8C6;
 }
@@ -557,6 +561,7 @@ $breakpoint argument choices
   outline: none;
   z-index: 1;
   text-align: center;
+  width: 100%;
 }
 .chic__btn--filled {
   background-color: var(--v-primary-base);

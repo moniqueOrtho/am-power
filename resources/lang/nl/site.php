@@ -69,5 +69,14 @@ return [
     'texts' => 'Tekst|Teksten',
     'buttons' => 'Knop|Knopen',
     'layout' => 'Lay-out',
-    'closed' => 'Gesloten'
+    'closed' => 'Gesloten',
+    'rotate' => 'Draaien',
+    'rotate_clockwise' => 'Met klok mee',
+    'rotate_counter_clockwise' => 'Tegen de klok ine',
+    'flip_horizontal' => 'Draai horizontaal',
+    'flip_vertical' => 'Draai verticaal',
+    'crop' => 'Bijsnijden',
+    'maximize' => 'Maximaliseren',
+    'Free stencil' => 'Vrij bijsnijden',
+    'reset' => 'Resetten'
 ];

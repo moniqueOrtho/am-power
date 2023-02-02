@@ -48,6 +48,7 @@
                             :label="text.text"
                             outlined
                             hide-details
+                            @change="changed = true"
                         ></v-text-field>
                         <v-text-field
                             v-model="button.url"
@@ -55,6 +56,7 @@
                             label="link"
                             outlined
                             hide-details
+                            @change="changed = true"
                         ></v-text-field>
                         <v-select
                             v-model="button.class"
@@ -63,6 +65,7 @@
                             :label="`${text.button} ${text.layout.toLowerCase()}`"
                             outlined
                             hide-details
+                            @change="changed = true"
                         ></v-select>
 
                     </div>
@@ -86,7 +89,7 @@
                     <div class="pulsate" >
                         <v-fab-transition>
                         <v-btn color="primary" fab dark v-bind="attrs" v-on="on" @click="save">
-                            <v-icon> mdi-content-save </v-icon>
+                            <v-icon>mdi-content-save</v-icon>
                         </v-btn>
                         </v-fab-transition>
                     </div>
@@ -290,18 +293,14 @@ export default {
         save() {
             this.changed = false;
             this.maker = false;
-            let text = this.section.body.map((s) => {
-                return `<h6 class="text-h6">${s.title}</h6><p>${s.text}</p>`
-            });
             this.$emit('save-section', {
                 id : this.data === null ? null : this.data.id,
                 sequence: this.sequence,
-                component: 'TheFeatures',
+                component: 'ContentRight',
                 title: this.section.title,
                 subtitle: this.section.subtitle,
                 body: JSON.stringify(this.section.body),
-                text: text.toString()
-
+                text: this.section.text
             });
         }
 
@@ -330,7 +329,7 @@ export default {
         &__button-container {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(auto-fill, 11rem);
+            grid-template-columns: repeat(auto-fill, 12rem);
             grid-row-gap: 1rem;
             align-items: center;
             align-content: start;

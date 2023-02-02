@@ -392,8 +392,4 @@ export default {
             height: 7rem;
         }
     }
-
-    [contenteditable] {
-        outline: 0px solid transparent;
-    }
 </style>

@@ -19,7 +19,7 @@
 <script>
 import TheFeatures from './chic/TheFeatures.vue';
 import ContentRight from './chic/ContentRight.vue';
-import PicturesLeft from '../themes/chic/PicturesLeft.vue';
+import PicturesLeft from './chic/PicturesLeft.vue';
 import TheFooter from '../themes/chic/TheFooter.vue';
 import HeaderOne from '../themes/chic/HeaderOne.vue';
 import HeaderTwo from '../themes/chic/HeaderTwo.vue';
@@ -83,7 +83,8 @@ export default {
                 button: 'Button',
                 layout: 'Layout',
                 new2: 'new',
-                closed: 'Closed'
+                closed: 'Closed',
+                back: 'Back'
             }
         }
     },
