@@ -6,13 +6,13 @@
         @click="imageBoxClicked"
       >
         <div class="image-btn__image-container" v-if="image.src">
-          <img :src="image.src " :alt="image.title" class="images" />
+          <img :src="image.src " :alt="image.alt" class="images" />
         </div>
         <div class="noImage" v-else>
-          <v-icon class="image-btn__icon grey1--text text--lighten-2 " :style="iconSize">
-            {{ optionsBtn.icon }}
+          <v-icon class="image-btn__icon grey1--text text--light2 " :style="{'font-size' : options.iconSize}">
+            {{ options.icon }}
           </v-icon>
-          <p class="mt-2">{{ optionsBtn.text }}</p>
+          <p class="mt-2">{{ options.text }}</p>
         </div>
       </div>
     </div>
@@ -23,15 +23,14 @@
     name: "image-btn",
     props: {
       image : {
-        // Required keys are: src, id, title,
+        // Required keys are: src, id, alt,
         type: Object,
         required: true
       },
       optionsBtn : {
-        // Required keys are: text (button), icon, size
-        // Options key are : bgColor, iconsize
+        // See computed options
         type: Object,
-        required: true
+        required: false
       },
     },
     emits: ['btn-clicked'],
@@ -44,23 +43,31 @@
     computed: {
       styleImageBox() {
         let imageDotted = {
-              outline: "2px dotted var(--v-grey1-base)",
-              cursor: "pointer",
-            }
-        let imageLines = {
-              outline: "2px solid var(--v-grey1-darken2)",
-              cursor: "no-drop",
-              'background-color': this.optionsBtn.bgColor ? this.optionsBtn.bgColor : "transparent"
-            }
-        return this.image.src
-          ? {...imageLines, ...this.optionsBtn.size}
-          : {...imageDotted, ...this.optionsBtn.size}
+                outline: "2px dotted var(--v-grey1-base)",
+                cursor: "pointer",
+                }
+            let imageLines = {
+                outline: "2px solid var(--v-grey1-darken2)",
+                cursor: "no-drop",
+                'background-color': this.options.bgColor
+                }
+            return this.image.src ? imageLines : imageDotted;
       },
       imageSrc() {
         return this.image.src;
       },
-      iconSize() {
-        return this.optionsBtn.iconSize ? {'font-size' : this.optionsBtn.iconSize} : {'font-size' : '4vh'};
+      options() {
+        let options = {
+            text: 'Add image',
+            icon: 'mdi-image-plus',
+            bgColor: 'transparent',
+            iconsize: '4vh'
+        }, keys;
+        if(this.optionsBtn) {
+            keys = Object.keys(this.optionsBtn);
+            keys.forEach(k => options[k] = this.optionsBtn[k]);
+        }
+        return options;
       }
     },
   };
@@ -68,15 +75,22 @@
 
   <style lang="scss" scoped>
     .image-btn {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 18px;
+
       &__image-box {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-content: center;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        // position: absolute;
+        // left: 50%;
+        // top: 50%;
+        // transform: translate(-50%, -50%);
       }
       &__actions-btn {
         height: 34px;
