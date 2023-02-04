@@ -11,92 +11,69 @@
         ></v-progress-circular>
       </v-overlay>
       <v-card tile>
-        <!-- <v-toolbar
-          dark
-          color="primary"
-        >
-            <v-tooltip right>
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                        icon
-                        dark
-                        x-large
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="close"
-                    >
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                </template>
-                <span>{{ labels.back }}</span>
-            </v-tooltip>
-            <v-spacer></v-spacer>
-            <v-tooltip left>
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                        icon
-                        dark
-                        x-large
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="uploadImage"
-                    >
-                        <v-icon>mdi-content-save</v-icon>
-                    </v-btn>
-                </template>
-                <span>{{ labels.save }}</span>
-            </v-tooltip>
-        </v-toolbar> -->
+
         <div class="image-dialog">
-            <div class="image-dialog__sidebar primary" ref="sidebar">
-                <v-tooltip right>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                            icon
-                            dark
-                            x-large
-                            v-bind="attrs"
-                            v-on="on"
-                            @click="close"
-                        >
-                            <v-icon>mdi-close</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>{{ labels.back }}</span>
-                </v-tooltip>
-                <v-tooltip left>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                            icon
-                            dark
-                            x-large
-                            v-bind="attrs"
-                            v-on="on"
-                            @click="uploadImage"
-                            class="image-dialog__sidebar--save"
-                        >
-                            <v-icon>mdi-content-save</v-icon>
-                        </v-btn>
-                    </template>
-                    <span>{{ labels.save }}</span>
-                </v-tooltip>
-                <div class="image-dialog__sidebar--container">
-                    <div class="image-dialog__sidebar--image" :style="{height : `${this.sidebarWidth - 36}px`}" >
-                        <image-btn
-                            :image="{id: 1, src: '', alt: ''}"
-                            :optionsBtn="{iconSize: '4rem'}"
-                        ></image-btn>
+            <div class="image-dialog__sidebar accent" :class="edit ? 'image-dialog__sidebar--open' : 'image-dialog__sidebar--closed'">
+                <v-container>
+                    <div class="d-flex justify-space-between">
+                        <v-tooltip right>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    icon
+                                    dark
+                                    x-large
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    @click="close"
+                                >
+                                    <v-icon>mdi-close</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>{{ labels.back }}</span>
+                        </v-tooltip>
+                        <v-tooltip left>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    icon
+                                    dark
+                                    x-large
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    @click="uploadImage"
+                                    class="image-dialog__sidebar--save"
+                                >
+                                    <v-icon>mdi-content-save</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>{{ labels.save }}</span>
+                        </v-tooltip>
                     </div>
-
-                    <v-btn text dark class="px-4">Edit image</v-btn>
-
-
-                    <!-- <div class="image-dialog__sidebar--menu">
-                        <div class="navigation__item navigation__item--nav">
-                            <button class="navigation__link--btn">Edit image</button>
+                    <div class="image-dialog__sidebar--container">
+                        <div class="pa-3">
+                            <image-btn
+                                :image="editedImg"
+                                :optionsBtn="{iconSize: '4rem', text: labels.addImage}"
+                            ></image-btn>
                         </div>
-                    </div> -->
-                </div>
+                        <div class="text-center">
+                            <text-btn
+                                :text="edit ? labels.otherImage :labels.editImage"
+                                :color="$vuetify.theme.themes.light.light1"
+                                size="1rem"
+                                @do-action="edit = !edit">
+                            </text-btn>
+                        </div>
+                        <div class="px-3 py-12 ">
+                            <v-text-field
+                                :label="labels.description"
+                                v-model="editedImg.alt"
+                                color="primary"
+                                dark
+                                v-if="!edit && dialogState"
+                            ></v-text-field>
+                        </div>
+                    </div>
+                </v-container>
 
 
             </div>
@@ -131,9 +108,10 @@
   <script>
   //import AdvancedCropper from '../form/AdvancedCropper.vue';
   import ImageBtn from '../buttons/ImageBtn.vue';
+  import TextBtn from '../buttons/TextBtn.vue';
   export default {
-    name: "cropper-dialog",
-    components: { ImageBtn },
+    name: "image-dialog",
+    components: { ImageBtn, TextBtn },
     props: {
         labels: {
             type: Object,
@@ -141,13 +119,18 @@
                 return {
                     back: 'Back',
                     save: 'Save',
+                    editImage: 'Edit Image',
+                    ownImages: 'Own Image',
+                    addImage: 'Add image',
+                    otherImage: 'Other image',
+                    description: 'Description'
                 }
             }
         },
-    //   image: {
-    //     type: Object,
-    //     required: true,
-    //   },
+      image: {
+        type: Object,
+        default: () => { return {id: 1, src: '', alt: ''} },
+      },
       dialog: {
         type: Boolean,
         default: false,
@@ -174,27 +157,20 @@
     //   }
     },
     emits: ["dialog-closed"],
-    mounted() {
-        this.ro = new ResizeObserver(this.onResize);
-        this.ro.observe(this.$refs.sidebar)
-    },
-    beforeDestroy() {
-        this.ro.unobserve(this.$refs.sidebar)
-    },
     data() {
       return {
+        editedImg: null,
         upload: false,
         loading: false,
         loadingDisabled: true,
-        dialogState: true,
-        sidebarWidth: null,
-        ro: null,
+        dialogState: false,
+        edit: false
       };
     },
     methods: {
-        onResize() {
-            this.$emit('resize', this.$refs.sidebar.clientWidth)
-            this.sidebarWidth = this.$refs.sidebar.clientWidth;
+
+        editPicture(value) {
+            this.edit = value;
         },
         uploadImage() {
             this.loading = true;
@@ -215,6 +191,9 @@
     watch: {
         dialog(value) {
             this.dialogState = value;
+            if(value) {
+                this.editedImg = Object.assign({}, this.image);
+            }
         }
     }
   };
@@ -227,12 +206,16 @@
         grid-template-columns: repeat(8, 1fr);
 
         &__sidebar {
-            grid-column: 1/span 2;
             grid-row: 1/3;
-            display: grid;
-            grid-template-rows: min-content;
-            grid-template-columns: 1fr 1fr;
-            align-items: start;
+            grid-column: 1/span 2;
+            z-index: 100;
+            transition: width cubic-bezier(0, 0.52, 1, 1) .4s;
+            &--open {
+                width: 100vw;
+            }
+            &--closed {
+                width: 100%;
+            }
             &--save {
                 grid-column: 2/3;
                 grid-row: 1/2;
@@ -241,17 +224,7 @@
 
             &--container {
                 grid-column: 1/3;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                height: 100%;
-            }
 
-            &--image {
-                width: 100%;
-            }
-            &--menu {
-                padding: 0 18px;
             }
         }
         &__heading {

@@ -1,20 +1,16 @@
 <template>
-    <div class="image-btn">
-      <div
-        class="image-btn__image-box"
-        :style="styleImageBox"
-        @click="imageBoxClicked"
-      >
-        <div class="image-btn__image-container" v-if="image.src">
-          <img :src="image.src " :alt="image.alt" class="images" />
-        </div>
+    <div class="image-btn" :style="styleImageBox" @click="imageBoxClicked">
+
+
+        <img :src="image.src " :alt="image.alt" class="image-btn__image" v-if="image.src"/>
+
         <div class="noImage" v-else>
-          <v-icon class="image-btn__icon grey1--text text--light2 " :style="{'font-size' : options.iconSize}">
-            {{ options.icon }}
-          </v-icon>
-          <p class="mt-2">{{ options.text }}</p>
+            <v-icon class="image-btn__icon grey1--text text--light2 " :style="{'font-size' : options.iconSize}">
+                {{ options.icon }}
+            </v-icon>
+            <p class="mt-2">{{ options.text }}</p>
         </div>
-      </div>
+
     </div>
   </template>
 
@@ -44,11 +40,9 @@
       styleImageBox() {
         let imageDotted = {
                 outline: "2px dotted var(--v-grey1-base)",
-                cursor: "pointer",
                 }
             let imageLines = {
                 outline: "2px solid var(--v-grey1-darken2)",
-                cursor: "no-drop",
                 'background-color': this.options.bgColor
                 }
             return this.image.src ? imageLines : imageDotted;
@@ -78,20 +72,18 @@
         position: relative;
         width: 100%;
         height: 100%;
-        padding: 18px;
-
-      &__image-box {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-content: center;
-        width: 100%;
-        height: 100%;
-        // position: absolute;
-        // left: 50%;
-        // top: 50%;
-        // transform: translate(-50%, -50%);
-      }
+
+        &__image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+
       &__actions-btn {
         height: 34px;
         width: 34px;
@@ -124,14 +116,7 @@
         font-size: 1.125rem;
         color: var(--v-light1-base);
       }
-      // &__image-container {
-      //   display: flex;
-      //   position: relative;
-      //   width: 100%;
-      //   height: 100%;
-      //   justify-content: center;
-      //   background-color: var(--v-grey1-base);
-      // }
+
       &__name {
         font-size: 15px;
         color: var(--v-grey1-base);
@@ -141,5 +126,6 @@
       display: flex;
       flex-direction: column;
       text-align: center;
+      cursor: pointer;
     }
   </style>

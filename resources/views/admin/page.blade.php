@@ -23,6 +23,11 @@
             'layout' => __('site.layout'),
             'new2' => trans_choice('site.new i', 2),
             'closed' => __('site.closed'),
+            'editImage'=> __('site.edit_image'),
+            'ownImages' => trans_choice('site.own_images', 2),
+            'addImage'=> __('site.add_image'),
+            'otherImage'=> __('site.other_image'),
+            'description' => trans_choice('site.descriptions', 2)
         ])}}"
     >
 

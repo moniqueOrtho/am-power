@@ -78,5 +78,10 @@ return [
     'crop' => 'Crop',
     'maximize' => 'Maximize',
     'Free stencil' => 'Free stencil',
-    'reset' => 'Reset'
+    'reset' => 'Reset',
+    'edit_image' => 'Edit image',
+    'images' => 'image|images',
+    'own_images' => 'Own image|Own images',
+    'add_image' => 'Add image',
+    'other_image' => 'Other image'
 ];

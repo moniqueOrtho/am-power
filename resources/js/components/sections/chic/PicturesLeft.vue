@@ -10,8 +10,10 @@
         >
         <div class="story__background-editor" @click="openImageDialog(section.body.background)"></div>
         <image-dialog
+        :image="image"
         :dialog="dialog"
         @dialog-closed="dialog = false"
+        :labels="labels"
         ></image-dialog>
     </div>
 </template>
@@ -34,13 +36,19 @@ export default {
                 return {
                     back: 'Back',
                     save: 'Save',
+                    editImage: 'Edit Image',
+                    ownImages: 'Own Image',
+                    addImage: 'Add image',
+                    otherImage: 'Other image',
+                    description: 'Description'
                 }
             }
         }
     },
     data() {
         return {
-            dialog: false
+            dialog: false,
+            image: {}
         }
     },
     methods: {
@@ -55,6 +63,7 @@ export default {
       openImageDialog(image) {
         console.log(image)
         this.dialog = true;
+        this.image = image;
       }
     },
     computed: {

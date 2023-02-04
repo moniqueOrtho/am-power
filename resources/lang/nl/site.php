@@ -78,5 +78,10 @@ return [
     'crop' => 'Bijsnijden',
     'maximize' => 'Maximaliseren',
     'Free stencil' => 'Vrij bijsnijden',
-    'reset' => 'Resetten'
+    'reset' => 'Resetten',
+    'edit_image' => 'Afbeelding bewerken',
+    'images' => 'Afbeelding|Afbeeldingen',
+    'own_images' => 'Eigen afbeelding|Eigen afbeeldingen',
+    'add_image' => 'Afbeelding toevoegen',
+    'other_image' => 'Andere afbeelding'
 ];

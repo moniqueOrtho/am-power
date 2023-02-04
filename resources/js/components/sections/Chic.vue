@@ -84,7 +84,12 @@ export default {
                 layout: 'Layout',
                 new2: 'new',
                 closed: 'Closed',
-                back: 'Back'
+                back: 'Back',
+                editImage: 'Edit Image',
+                ownImages: 'Own Image',
+                addImage: 'Add image',
+                otherImage: 'Other image',
+                description: 'Description'
             }
         }
     },
