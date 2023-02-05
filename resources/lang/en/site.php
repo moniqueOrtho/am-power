@@ -70,6 +70,8 @@ return [
     'buttons' => 'Button|Buttons',
     'layout' => 'Layout',
     'closed' => 'Closed',
+    'close' => 'Close',
+    'back' => 'Back',
     'rotate' => 'Rotate',
     'rotate_clockwise' => 'Rotate clockwise',
     'rotate_counter_clockwise' => 'Rotate counter clockwise',

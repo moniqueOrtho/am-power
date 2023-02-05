@@ -5,7 +5,6 @@
             :is="section.component"
             :sequence="index"
             :data="section"
-            :labels="text"
             :class="section.class"
             :success="succesIndex === index ? text.sectionSaved : ''"
             :error="errorIndex === index ? text.sectionNotSaved : ''"
@@ -66,51 +65,23 @@ export default {
             },
             succesIndex: -1,
             errorIndex: -1,
-            text: {
-                feature: 'Feature',
-                add: 'Add',
-                title: 'Title',
-                subtitle: 'Subtitle',
-                save: 'Save',
-                noTitle: 'No title',
-                noSubtitle: 'No subtitle',
-                sectionSaved: 'Section has been saved successful!',
-                sectionNotSaved: 'Paragraph has not been saved',
-                happyCustomers: 'Happy customers',
-                bestDecision: 'The best decision for our company!',
-                moreReviews: 'More reviews',
-                text: 'Text',
-                button: 'Button',
-                layout: 'Layout',
-                new2: 'new',
-                closed: 'Closed',
-                back: 'Back',
-                editImage: 'Edit Image',
-                ownImages: 'Own Image',
-                addImage: 'Add image',
-                otherImage: 'Other image',
-                description: 'Description'
-            }
         }
     },
     created() {
         //console.log(this.page);
         this.setColors();
-        this.setLabels();
         this.setSections();
+        this.setTranslationStore();
     },
     methods: {
+        setTranslationStore() {
+            this.$store.dispatch('labels/setTranslations', this.labels);
+        },
         setColors() {
             const keys = Object.keys(this.colors);
             keys.forEach(key => {
                 this.$vuetify.theme.themes.light[key] = this.colors[key];
             });
-        },
-        setLabels() {
-            if(this.labels) {
-                let keys = Object.keys(this.labels);
-                keys.forEach(k => this.text[k] = this.labels[k]);
-            }
         },
         setSections() {
             let index, section;

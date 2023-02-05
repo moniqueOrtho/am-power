@@ -9,6 +9,7 @@ require('./bootstrap');
 window.Vue = require('vue').default;
 
 import vuetify from './vuetify';
+import store from './store/index';
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -18,7 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
 import { faUserSecret, faEye, faUserCircle, faEyeSlash, faKey, faCheck, faArrowRightFromBracket, faCircleCheck, faCircleExclamation, faXmark, faHeading } from '@fortawesome/free-solid-svg-icons'
-
+import Vue from 'vue';
 
 /* add icons to the library */
 library.add(faUserSecret, faEye, faUserCircle, faKey, faEyeSlash, faCheck, faArrowRightFromBracket, faCircleCheck, faCircleExclamation, faXmark, faHeading)
@@ -41,7 +42,6 @@ Vue.component('btn-pressed', require('./components/buttons/BtnPressed.vue').defa
 Vue.component('CrudTable', require('./components/table/CrudTable.vue').default);
 Vue.component('chic', require('./components/sections/Chic.vue').default);
 Vue.component('playful', require('./components/sections/Playful.vue').default);
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -50,5 +50,7 @@ Vue.component('playful', require('./components/sections/Playful.vue').default);
 
 const app = new Vue({
     el: '#app',
-    vuetify
+    store,
+    vuetify,
+
 });

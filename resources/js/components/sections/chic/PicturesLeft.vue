@@ -30,20 +30,6 @@ export default {
             type: Object,
             required: true
         },
-        labels: {
-            type: Object,
-            default: () => {
-                return {
-                    back: 'Back',
-                    save: 'Save',
-                    editImage: 'Edit Image',
-                    ownImages: 'Own Image',
-                    addImage: 'Add image',
-                    otherImage: 'Other image',
-                    description: 'Description'
-                }
-            }
-        }
     },
     data() {
         return {
@@ -67,6 +53,9 @@ export default {
       }
     },
     computed: {
+        labels() {
+            return this.$store.getters['labels/getTranslations'];
+        },
         section() {
             let data = {};
             if(this.data.body !== null) {

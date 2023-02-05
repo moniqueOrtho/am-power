@@ -70,6 +70,8 @@ return [
     'buttons' => 'Knop|Knopen',
     'layout' => 'Lay-out',
     'closed' => 'Gesloten',
+    'close' => 'Sluiten',
+    'back' => 'terug',
     'rotate' => 'Draaien',
     'rotate_clockwise' => 'Met klok mee',
     'rotate_counter_clockwise' => 'Tegen de klok ine',

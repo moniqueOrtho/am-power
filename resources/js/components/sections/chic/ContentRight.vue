@@ -10,8 +10,8 @@
         :labels="labels"
         >
         </editor-menu>
-        <input class="chic__heading-3 mb-5 editor__box editor__box--title" v-model="section.title" :placeholder="text.title"  v-if="title && maker">
-        <textarea class="chic__subheading-2 chic__subheading-2--dark mb-8 editor__box editor__box--subtitle" v-model="section.subtitle" :placeholder="text.subtitle" rows="2" v-if="subtitle && maker"></textarea>
+        <input class="chic__heading-3 mb-5 editor__box editor__box--title" v-model="section.title" :placeholder="labels.title"  v-if="title && maker">
+        <textarea class="chic__subheading-2 chic__subheading-2--dark mb-8 editor__box editor__box--subtitle" v-model="section.subtitle" :placeholder="labels.subtitle" rows="2" v-if="subtitle && maker"></textarea>
         <p
             class="story__text mb-10 mb-8 editor__box"
             contenteditable
@@ -45,7 +45,7 @@
                         <v-text-field
                             v-model="button.text"
                             class="pa-2"
-                            :label="text.text"
+                            :label="labels.text"
                             outlined
                             hide-details
                             @change="changed = true"
@@ -62,7 +62,7 @@
                             v-model="button.class"
                             :items="classItems"
                             class="pa-2"
-                            :label="`${text.button} ${text.layout.toLowerCase()}`"
+                            :label="`${labels.button} ${labels.layout.toLowerCase()}`"
                             outlined
                             hide-details
                             @change="changed = true"
@@ -124,14 +124,10 @@ export default {
             type: String,
             default: ''
         },
-        labels: {
-            type: Object,
-            required: false
-        },
-        emits: ['save-section', 'delete-message'],
+
     },
+    emits: ['save-section', 'delete-message'],
     created() {
-        this.setLabels();
         this.initialize();
     },
     data() {
@@ -142,21 +138,6 @@ export default {
                 text: '',
                 body: []
             },
-            text: {
-                add: 'Add',
-                title: 'Title',
-                subtitle: 'Subtitle',
-                save: 'Save',
-                noTitle: 'No title',
-                happyCustomers: 'Happy customers',
-                bestDecision: 'The best decision for our company!',
-                moreReviews: 'More reviews',
-                text: 'Text',
-                button: 'Button',
-                layout: 'Layout',
-                new2: 'New',
-                closed: 'Closed'
-            },
             changed: false,
             actions: ['button', 'no-title', 'no-subtitle'],
             title: false,
@@ -166,6 +147,9 @@ export default {
         }
     },
     computed: {
+        labels() {
+            return this.$store.getters['labels/getTranslations'];
+        },
         contentManager() {
             return this.maker ? 'story' : 'story__viewer';
         },
@@ -182,18 +166,18 @@ export default {
             return this.error ? 'error' : 'success';
         },
         defaultSubtitle() {
-            return `“${this.text.bestDecision}”`
+            return `“${this.labels.bestDecision}”`
         },
         classItems() {
-            return [ {text : this.text.closed, value : 'chic__btn--filled'}, {text : 'Open', value : 'chic__btn--open'}]
+            return [ {text : this.labels.closed, value : 'chic__btn--filled'}, {text : 'Open', value : 'chic__btn--open'}]
         },
         defaultButton() {
-            return { id: `btn-${this.section.body.length}`, text: `${this.text.new2} ${this.text.button.toLowerCase()}`, url: '', class:"chic__btn--filled" }
+            return { id: `btn-${this.section.body.length}`, text: `${this.labels.new2} ${this.labels.button.toLowerCase()}`, url: '', class:"chic__btn--filled" }
         }
     },
     methods: {
         initialize() {
-            this.section.title = this.data.title ? this.data.title : this.text.happyCustomers;
+            this.section.title = this.data.title ? this.data.title : this.labels.happyCustomers;
             this.title = true;
 
             this.section.subtitle = this.data.subtitle ? this.data.subtitle : this.defaultSubtitle;
@@ -207,12 +191,6 @@ export default {
 
             this.section.text = this.data.text ? this.data.text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus. Quidem consequatur harum volupta!';
 
-        },
-        setLabels() {
-            if(this.labels) {
-                let keys = Object.keys(this.text);
-                keys.forEach(k => this.text[k] = this.labels[k]);
-            }
         },
         bigActivatorClicked(closed) {
             this.maker = ! closed;
@@ -249,7 +227,7 @@ export default {
         },
         addTitle(title) {
             this.title = true;
-            this.section.title = this.text.happyCustomers;
+            this.section.title = this.labels.happyCustomers;
             this.setRightTitleBtn(title, 'no-title');
         },
         deleteTitle(title) {

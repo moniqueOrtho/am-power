@@ -29,7 +29,7 @@
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
                             </template>
-                            <span>{{ labels.back }}</span>
+                            <span>{{ labels.close }}</span>
                         </v-tooltip>
                         <v-tooltip left>
                             <template v-slot:activator="{ on, attrs }">
@@ -113,28 +113,14 @@
     name: "image-dialog",
     components: { ImageBtn, TextBtn },
     props: {
-        labels: {
+        image: {
             type: Object,
-            default: () => {
-                return {
-                    back: 'Back',
-                    save: 'Save',
-                    editImage: 'Edit Image',
-                    ownImages: 'Own Image',
-                    addImage: 'Add image',
-                    otherImage: 'Other image',
-                    description: 'Description'
-                }
-            }
+            default: () => { return {id: 1, src: '', alt: ''} },
         },
-      image: {
-        type: Object,
-        default: () => { return {id: 1, src: '', alt: ''} },
-      },
-      dialog: {
-        type: Boolean,
-        default: false,
-      },
+        dialog: {
+            type: Boolean,
+            default: false,
+        },
     //   autoZoom: {
     //     type: Boolean,
     //     default: false,
@@ -186,6 +172,11 @@
         close() {
             this.$emit('dialog-closed');
         }
+    },
+    computed: {
+        labels() {
+            return this.$store.getters['labels/getTranslations'];
+        },
     },
 
     watch: {

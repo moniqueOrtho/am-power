@@ -27,7 +27,8 @@
             'ownImages' => trans_choice('site.own_images', 2),
             'addImage'=> __('site.add_image'),
             'otherImage'=> __('site.other_image'),
-            'description' => trans_choice('site.descriptions', 2)
+            'description' => trans_choice('site.descriptions', 1),
+            'close' => __('site.close')
         ])}}"
     >
 

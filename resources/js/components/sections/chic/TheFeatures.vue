@@ -114,18 +114,18 @@ export default {
             type: String,
             default: ''
         },
-        labels: {
-            type: Object,
-            default: () => {
-                return {
-                    feature: 'Feature',
-                    add: 'Add',
-                    title: 'Title',
-                    save: 'Save',
-                    noTitle: 'No title'
-                }
-            }
-        }
+        // labels: {
+        //     type: Object,
+        //     default: () => {
+        //         return {
+        //             feature: 'Feature',
+        //             add: 'Add',
+        //             title: 'Title',
+        //             save: 'Save',
+        //             noTitle: 'No title'
+        //         }
+        //     }
+        // }
     },
     emits: ['save-section', 'delete-message'],
     created() {
@@ -134,13 +134,6 @@ export default {
     data() {
         return {
             maker: false,
-            features: [
-                {id:"feature-0", title: `${this.labels.feature} 1`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'},
-                {id:"feature-1", title: `${this.labels.feature} 2`, icon: '', text: 'Voluptatum mollitia quae. Vero ipsum sapiente molestias accusamus rerum sed a eligendi aut quia.'},
-                {id:"feature-2", title: `${this.labels.feature} 3`, icon: '', text: 'Tenetur distinctio necessitatibus pariatur voluptatibus quidem consequatur harum.'},
-                {id:"feature-3", title: `${this.labels.feature} 4`, icon: '', text: 'Vero ipsum sapiente molestias accusamus rerum. Lorem, ipsum dolor sit amet consectetur adipisicing elit.'},
-                {id:"feature-4", title: `${this.labels.feature} 5`, icon: '', text: 'Quidem consequatur harum, voluptatum mollitia quae. Tenetur distinctio necessitatibus pariatur voluptatibus.'},
-            ],
             section: {
                 title: null,
                 subtitle: null,
@@ -154,6 +147,18 @@ export default {
         }
     },
     computed: {
+        labels() {
+            return this.$store.getters['labels/getTranslations'];
+        },
+        features() {
+            return [
+                {id:"feature-0", title: `${this.labels.feature} 1`, icon: '', text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur distinctio necessitatibus pariatur voluptatibus.'},
+                {id:"feature-1", title: `${this.labels.feature} 2`, icon: '', text: 'Voluptatum mollitia quae. Vero ipsum sapiente molestias accusamus rerum sed a eligendi aut quia.'},
+                {id:"feature-2", title: `${this.labels.feature} 3`, icon: '', text: 'Tenetur distinctio necessitatibus pariatur voluptatibus quidem consequatur harum.'},
+                {id:"feature-3", title: `${this.labels.feature} 4`, icon: '', text: 'Vero ipsum sapiente molestias accusamus rerum. Lorem, ipsum dolor sit amet consectetur adipisicing elit.'},
+                {id:"feature-4", title: `${this.labels.feature} 5`, icon: '', text: 'Quidem consequatur harum, voluptatum mollitia quae. Tenetur distinctio necessitatibus pariatur voluptatibus.'},
+            ]
+        },
         styleContainer() {
             return this.title ? {margin: '0 0 9rem 0'} : {margin: '9rem 0'};
         },
