@@ -28,7 +28,8 @@
             'addImage'=> __('site.add_image'),
             'otherImage'=> __('site.other_image'),
             'description' => trans_choice('site.descriptions', 1),
-            'close' => __('site.close')
+            'close' => __('site.close'),
+            'chooseAnotherImg' => __('site.choose_another_image')
         ])}}"
     >
 

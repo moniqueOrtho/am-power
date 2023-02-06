@@ -4,11 +4,12 @@
 
         <img :src="image.src " :alt="image.alt" class="image-btn__image" v-if="image.src"/>
 
-        <div class="noImage" v-else>
+        <div class="noImage" v-else @click="activateFileUpload">
             <v-icon class="image-btn__icon grey1--text text--light2 " :style="{'font-size' : options.iconSize}">
                 {{ options.icon }}
             </v-icon>
             <p class="mt-2">{{ options.text }}</p>
+            <input type="file" :ref="image.name" :name="image.name" :style="{display: 'none'}" @change="loadImage($event)">
         </div>
 
     </div>
@@ -33,6 +34,12 @@
     methods: {
       imageBoxClicked() {
         this.$emit("btn-clicked", this.image);
+      },
+      activateFileUpload() {
+        this.$refs[this.image.name].click();
+      },
+      loadImage(e) {
+        console.log(e)
       }
 
     },

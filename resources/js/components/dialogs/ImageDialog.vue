@@ -59,6 +59,7 @@
                             <text-btn
                                 :text="edit ? labels.otherImage :labels.editImage"
                                 :color="$vuetify.theme.themes.light.light1"
+                                :hoverColor="$vuetify.theme.themes.light.primary"
                                 size="1rem"
                                 @do-action="edit = !edit">
                             </text-btn>
@@ -77,8 +78,18 @@
 
 
             </div>
-            <div class="image-dialog__heading light1">heading</div>
-            <div class="image-dialog__images white">images</div>
+            <div class="image-dialog__heading light1">
+                <h6 class="text-h6 text-uppercase">{{ labels.ownImages }}</h6>
+                <h6 class="text-h6 primary--text">{{ labels.chooseAnotherImg }}</h6>
+            </div>
+            <div class="image-dialog__images white">
+                <image-btn
+                    v-for="image in newImages"
+                    :key="image.name"
+                    :image="image"
+                    :optionsBtn="{iconSize: '4rem', text: labels.addImage}"
+                ></image-btn>
+            </div>
         </div>
         <!-- <h6 class="text-h6 text-uppercase primary--text pa-5">
           Plaatje toevoegen
@@ -150,7 +161,20 @@
         loading: false,
         loadingDisabled: true,
         dialogState: false,
-        edit: false
+        edit: false,
+        newImages: [
+            {name: '', src : '', alt:'', class: ''}
+        ],
+        text: {
+            close: 'Close',
+            save: 'Save',
+            addImage: 'Add Image',
+            otherImage: 'Other image',
+            editImage: 'Edit image',
+            description: 'Description',
+            ownImages: 'Own images',
+            chooseAnotherImg: 'Choose another image'
+        }
       };
     },
     methods: {
@@ -175,7 +199,14 @@
     },
     computed: {
         labels() {
-            return this.$store.getters['labels/getTranslations'];
+            const labels = this.$store.getters['labels/getTranslations'];
+            if(labels && Object.keys(labels) !== 0 && Object.getPrototypeOf(labels) === Object.prototype) {
+                let keys = Object.keys(this.text);
+                keys.forEach(k => {
+                    if(k in labels) this.text[k] = labels[k]
+                })
+            }
+            return this.text;
         },
     },
 
@@ -220,6 +251,20 @@
         }
         &__heading {
             grid-column: 3/9;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 0 2rem;
+        }
+        &__images {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 12rem);
+            grid-auto-rows: 12rem;
+            grid-row-gap: 1.5rem;
+            grid-column-gap: 1rem;
         }
     }
 

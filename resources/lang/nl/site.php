@@ -85,5 +85,6 @@ return [
     'images' => 'Afbeelding|Afbeeldingen',
     'own_images' => 'Eigen afbeelding|Eigen afbeeldingen',
     'add_image' => 'Afbeelding toevoegen',
-    'other_image' => 'Andere afbeelding'
+    'other_image' => 'Andere afbeelding',
+    'choose_another_image' => 'Kies een andere afbeelding'
 ];

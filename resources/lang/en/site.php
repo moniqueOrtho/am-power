@@ -85,5 +85,6 @@ return [
     'images' => 'image|images',
     'own_images' => 'Own image|Own images',
     'add_image' => 'Add image',
-    'other_image' => 'Other image'
+    'other_image' => 'Other image',
+    'choose_another_image' => 'Choose another image'
 ];
