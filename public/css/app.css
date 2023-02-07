@@ -230,6 +230,18 @@ $breakpoint argument choices
   }
 }
 
+.max-container {
+  margin-right: auto;
+  margin-left: auto;
+  padding: 1rem;
+  max-width: 1185px;
+}
+@media only screen and (max-width: 60em) {
+  .max-container {
+    max-width: 900px;
+  }
+}
+
 .am-fill-height {
   flex: 1 1 auto;
   flex-direction: column;

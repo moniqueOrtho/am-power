@@ -86,5 +86,7 @@ return [
     'own_images' => 'Eigen afbeelding|Eigen afbeeldingen',
     'add_image' => 'Afbeelding toevoegen',
     'other_image' => 'Andere afbeelding',
-    'choose_another_image' => 'Kies een andere afbeelding'
+    'choose_another_image' => 'Kies een andere afbeelding',
+    'no_image' => 'Er is geen afbeelding geselecteerd!',
+    'image_size_restriction' => 'De afbeelding is groter dan 2MB!'
 ];

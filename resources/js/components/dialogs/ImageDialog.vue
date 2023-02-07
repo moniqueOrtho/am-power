@@ -12,9 +12,9 @@
       </v-overlay>
       <v-card tile>
 
-        <div class="image-dialog">
+        <div class="image-dialog" v-if="dialogState">
             <div class="image-dialog__sidebar accent" :class="edit ? 'image-dialog__sidebar--open' : 'image-dialog__sidebar--closed'">
-                <v-container>
+                <div class="max-container">
                     <div class="d-flex justify-space-between">
                         <v-tooltip right>
                             <template v-slot:activator="{ on, attrs }">
@@ -52,7 +52,7 @@
                         <div class="pa-3">
                             <image-btn
                                 :image="editedImg"
-                                :optionsBtn="{iconSize: '4rem', text: labels.addImage}"
+                                :optionsBtn="{iconSize: '4rem', text: labels.addImage, clickable: false}"
                             ></image-btn>
                         </div>
                         <div class="text-center">
@@ -74,7 +74,7 @@
                             ></v-text-field>
                         </div>
                     </div>
-                </v-container>
+                </div>
 
 
             </div>
@@ -84,10 +84,11 @@
             </div>
             <div class="image-dialog__images white">
                 <image-btn
-                    v-for="image in newImages"
+                    v-for="image in ownImages"
                     :key="image.name"
                     :image="image"
-                    :optionsBtn="{iconSize: '4rem', text: labels.addImage}"
+                    :optionsBtn="{iconSize: '4rem', text: labels.addImage, bgColor: image.name === editedImg.name ? $vuetify.theme.themes.light.accent : 'transparent', clickable: image.name === editedImg.name ? false : true }"
+                    @image-upload="allNewImgUploads"
                 ></image-btn>
             </div>
         </div>
@@ -162,9 +163,7 @@
         loadingDisabled: true,
         dialogState: false,
         edit: false,
-        newImages: [
-            {name: '', src : '', alt:'', class: ''}
-        ],
+        defaultImage: {name: 'file-image', src : '', alt:'', class: ''},
         text: {
             close: 'Close',
             save: 'Save',
@@ -181,6 +180,10 @@
 
         editPicture(value) {
             this.edit = value;
+        },
+        allNewImgUploads(image, name) {
+            console.log(name)
+            if(name ==='file-image') this.ownImages.push(image);
         },
         uploadImage() {
             this.loading = true;
@@ -208,6 +211,13 @@
             }
             return this.text;
         },
+        ownImages() {
+            let images = [this.defaultImage];
+            if(this.editedImg && Object.keys(this.editedImg) !== 0 && Object.getPrototypeOf(this.editedImg) === Object.prototype) {
+                images.push(this.editedImg);
+            }
+            return images;
+        }
     },
 
     watch: {
@@ -259,6 +269,7 @@
             padding: 0 2rem;
         }
         &__images {
+            grid-column: 3/9;
             padding: 2rem;
             display: grid;
             grid-template-columns: repeat(auto-fill, 12rem);

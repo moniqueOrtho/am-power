@@ -1,8 +1,9 @@
 <template>
-    <div class="image-btn" :style="styleImageBox" @click="imageBoxClicked">
+    <div class="image-btn" :style="styleImageBox">
 
 
-        <img :src="image.src " :alt="image.alt" class="image-btn__image" v-if="image.src"/>
+        <img :src="image.src " :alt="image.alt" class="image-btn__image" v-if="image.src && !options.clickable" />
+        <img :src="image.src " :alt="image.alt" class="image-btn__image" v-else-if="image.src && options.clickable" @click="imageBoxClicked" />
 
         <div class="noImage" v-else @click="activateFileUpload">
             <v-icon class="image-btn__icon grey1--text text--light2 " :style="{'font-size' : options.iconSize}">
@@ -30,46 +31,113 @@
         required: false
       },
     },
-    emits: ['btn-clicked'],
+    emits: ['btn-clicked', 'image-upload'],
+    data() {
+      return {
+        error: null,
+        text: {
+            noImage: 'No image has been selected!',
+            noRightImgSize: 'The image is larger than 2MB!'
+        }
+      }
+    },
     methods: {
       imageBoxClicked() {
         this.$emit("btn-clicked", this.image);
       },
       activateFileUpload() {
+        console.log(this.image.name)
         this.$refs[this.image.name].click();
+        this.error = null;
       },
       loadImage(e) {
-        console.log(e)
-      }
+        const {files} = e.target;
+        if( files && files[0]) {
+          let validated = this.validateImage(files[0]);
+          if(validated) {
+            this.setNewImage(files[0]);
+          }
+        }
+      },
+      validateImage(file) {
+      // Is there a file?
+        if(!file) {
+          this.error = this.labels.noImage;
+          return false;
+        }
+        // Validate type gif|jpg|png|jpeg|bmp
+        let isGood = /\.(?=gif|jpg|png|jpeg|bmp)/gi.test(file.name);
+        if(!isGood) {
+          this.error = this.labels.noImage;
+          return false;
+        }
+        // Validate size. Size must be smaller then 2mb
+        if(file.size > 2000000) {
+          this.error = this.labels.noRightImgSize;
+          return false;
+        }
+        return true;
+      },
+      setNewImage(file) {
+        let newImage = {};
+        const blob = URL.createObjectURL(file);
+        // Create a new FileReader to read this image binary data
+        const reader = new FileReader();
+        // Define a callback function to run, when FileReader finishes its job
+        reader.onload = (e) => {
+            // Note: arrow function used here, so that "this.imageEdited" refers to the image of Vue component
+            newImage.name = file.name
+            newImage.src = blob;
+            newImage.alt = file.name
+            // this.imageEdited['type'] = this.getMimeType(e.target.result, file.type);
+        };
+        // Start the reader job - read file as a data url (base64 format)
+        reader.readAsArrayBuffer(file);
+        console.log(file)
+        this.$emit('image-upload', newImage, this.image.name)
+    },
 
     },
     computed: {
-      styleImageBox() {
-        let imageDotted = {
-                outline: "2px dotted var(--v-grey1-base)",
-                }
-            let imageLines = {
-                outline: "2px solid var(--v-grey1-darken2)",
-                'background-color': this.options.bgColor
-                }
-            return this.image.src ? imageLines : imageDotted;
-      },
-      imageSrc() {
-        return this.image.src;
-      },
-      options() {
-        let options = {
-            text: 'Add image',
-            icon: 'mdi-image-plus',
-            bgColor: 'transparent',
-            iconsize: '4vh'
-        }, keys;
-        if(this.optionsBtn) {
-            keys = Object.keys(this.optionsBtn);
-            keys.forEach(k => options[k] = this.optionsBtn[k]);
+        labels() {
+            const labels = this.$store.getters['labels/getTranslations'];
+            if(labels && Object.keys(labels) !== 0 && Object.getPrototypeOf(labels) === Object.prototype) {
+                let keys = Object.keys(this.text);
+                keys.forEach(k => {
+                    if(k in labels) this.text[k] = labels[k]
+                })
+            }
+            return this.text;
+        },
+        styleImageBox() {
+            let imageDotted = {
+                    outline: "2px dotted var(--v-grey1-base)",
+                    cursor: 'pointer'
+                    }
+                let imageLines = {
+                    outline: "2px solid var(--v-grey1-darken2)",
+                    'background-color': this.options.bgColor,
+                    cursor: this.options.clickable ? 'pointer' : 'cursor'
+                    }
+                return this.image.src ? imageLines : imageDotted;
+        },
+        imageSrc() {
+            return this.image.src;
+        },
+        options() {
+            let options = {
+                text: 'Add image',
+                icon: 'mdi-image-plus',
+                bgColor: 'transparent',
+                iconsize: '4vh',
+                clickable: true
+            }, keys;
+            if(this.optionsBtn) {
+                keys = Object.keys(this.optionsBtn);
+                keys.forEach(k => options[k] = this.optionsBtn[k]);
+            }
+            return options;
         }
-        return options;
-      }
     },
   };
   </script>
@@ -133,6 +201,5 @@
       display: flex;
       flex-direction: column;
       text-align: center;
-      cursor: pointer;
     }
   </style>

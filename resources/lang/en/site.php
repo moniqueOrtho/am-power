@@ -86,5 +86,7 @@ return [
     'own_images' => 'Own image|Own images',
     'add_image' => 'Add image',
     'other_image' => 'Other image',
-    'choose_another_image' => 'Choose another image'
+    'choose_another_image' => 'Choose another image',
+    'no_image' => 'No image has been selected!',
+    'image_size_restriction' => 'The image is larger than 2MB!'
 ];

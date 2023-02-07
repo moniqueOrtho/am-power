@@ -23,6 +23,17 @@
     }
 }
 
+.max-container {
+    margin-right: auto;
+    margin-left: auto;
+    padding: 1rem;
+    max-width: 1185px;
+
+    @include respond(sm) {
+        max-width: 900px;
+    }
+}
+
 .am-fill-height {
     flex: 1 1 auto;
     flex-direction: column;
