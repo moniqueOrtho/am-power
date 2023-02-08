@@ -105,6 +105,10 @@ export default {
             width: 100%;
             height: 100%;
             z-index: 5;
+            transition: all 0.5s ease;
+            &:hover {
+                background-color: rgba($color: #000000, $alpha: .5);
+            }
         }
 
         &__img--1 {
@@ -115,6 +119,11 @@ export default {
             box-shadow: 0 20px 50px rgba($color: #000000, $alpha: .2);
             object-fit: cover;
             z-index: 10;
+            transition: all 0.5s ease;
+            &:hover {
+                -webkit-filter: brightness(.5);
+                filter: brightness(.5);
+            }
         }
 
         &__img--2 {
@@ -124,6 +133,11 @@ export default {
             z-index: 20;
             box-shadow: 0 20px 50px rgba($color: #000000, $alpha: .3);
             z-index: 15;
+            transition: all 0.5s ease;
+            &:hover {
+                -webkit-filter: brightness(.5);
+                filter: brightness(.5);
+            }
         }
     }
 

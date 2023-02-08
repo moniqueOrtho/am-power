@@ -17,7 +17,7 @@ class CreateImagesTable extends Migration
         Schema::create('images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('alt', 50)->nullable();
             $table->boolean('upload_successful')->default(false);
             $table->string('disk')->default('public');

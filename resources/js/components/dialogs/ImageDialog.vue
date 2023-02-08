@@ -84,12 +84,13 @@
             </div>
             <div class="image-dialog__images white">
                 <image-btn
-                    v-for="image in ownImages"
+                    v-for="image in images"
                     :key="image.name"
                     :image="image"
-                    :optionsBtn="{iconSize: '4rem', text: labels.addImage, bgColor: image.name === editedImg.name ? $vuetify.theme.themes.light.accent : 'transparent', clickable: image.name === editedImg.name ? false : true }"
-                    @image-upload="allNewImgUploads"
+                    :optionsBtn="{iconSize: '4rem', text: labels.addImage, bgColor: image.name !== 'file' ? $vuetify.theme.themes.light.accent : 'transparent', clickable: image.name === editedImg.name ? false : true }"
+                    @btn-clicked="allNewImgUploads"
                 ></image-btn>
+                <input type="file" ref="file" name="file" :style="{display: 'none'}" @change="getImageFile">
             </div>
         </div>
         <!-- <h6 class="text-h6 text-uppercase primary--text pa-5">
@@ -158,12 +159,15 @@
     data() {
       return {
         editedImg: null,
+        images: [{name: 'file', src : '', alt:'', class: ''}],
+        newImage: {},
+        refName: '',
         upload: false,
         loading: false,
         loadingDisabled: true,
         dialogState: false,
         edit: false,
-        defaultImage: {name: 'file-image', src : '', alt:'', class: ''},
+        error: null,
         text: {
             close: 'Close',
             save: 'Save',
@@ -172,18 +176,87 @@
             editImage: 'Edit image',
             description: 'Description',
             ownImages: 'Own images',
-            chooseAnotherImg: 'Choose another image'
+            chooseAnotherImg: 'Choose another image',
+            noImage: 'No image has been selected!',
+            noRightImgSize: 'The image is larger than 2MB!'
         }
       };
     },
     methods: {
-
         editPicture(value) {
             this.edit = value;
         },
-        allNewImgUploads(image, name) {
-            console.log(name)
-            if(name ==='file-image') this.ownImages.push(image);
+        allNewImgUploads(image) {
+            (image.name ==='file') ? this.activateFileUpload(image.name) : this.changePicture(image);
+        },
+        activateFileUpload(name) {
+            this.refName = name;
+            this.newImage = {};
+            this.$refs[this.refName].click();
+        },
+        changePicture(image) {
+            this.editedImg = image;
+        },
+        getImageFile(e) {
+            const {files} = e.target;
+            if( files && files[0]) {
+                let validated = this.validateImage(files[0]);
+                if(validated) {
+                    this.deleteUrl();
+                    this.prepareNewImage(files[0]);
+                } else {
+                    this.emptyFileInput();
+                }
+            }
+        },
+        validateImage(file) {
+        // Is there a file?
+            if(!file) {
+                this.error = this.labels.noImage;
+                return false;
+            }
+            // Validate type gif|jpg|png|jpeg|bmp
+            let isGood = /\.(?=gif|jpg|png|jpeg|bmp)/gi.test(file.name);
+            if(!isGood) {
+                this.error = this.labels.noImage;
+                return false;
+            }
+            // Validate size. Size must be smaller then 2mb
+            if(file.size > 2000000) {
+                this.error = this.labels.noRightImgSize;
+                return false;
+            }
+            return true;
+        },
+        emptyFileInput() {
+            this.$refs[this.refName].value = "";
+
+        },
+        prepareNewImage(file) {
+            const blob = URL.createObjectURL(file);
+            // Create a new FileReader to read this image binary data
+            const reader = new FileReader();
+            // Define a callback function to run, when FileReader finishes its job
+            reader.onload = (e) => {
+                // Note: arrow function used here, so that "this.imageEdited" refers to the image of Vue component
+                this.newImage.name = file.name
+                this.newImage.src = blob;
+                this.newImage.alt = file.name
+                this.setNewImage(this.newImage);
+                // this.imageEdited['type'] = this.getMimeType(e.target.result, file.type);
+            };
+            // Start the reader job - read file as a data url (base64 format)
+            reader.readAsArrayBuffer(file);
+
+        },
+        setNewImage(image) {
+            this.editedImg = image;
+            this.images.push(image)
+        },
+        deleteUrl() {
+        if (this.newImage.src) {
+                URL.revokeObjectURL(this.newImage.src);
+            }
         },
         uploadImage() {
             this.loading = true;
@@ -211,13 +284,6 @@
             }
             return this.text;
         },
-        ownImages() {
-            let images = [this.defaultImage];
-            if(this.editedImg && Object.keys(this.editedImg) !== 0 && Object.getPrototypeOf(this.editedImg) === Object.prototype) {
-                images.push(this.editedImg);
-            }
-            return images;
-        }
     },
 
     watch: {
@@ -225,6 +291,7 @@
             this.dialogState = value;
             if(value) {
                 this.editedImg = Object.assign({}, this.image);
+                this.setNewImage(this.editedImg);
             }
         }
     }
