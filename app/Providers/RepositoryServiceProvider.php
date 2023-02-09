@@ -11,7 +11,8 @@ use App\Repositories\Contracts\{
     ISubpage,
     IUser,
     IRole,
-    IPermission
+    IPermission,
+    IImage
 };
 
 use App\Repositories\Eloquent\{
@@ -22,7 +23,8 @@ use App\Repositories\Eloquent\{
     SubpageRepository,
     UserRepository,
     RoleRepository,
-    PermissionRepository
+    PermissionRepository,
+    ImageRepository
 };
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -52,5 +54,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(IUser::class, UserRepository::class);
         $this->app->bind(IRole::class, RoleRepository::class);
         $this->app->bind(IPermission::class, PermissionRepository::class);
+        $this->app->bind(IImage::class, ImageRepository::class);
     }
 }

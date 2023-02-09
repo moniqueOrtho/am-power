@@ -217,7 +217,7 @@ class UserController extends Controller
             'gender' => ['required', 'string', 'max:7'],
             'first_name' => ['nullable', 'string', 'max:15'],
             'last_name' => ['required', 'string', 'max:30'],
-            'email' => ['required', 'string', 'nullable', 'email', 'max:255', $email],
+            'email' => ['required', 'string', 'email', 'max:255', $email],
         ]);
         return true;
     }

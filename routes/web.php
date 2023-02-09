@@ -15,7 +15,8 @@ use App\Http\Controllers\{
     PageController,
     SectionController,
     SiteController,
-    UserController
+    UserController,
+    ImageController
 };
 use App\Models\Role;
 
@@ -71,4 +72,6 @@ Route::middleware(['auth'])->group( function () {
     Route::post('/pages/{pageId}/sections', [SectionController::class, 'store']);
     Route::put('/sections/{id}', [SectionController::class, 'update']);
     Route::delete('/sections/{id}', [SectionController::class, 'destroy']);
+
+    Route::resource('images', ImageController::class)->only(['store', 'update', 'destroy']);
 });

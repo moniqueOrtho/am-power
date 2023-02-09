@@ -249,6 +249,16 @@
             reader.readAsArrayBuffer(file);
 
         },
+        async storeNewImage() {
+            this.loading = true;
+            try {
+
+            } catch (error) {
+
+            } finally {
+                this.loading = false;
+            }
+        },
         setNewImage(image) {
             this.editedImg = image;
             this.images.push(image)
