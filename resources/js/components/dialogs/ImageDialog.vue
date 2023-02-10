@@ -39,7 +39,7 @@
                                     x-large
                                     v-bind="attrs"
                                     v-on="on"
-                                    @click="uploadImage"
+                                    @click="uploadEditedImage"
                                     class="image-dialog__sidebar--save"
                                 >
                                     <v-icon>mdi-content-save</v-icon>
@@ -122,13 +122,15 @@
   //import AdvancedCropper from '../form/AdvancedCropper.vue';
   import ImageBtn from '../buttons/ImageBtn.vue';
   import TextBtn from '../buttons/TextBtn.vue';
+  import ImageMixin from '../../mixins/image.js';
   export default {
     name: "image-dialog",
     components: { ImageBtn, TextBtn },
+    mixins: [ImageMixin],
     props: {
         image: {
             type: Object,
-            default: () => { return {id: 1, src: '', alt: ''} },
+            default: () => { return {id: 1, name: '', src: '', alt: ''} },
         },
         dialog: {
             type: Boolean,
@@ -159,11 +161,10 @@
     data() {
       return {
         editedImg: null,
-        images: [{name: 'file', src : '', alt:'', class: ''}],
+        images: [{id: 'file', name: 'file', src : '', alt:'', class: ''}],
         newImage: {},
         refName: '',
         upload: false,
-        loading: false,
         loadingDisabled: true,
         dialogState: false,
         edit: false,
@@ -202,73 +203,30 @@
             if( files && files[0]) {
                 let validated = this.validateImage(files[0]);
                 if(validated) {
-                    this.deleteUrl();
+                    if (this.newImage.src) {
+                        this.deleteUrl(this.newImage.src);
+                    }
                     this.prepareNewImage(files[0]);
                 } else {
-                    this.emptyFileInput();
+                    this.emptyFileInput(this.refName);
                 }
             }
         },
-        validateImage(file) {
-        // Is there a file?
-            if(!file) {
-                this.error = this.labels.noImage;
-                return false;
-            }
-            // Validate type gif|jpg|png|jpeg|bmp
-            let isGood = /\.(?=gif|jpg|png|jpeg|bmp)/gi.test(file.name);
-            if(!isGood) {
-                this.error = this.labels.noImage;
-                return false;
-            }
-            // Validate size. Size must be smaller then 2mb
-            if(file.size > 2000000) {
-                this.error = this.labels.noRightImgSize;
-                return false;
-            }
-            return true;
-        },
-        emptyFileInput() {
-            this.$refs[this.refName].value = "";
-
-        },
         prepareNewImage(file) {
-            const blob = URL.createObjectURL(file);
-            // Create a new FileReader to read this image binary data
-            const reader = new FileReader();
-            // Define a callback function to run, when FileReader finishes its job
-            reader.onload = (e) => {
-                // Note: arrow function used here, so that "this.imageEdited" refers to the image of Vue component
-                this.newImage.name = file.name
-                this.newImage.src = blob;
-                this.newImage.alt = file.name
-                this.setNewImage(this.newImage);
-                // this.imageEdited['type'] = this.getMimeType(e.target.result, file.type);
-            };
-            // Start the reader job - read file as a data url (base64 format)
-            reader.readAsArrayBuffer(file);
-
-        },
-        async storeNewImage() {
-            this.loading = true;
-            try {
-
-            } catch (error) {
-
-            } finally {
-                this.loading = false;
-            }
+            let form = new FormData();
+            form.append('image', file);
+            this.uploadImage(form, this.refName);
         },
         setNewImage(image) {
-            this.editedImg = image;
+            console.log(image)
+            let newImage = Object.assign({}, image);
+            newImage.src = image.src.original;
+            newImage.class = this.image.class;
+            this.editedImg = newImage;
             this.images.push(image)
         },
-        deleteUrl() {
-        if (this.newImage.src) {
-                URL.revokeObjectURL(this.newImage.src);
-            }
-        },
-        uploadImage() {
+
+        uploadEditedImage() {
             this.loading = true;
             this.upload = true;
             this.loadingDisabled = true;

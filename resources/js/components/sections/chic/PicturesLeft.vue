@@ -47,7 +47,6 @@ export default {
         return result
       },
       openImageDialog(image) {
-        console.log(image)
         this.dialog = true;
         this.image = image;
       }

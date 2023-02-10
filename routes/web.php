@@ -62,6 +62,10 @@ Route::middleware(['auth'])->group( function () {
         'index' => 'sites'
     ])->only(['index', 'store', 'update', 'destroy']);
 
+    Route::post('store_image', [ImageController::class, 'storeImage']);
+
+    Route::resource('images', ImageController::class)->only(['update', 'destroy']);
+
     Route::get('/' . strtolower(trans_choice('site.subscribers', 2)) . '/{siteId}' , [UserController::class, 'indexSubscribers'] )->name('subscribers');
 
     Route::get('/' . __('site.pages_slug') . '/{siteId}' , [PageController::class, 'index'] )->name('pages');
@@ -73,5 +77,5 @@ Route::middleware(['auth'])->group( function () {
     Route::put('/sections/{id}', [SectionController::class, 'update']);
     Route::delete('/sections/{id}', [SectionController::class, 'destroy']);
 
-    Route::resource('images', ImageController::class)->only(['store', 'update', 'destroy']);
+
 });

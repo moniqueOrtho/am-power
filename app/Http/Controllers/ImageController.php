@@ -39,7 +39,7 @@ class ImageController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function storeImage(Request $request)
     {
         // Validate the request
         $validated = $this->validateUpload($request);
