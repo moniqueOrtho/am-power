@@ -217,13 +217,22 @@
             form.append('image', file);
             this.uploadImage(form, this.refName);
         },
-        setNewImage(image) {
-            console.log(image)
+        transformData(data, makeImageEditable = true) {
+            this.setNewImage(
+                {
+                    id: data.id, name: data.name, src : data.sizes.original, alt : data.alt, class: this.editedImg.class
+                }, makeImageEditable
+            );
+        },
+        setNewImage(image, makeImageEditable = true) {
             let newImage = Object.assign({}, image);
-            newImage.src = image.src.original;
-            newImage.class = this.image.class;
-            this.editedImg = newImage;
-            this.images.push(image)
+            if(! 'class' in newImage) this.image.class;
+            if(makeImageEditable) {
+                this.editedImg = newImage;
+                this.images.splice(1, 0, newImage);
+            } else {
+                this.images.push(newImage)
+            }
         },
 
         uploadEditedImage() {
@@ -260,6 +269,13 @@
             if(value) {
                 this.editedImg = Object.assign({}, this.image);
                 this.setNewImage(this.editedImg);
+                const ownImages = this.$store.getters['images/getImages'];
+                console.log(ownImages)
+                ownImages.forEach(i => {
+                    if(i.id !== this.editedImg.id) {
+                        this.transformData(i, false)
+                    }
+                })
             }
         }
     }

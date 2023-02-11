@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\PageResource;
 use App\Http\Resources\ViewPageResource;
+use App\Repositories\Contracts\IImage;
 use App\Repositories\Contracts\IPage;
 use App\Repositories\Contracts\ISite;
 use App\Repositories\Eloquent\Criteria\EagerLoad;
@@ -16,12 +17,14 @@ class PageController extends Controller
 
     protected $pages;
     protected $sites;
+    protected $images;
 
-    public function __construct(IPage $pages, ISite $sites)
+    public function __construct(IPage $pages, ISite $sites, IImage $images)
     {
 
        $this->pages = $pages;
        $this->sites = $sites;
+       $this->images = $images;
     }
 
 
@@ -68,6 +71,7 @@ class PageController extends Controller
             });
         }
 
+
         return view('admin.pages', ['data' => $result, 'siteId' => $siteId, 'sites' => $sites ]);
     }
 
@@ -87,7 +91,9 @@ class PageController extends Controller
 
         $page = new ViewPageResource($result);
 
-        return view('admin.page', ['page' => $page, 'component' => $component]);
+        $images = $this->images->getUserImages();
+
+        return view('admin.page', ['page' => $page, 'component' => $component, 'images' => $images]);
     }
 
     /**

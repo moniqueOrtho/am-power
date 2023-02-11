@@ -33,6 +33,10 @@ export default {
             type: Object,
             required: true
         },
+        images : {
+            type: [Array, Object],
+            default: () => []
+        },
         labels: {
             type: Object,
             required: false
@@ -72,10 +76,16 @@ export default {
         this.setColors();
         this.setSections();
         this.setTranslationStore();
+        if(this.images && Object.keys(this.images).length > 0 ) {
+            this.setUserImages();
+        }
     },
     methods: {
         setTranslationStore() {
             this.$store.dispatch('labels/setTranslations', this.labels);
+        },
+        setUserImages() {
+            this.$store.dispatch('images/setImages', Object.values(this.images));
         },
         setColors() {
             const keys = Object.keys(this.colors);

@@ -5,6 +5,7 @@
     <component
         is="{{$component}}"
         :page="{{ Js::from($page) }}"
+        :images="{{ Js::from($images) }}"
         :labels="{{ Js::from([
             'feature' => trans_choice('site.features', 1),
             'add' => __('site.add'),

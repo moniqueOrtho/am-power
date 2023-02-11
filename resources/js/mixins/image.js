@@ -42,7 +42,7 @@ export default {
             this.loading = true;
             try {
             const newImage = await axios.post('/store_image', file, config);
-            this.setNewImage(newImage.data.data);
+            this.transformData(newImage.data.data, true);
             } catch (error) {
             console.log(error);
 

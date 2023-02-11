@@ -11,4 +11,20 @@ class ImageRepository extends BaseRepository implements IImage
     {
         return Image::class;
     }
+
+    public function getUserImages()
+    {
+        $images = $this->findWhere('user_id', auth()->user()->id);
+        if($images->isNotEmpty()) {
+            $images = $images->map(function ($image){
+                return [
+                    'id' => $image->id,
+                    'name' => $image->name,
+                    'alt' => $image->alt,
+                    'sizes' => $image->images
+                ];
+            });
+        }
+        return $images;
+    }
 }
