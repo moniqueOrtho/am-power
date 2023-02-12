@@ -31,7 +31,7 @@
                             </template>
                             <span>{{ labels.close }}</span>
                         </v-tooltip>
-                        <v-tooltip left>
+                        <v-tooltip left v-if="edit">
                             <template v-slot:activator="{ on, attrs }">
                                 <v-btn
                                     icon
@@ -70,7 +70,9 @@
                                 v-model="editedImg.alt"
                                 color="primary"
                                 dark
-                                v-if="!edit && dialogState"
+                                :append-icon="editedImg.altChanged ? 'mdi-content-save': ''"
+                                @click:append="updateImage"
+                                @input="setUpdateBtn"
                             ></v-text-field>
                         </div>
                     </div>
@@ -83,13 +85,15 @@
                 <h6 class="text-h6 primary--text">{{ labels.chooseAnotherImg }}</h6>
             </div>
             <div class="image-dialog__images white">
-                <image-btn
-                    v-for="image in images"
-                    :key="image.name"
-                    :image="image"
-                    :optionsBtn="{iconSize: '4rem', text: labels.addImage, bgColor: image.name !== 'file' ? $vuetify.theme.themes.light.accent : 'transparent', clickable: image.name === editedImg.name ? false : true }"
-                    @btn-clicked="allNewImgUploads"
-                ></image-btn>
+                <div class="image-dialog__image" v-for="image in images" :key="image.name">
+                    <curl-btn :obj="image" @curl-action="deleteImage" v-if="image.name !== editedImg.name && image.name !== 'file'"></curl-btn>
+                    <image-btn
+                        :image="image"
+                        :optionsBtn="{iconSize: '4rem', text: labels.addImage, bgColor: image.name !== 'file' ? $vuetify.theme.themes.light.accent : 'transparent', clickable: image.name === editedImg.name ? false : true }"
+                        @btn-clicked="allNewImgUploads"
+                    ></image-btn>
+                </div>
+
                 <input type="file" ref="file" name="file" :style="{display: 'none'}" @change="getImageFile">
             </div>
         </div>
@@ -123,9 +127,10 @@
   import ImageBtn from '../buttons/ImageBtn.vue';
   import TextBtn from '../buttons/TextBtn.vue';
   import ImageMixin from '../../mixins/image.js';
+  import CurlBtn from '../buttons/CurlBtn.vue';
   export default {
     name: "image-dialog",
-    components: { ImageBtn, TextBtn },
+    components: { ImageBtn, TextBtn, CurlBtn },
     mixins: [ImageMixin],
     props: {
         image: {
@@ -220,7 +225,8 @@
         transformData(data, makeImageEditable = true) {
             this.setNewImage(
                 {
-                    id: data.id, name: data.name, src : data.sizes.original, alt : data.alt, class: this.editedImg.class
+                    id: data.id, name: data.name, src : data.sizes.original, alt : data.alt, class: this.editedImg.class,
+                    altChanged: false
                 }, makeImageEditable
             );
         },
@@ -234,7 +240,23 @@
                 this.images.push(newImage)
             }
         },
-
+        async deleteImage(image) {
+            try {
+                await axios.delete(`/images/${image.id}`);
+                this.removeFormImages(image.id)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        removeFormImages(id) {
+            this.images = this.images.filter(x => x.id !== id );
+        },
+        setUpdateBtn() {
+            if(!this.editedImg.altChanged) this.editedImg.altChanged = true;
+        },
+        updateImage() {
+            console.log(this.editedImg.alt)
+        },
         uploadEditedImage() {
             this.loading = true;
             this.upload = true;
@@ -270,7 +292,6 @@
                 this.editedImg = Object.assign({}, this.image);
                 this.setNewImage(this.editedImg);
                 const ownImages = this.$store.getters['images/getImages'];
-                console.log(ownImages)
                 ownImages.forEach(i => {
                     if(i.id !== this.editedImg.id) {
                         this.transformData(i, false)
@@ -327,6 +348,10 @@
             grid-auto-rows: 12rem;
             grid-row-gap: 1.5rem;
             grid-column-gap: 1rem;
+        }
+
+        &__image {
+            position: relative;
         }
     }
 
