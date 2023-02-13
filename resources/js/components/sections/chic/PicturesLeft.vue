@@ -63,8 +63,8 @@ export default {
                 data['body'] = {
                     background: {name: 'background', src: image0, alt: 'Houten planken', class: 'story__pictures'},
                     images: [
-                        {name: 'img-0', src : image1, alt:'Laptop en koffie', class: 'story__img--1'},
-                        {name: 'img-1', src : image2, alt:'Tevreden vrouw met laptop', class: 'story__img--2'}
+                        {id: 'img-0', name: 'img-0', src : image1, alt:'Laptop en koffie', class: 'story__img--1'},
+                        {id: 'img-1', name: 'img-1', src : image2, alt:'Tevreden vrouw met laptop', class: 'story__img--2'}
                     ]
                 }
             }

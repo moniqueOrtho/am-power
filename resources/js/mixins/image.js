@@ -102,7 +102,7 @@ export default {
             return fallback;
         }
       },
-      setNewImage(file) {
+      readNewImage(file) {
         const blob = URL.createObjectURL(file);
         // Create a new FileReader to read this image binary data
         const reader = new FileReader();

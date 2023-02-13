@@ -127,11 +127,12 @@
   import ImageBtn from '../buttons/ImageBtn.vue';
   import TextBtn from '../buttons/TextBtn.vue';
   import ImageMixin from '../../mixins/image.js';
+  import MoveMixin from '../../mixins/move.js';
   import CurlBtn from '../buttons/CurlBtn.vue';
   export default {
     name: "image-dialog",
     components: { ImageBtn, TextBtn, CurlBtn },
-    mixins: [ImageMixin],
+    mixins: [ImageMixin, MoveMixin],
     props: {
         image: {
             type: Object,
@@ -166,7 +167,8 @@
     data() {
       return {
         editedImg: null,
-        images: [{id: 'file', name: 'file', src : '', alt:'', class: ''}],
+        images: [],
+        imageUpload: {id: 'file', name: 'file', src : '', alt:'', class: ''},
         newImage: {},
         refName: '',
         upload: false,
@@ -202,6 +204,7 @@
         },
         changePicture(image) {
             this.editedImg = image;
+            this.setImage(image);
         },
         getImageFile(e) {
             const {files} = e.target;
@@ -222,22 +225,22 @@
             form.append('image', file);
             this.uploadImage(form, this.refName);
         },
-        transformData(data, makeImageEditable = true) {
-            this.setNewImage(
+        transformData(data) {
+            this.setImage(
                 {
                     id: data.id, name: data.name, src : data.sizes.original, alt : data.alt, class: this.editedImg.class,
                     altChanged: false
-                }, makeImageEditable
+                }
             );
         },
-        setNewImage(image, makeImageEditable = true) {
-            let newImage = Object.assign({}, image);
+        setImage(image) {
+            let newImage = Object.assign({}, image), from = this.images.findIndex(x => x.id === image.id);
             if(! 'class' in newImage) this.image.class;
-            if(makeImageEditable) {
-                this.editedImg = newImage;
-                this.images.splice(1, 0, newImage);
+            if (from > -1) {
+                this.arrayMove(this.images, from, 1)
             } else {
-                this.images.push(newImage)
+                this.arrayAddTo(this.images, newImage, 1);
+                this.editedImg = newImage;
             }
         },
         async deleteImage(image) {
@@ -288,15 +291,18 @@
     watch: {
         dialog(value) {
             this.dialogState = value;
+            this.images.push(this.imageUpload);
             if(value) {
                 this.editedImg = Object.assign({}, this.image);
-                this.setNewImage(this.editedImg);
                 const ownImages = this.$store.getters['images/getImages'];
                 ownImages.forEach(i => {
                     if(i.id !== this.editedImg.id) {
-                        this.transformData(i, false)
+                        this.transformData(i)
                     }
                 })
+                this.setImage(this.image);
+            } else {
+                this.images = [];
             }
         }
     }
