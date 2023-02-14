@@ -253,12 +253,22 @@
         },
         removeFormImages(id) {
             this.images = this.images.filter(x => x.id !== id );
+            this.$store.dispatch('images/deleteImage', id);
         },
         setUpdateBtn() {
             if(!this.editedImg.altChanged) this.editedImg.altChanged = true;
         },
-        updateImage() {
-            console.log(this.editedImg.alt)
+        async updateImage() {
+            try {
+                const updated =  await axios.put(`/images/${this.editedImg.id}`, this.editedImg);
+                let index = this.images.findIndex(x => x.id === updated.data.data.id);
+                this.editedImg.altChanged = false;
+                this.images[index].alt = updated.data.data.alt;
+                this.$store.dispatch('images/updateImage', updated.data.data);
+            } catch (error) {
+                console.log(error)
+            }
+
         },
         uploadEditedImage() {
             this.loading = true;

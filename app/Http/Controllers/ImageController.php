@@ -96,12 +96,14 @@ class ImageController extends Controller
         $validated = $this->validateRequest($request, $id);
 
         if($validated) {
-            $updated = $this->images->update([
+            $updated = $this->images->update($id, [
                 'alt' => $request['alt']
             ]);
-        }
 
-        return new ImageResource($updated);
+            return new ImageResource($updated);
+        } else {
+            return response()->json(['message', __('site.input_not_valid')], 400);
+        }
     }
 
     /**
@@ -145,6 +147,7 @@ class ImageController extends Controller
             'name' => ['required', 'string', $name],
             'alt' => ['nullable', 'string', 'max:70']
         ]);
+        return true;
     }
 
 

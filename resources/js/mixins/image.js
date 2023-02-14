@@ -52,28 +52,6 @@ export default {
 
             }
         },
-      async deleteImageRequest(obj) {
-        let apiRoute, deletedMessage, image, route, id, name, loading;
-        route = obj.route;
-        id = obj.id;
-        name = obj.name;
-        loading = obj.loading;
-        apiRoute = route + id;
-        try {
-          deletedMessage = await this.$axios.$delete(apiRoute);
-          image.$delete();
-          this.setSuccesMessageImage(
-            this.$t("succes delete image", [name])
-          );
-        } catch (error) {
-          console.log(error.response);
-          if (this.alertMessage) this.alertMessage = "";
-          this.errorMessage = error.response.data.message;
-        } finally {
-          if(loading) loading();
-          if(this.deleteloading) this.deleteloading = false;
-        }
-      },
       setSuccesMessageImage(message) {
         if (this.errors) this.errors = {};
         if (this.errorMessage) this.errorMessage = "";
