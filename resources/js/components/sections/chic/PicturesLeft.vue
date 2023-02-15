@@ -23,8 +23,10 @@ import image1 from "../../../../images/laptop-en-koffie.jpg";
 import image2 from "../../../../images/vrouw-met-laptop.jpg";
 import image0 from "../../../../images/wood.jpg";
 import ImageDialog from "../../dialogs/ImageDialog.vue";
+import ColorsMixin from "../../../mixins/colors.js";
 export default {
     components: {ImageDialog},
+    mixins: [ColorsMixin],
     props: {
         data: {
             type: Object,
@@ -38,14 +40,7 @@ export default {
         }
     },
     methods: {
-        convertHex (color, opacity) {
-        color = color.replace('#', '')
-        let r = parseInt(color.substring(0, 2), 16)
-        let g = parseInt(color.substring(2, 4), 16)
-        let b = parseInt(color.substring(4, 6), 16)
-        let result = 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')'
-        return result
-      },
+
       openImageDialog(image) {
         this.dialog = true;
         this.image = image;

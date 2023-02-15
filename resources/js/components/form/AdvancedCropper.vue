@@ -1,16 +1,31 @@
 <template>
     <div class="advanced-cropper">
-      <div class="advanced-cropper__error-wrapper">
-        <CloseAlert
-          alertColor="red-me"
-          :alertMessage="error"
-          type="error"
-          spacing="my-2 mx-2"
-          class="pa-4 advanced-cropper__error-box"
-        />
-      </div>
-      <div class="advanced-cropper__image-box">
+        <!-- <div class="advanced-cropper__error-wrapper">
+            <CloseAlert
+            alertColor="red-me"
+            :alertMessage="error"
+            type="error"
+            spacing="my-2 mx-2"
+            class="pa-4 advanced-cropper__error-box"
+            />
+        </div> -->
+      <img :src="image.src" class="advanced-cropper__bg">
+
+
         <cropper
+            class="advanced-cropper__cropper"
+            :src="image.src"
+            @change="change"
+            :transitions="true"
+			image-restriction="fit-area"
+            ref="cropper"
+        />
+        <vertical-buttons>
+			<square-button :title="action.title"  v-for="action in actions" :key="action.name">
+				<v-icon color="white">{{ action.icon }}</v-icon>
+			</square-button>
+		</vertical-buttons>
+        <!-- <cropper
           class="cropper"
           :src="imageEdited.src"
           :auto-zoom="autoZoom"
@@ -18,8 +33,8 @@
           :stencil-size="stencilSize"
           :image-restriction="restrictionType"
           ref="cropper"
-        />
-      </div>
+        /> -->
+
     </div>
   </template>
 
@@ -28,10 +43,12 @@
   import "vue-advanced-cropper/dist/style.css";
   import EditorMenu from "../tools/EditorMenu.vue";
   import CloseAlert from "../alerts/CloseAlert.vue";
+  import VerticalButtons from "../buttons/VerticalButtons.vue";
+  import SquareButton from "../buttons/SquareButton.vue";
 
   export default {
     name: 'advanced-cropper',
-    components: { Cropper, EditorMenu, CloseAlert },
+    components: { Cropper, EditorMenu, CloseAlert, VerticalButtons, SquareButton },
     props: {
       image: {
         type: Object,
@@ -42,50 +59,53 @@
         default: false,
       },
       stencilProps: {
-        type: Object,
-        required: false,
+        type: [Object, Boolean],
+        default: false,
       },
       stencilSize: {
-        type: Object,
-        required: false,
-      },
-      route: {
-        type: String,
-        required: true
+        type: [Object, Boolean],
+        default: false,
       },
       upload: {
         type: Boolean,
         default: false
       },
-      model: {
-        type: Function,
-        required: true
-      }
     },
     emits: ['enable-loading', 'succes-message', 'error-upload', 'undo-upload'],
-    created() {
-      this.setImageData();
-    },
+    // created() {
+    //   this.setImageData();
+    // },
     data() {
       return {
         imageEdited: null,
-        rotate: false,
         restrictionType: 'fill-area',
-        actions: [],
+
         error: ''
       };
     },
     methods: {
-      init() {
-        this.rotate = false;
-        this.restrictionType = 'fill-area';
-      },
-      setImageData() {
-        this.imageEdited = this.image;
-      },
-      exitAction(type) {
-        if(type === 'rotate') this.rotate = false;
-      },
+
+        flip(x, y) {
+            // const { image } = this.$refs.cropper;
+            // console.log(image)
+			//const { image } = this.$refs.cropper.getResult();
+			// if (image.transforms.rotate % 180 !== 0) {
+			// 	this.$refs.cropper.flip(!x, !y);
+			// } else {
+			// 	this.$refs.cropper.flip(x, y);
+			// }
+		},
+		rotate(angle) {
+			//this.$refs.cropper.rotate(angle);
+		},
+		download() {
+			//const result = this.$refs.cropper.getResult().canvas.toDataURL();
+
+
+		},
+		change(args) {
+			console.log(args);
+		},
 
     },
     watch: {
@@ -104,13 +124,23 @@
         this.setImageData();
       }
     },
-    computed: {},
+    computed: {
+        actions() {
+            return [
+                {name: 'flip-horizontal', title: 'Flip Horizontal', icon: 'mdi-flip-horizontal', method: this.flip(true, false)},
+                {name: 'flip-vertical', title: 'Flip Vertical', icon: 'mdi-flip-vertical', method: this.flip(false, true)},
+                {name: 'rotate-right', title: 'Rotate Clockwise', icon: 'mdi-reload', method: this.rotate(90)},
+                {name: 'rotate-left', title: 'Rotate Counter-Clockwise', icon: 'mdi-restore', method: this.rotate(-90)},
+            ];
+        }
+    },
   };
   </script>
 
   <style lang="scss" scoped>
 
   .advanced-cropper {
+    position: relative;
     &__error-wrapper {
       position: relative;
       margin: 0 8px;
@@ -121,6 +151,18 @@
     &__error-box {
       position: absolute;
       width: 100%;
+    }
+    &__bg {
+        width: 100%;
+        height: 100%;
+        z-index: 5;
+    }
+
+    &__cropper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
     }
 
     &__image-box {

@@ -12,7 +12,7 @@
       </v-overlay>
       <v-card tile>
 
-        <div class="image-dialog" v-if="dialogState">
+        <div class="image-dialog" :class="{fixed: edit}" v-if="dialogState" >
             <div class="image-dialog__sidebar accent" :class="edit ? 'image-dialog__sidebar--open' : 'image-dialog__sidebar--closed'">
                 <div class="max-container">
                     <div class="d-flex justify-space-between">
@@ -53,7 +53,17 @@
                             <image-btn
                                 :image="editedImg"
                                 :optionsBtn="{iconSize: '4rem', text: labels.addImage, clickable: false}"
+                                v-if="!edit"
                             ></image-btn>
+                            <AdvancedCropper
+                                v-else
+                                :image="editedImg"
+                                :upload="upload"
+                                @enable-loading="loadingDisabled = false"
+                                @succes-message="setSuccesMessage"
+                                @error-upload="loading = false"
+                                @undo-upload="upload = false"
+                            />
                         </div>
                         <div class="text-center">
                             <text-btn
@@ -64,8 +74,9 @@
                                 @do-action="edit = !edit">
                             </text-btn>
                         </div>
-                        <div class="px-3 py-12 ">
+                        <div class="px-3 py-12 " v-if="!edit">
                             <v-text-field
+
                                 :label="labels.description"
                                 v-model="editedImg.alt"
                                 color="primary"
@@ -129,9 +140,10 @@
   import ImageMixin from '../../mixins/image.js';
   import MoveMixin from '../../mixins/move.js';
   import CurlBtn from '../buttons/CurlBtn.vue';
+  import AdvancedCropper from '../form/AdvancedCropper.vue';
   export default {
     name: "image-dialog",
-    components: { ImageBtn, TextBtn, CurlBtn },
+    components: { ImageBtn, TextBtn, CurlBtn, AdvancedCropper },
     mixins: [ImageMixin, MoveMixin],
     props: {
         image: {
@@ -324,6 +336,7 @@
         display: grid;
         grid-template-rows: 15vh minmax(85vh, min-content);
         grid-template-columns: repeat(8, 1fr);
+        min-height: 100vh;
 
         &__sidebar {
             grid-row: 1/3;
@@ -332,7 +345,7 @@
             transition: width cubic-bezier(0, 0.52, 1, 1) .4s;
             &--open {
                 width: 100vw;
-            }
+                            }
             &--closed {
                 width: 100%;
             }
@@ -369,6 +382,9 @@
         &__image {
             position: relative;
         }
+    }
+    .fixed {
+        position: fixed;
     }
 
   </style>
