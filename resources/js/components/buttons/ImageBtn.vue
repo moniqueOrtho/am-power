@@ -39,7 +39,7 @@
     computed: {
         styleImageBox() {
             return {
-                '--outline' : this.image.src ? '2px solid var(--v-grey1-darken2)' : '2px dotted var(--v-grey1-base)',
+                '--border' : this.image.src ? 'none' : '2px dotted var(--v-grey1-base)',
                 '--cursor' : this.options.clickable ? 'pointer' : 'cursor',
                 '--bg-color' : this.options.bgColor
             }
@@ -73,7 +73,7 @@
         align-content: center;
         background-color: var(--bg-color);
         cursor: var(--cursor);
-        outline: var(--outline);
+        border: var(--border);
         overflow: hidden;
         transition: all 0.5s ease;
         &:hover .noImage {

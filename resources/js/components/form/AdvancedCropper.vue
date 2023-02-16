@@ -1,5 +1,5 @@
 <template>
-    <div class="advanced-cropper">
+    <div class="advanced-cropper" ref="background">
         <!-- <div class="advanced-cropper__error-wrapper">
             <CloseAlert
             alertColor="red-me"
@@ -9,19 +9,19 @@
             class="pa-4 advanced-cropper__error-box"
             />
         </div> -->
-      <img :src="image.src" class="advanced-cropper__bg">
+      <!-- <img :src="cropperImage.src" class="advanced-cropper__bg" :style="setBgSize"> -->
 
 
         <cropper
             class="advanced-cropper__cropper"
-            :src="image.src"
-            @change="change"
+            :src="cropperImage.src"
             :transitions="true"
-			image-restriction="fit-area"
+			:image-restriction="restrictionType"
             ref="cropper"
+            :stencil-props="stencilProps"
         />
         <vertical-buttons>
-			<square-button :title="action.title"  v-for="action in actions" :key="action.name">
+			<square-button :title="action.title" @click="operation(action)" v-for="action in actions" :key="action.name">
 				<v-icon color="white">{{ action.icon }}</v-icon>
 			</square-button>
 		</vertical-buttons>
@@ -59,8 +59,8 @@
         default: false,
       },
       stencilProps: {
-        type: [Object, Boolean],
-        default: false,
+        type: Object,
+        default: () => {{}},// Square stencil : {aspectRatio: 1/1}
       },
       stencilSize: {
         type: [Object, Boolean],
@@ -72,31 +72,65 @@
       },
     },
     emits: ['enable-loading', 'succes-message', 'error-upload', 'undo-upload'],
-    // created() {
-    //   this.setImageData();
-    // },
+    created() {
+      this.setImageData(this.image);
+    },
     data() {
       return {
-        imageEdited: null,
         restrictionType: 'fill-area',
-
+        cropperImage: null,
+        coordinates: {
+            width: 0,
+            height: 0,
+            left: 0,
+            top: 0,
+        },
         error: ''
       };
     },
     methods: {
+        setImageData(data) {
+            this.cropperImage = data;
+        },
+        operation(action) {
+            switch (action.name) {
+                case 'crop':
+                    this.crop()
+                    break;
+                case 'flip-horizontal':
+                    this.flip(true, false)
+                    break;
+                case 'flip-vertical':
+                    this.flip(false, true)
+                    break;
+                case 'rotate-right':
+                    this.rotate(90)
+                    break;
+                case 'rotate-left':
+                    this.rotate(-90)
+                    break;
 
+                default:
+                    break;
+            }
+        },
+        crop() {
+            const { coordinates, canvas, } = this.$refs.cropper.getResult();
+            console.log(coordinates)
+			this.coordinates = coordinates;
+            this.cropperImage.src = canvas.toDataURL();
+
+        },
         flip(x, y) {
-            // const { image } = this.$refs.cropper;
-            // console.log(image)
-			//const { image } = this.$refs.cropper.getResult();
-			// if (image.transforms.rotate % 180 !== 0) {
-			// 	this.$refs.cropper.flip(!x, !y);
-			// } else {
-			// 	this.$refs.cropper.flip(x, y);
-			// }
+            const image = this.$refs.cropper.getResult();
+            if (image.image.transforms.rotate % 180 !== 0) {
+                this.$refs.cropper.flip(!x, !y);
+            } else {
+                this.$refs.cropper.flip(x, y);
+            }
 		},
 		rotate(angle) {
-			//this.$refs.cropper.rotate(angle);
+			this.$refs.cropper.rotate(angle);
 		},
 		download() {
 			//const result = this.$refs.cropper.getResult().canvas.toDataURL();
@@ -104,7 +138,7 @@
 
 		},
 		change(args) {
-			console.log(args);
+			//console.log(args)
 		},
 
     },
@@ -127,12 +161,22 @@
     computed: {
         actions() {
             return [
-                {name: 'flip-horizontal', title: 'Flip Horizontal', icon: 'mdi-flip-horizontal', method: this.flip(true, false)},
-                {name: 'flip-vertical', title: 'Flip Vertical', icon: 'mdi-flip-vertical', method: this.flip(false, true)},
-                {name: 'rotate-right', title: 'Rotate Clockwise', icon: 'mdi-reload', method: this.rotate(90)},
-                {name: 'rotate-left', title: 'Rotate Counter-Clockwise', icon: 'mdi-restore', method: this.rotate(-90)},
+                {name: 'crop', title: 'Crop', icon: 'mdi-crop'},
+                {name: 'flip-horizontal', title: 'Flip Horizontal', icon: 'mdi-flip-horizontal'},
+                {name: 'flip-vertical', title: 'Flip Vertical', icon: 'mdi-flip-vertical'},
+                {name: 'rotate-right', title: 'Rotate Clockwise', icon: 'mdi-reload'},
+                {name: 'rotate-left', title: 'Rotate Counter-Clockwise', icon: 'mdi-restore'},
             ];
-        }
+        },
+        // setBgSize() {
+        //     let obj = {};
+
+        //     if(this.coordinates.width > 0 && this.$refs.background.clientWidth ) {
+        //         obj.width = `${this.coordinates.width}px`,
+        //         obj.height = `${this.coordinates.height}px`
+        //     }
+        //     return obj;
+        // }
     },
   };
   </script>
@@ -141,6 +185,12 @@
 
   .advanced-cropper {
     position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dotted white;
+
     &__error-wrapper {
       position: relative;
       margin: 0 8px;
@@ -156,37 +206,16 @@
         width: 100%;
         height: 100%;
         z-index: 5;
+        object-fit: contain;
     }
 
     &__cropper {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 50%;
+        left: 50%;
         z-index: 10;
+        transform: translate(-50%, -50%);
     }
 
-    &__image-box {
-      outline: 2px solid var(--v-grey1-darken2);
-      width: 95%;
-      height: 95%;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    &__speed-dial {
-      position: absolute;
-      left: 24px;
-      top: 24px;
-    }
-  }
-  .cropper {
-    background: var(--v-grey1-base);
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
   }
   </style>

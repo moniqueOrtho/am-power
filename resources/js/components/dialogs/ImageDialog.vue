@@ -49,16 +49,17 @@
                         </v-tooltip>
                     </div>
                     <div class="image-dialog__sidebar--container">
-                        <div class="pa-3">
+                        <div class="pa-3 image-dialog__sidebar--image">
                             <image-btn
                                 :image="editedImg"
                                 :optionsBtn="{iconSize: '4rem', text: labels.addImage, clickable: false}"
-                                v-if="!edit"
+                                v-if="!cropper"
                             ></image-btn>
                             <AdvancedCropper
                                 v-else
                                 :image="editedImg"
                                 :upload="upload"
+                                :stencilProps="{aspectRatio: 9/6}"
                                 @enable-loading="loadingDisabled = false"
                                 @succes-message="setSuccesMessage"
                                 @error-upload="loading = false"
@@ -71,7 +72,7 @@
                                 :color="$vuetify.theme.themes.light.light1"
                                 :hoverColor="$vuetify.theme.themes.light.primary"
                                 size="1rem"
-                                @do-action="edit = !edit">
+                                @do-action="editPicture(!edit)">
                             </text-btn>
                         </div>
                         <div class="px-3 py-12 " v-if="!edit">
@@ -187,6 +188,7 @@
         loadingDisabled: true,
         dialogState: false,
         edit: false,
+        cropper: false,
         error: null,
         text: {
             close: 'Close',
@@ -205,6 +207,11 @@
     methods: {
         editPicture(value) {
             this.edit = value;
+            if(value) {
+                setTimeout(() => {this.cropper = true}, 400)
+            } else {
+                this.cropper = false;
+            }
         },
         allNewImgUploads(image) {
             (image.name ==='file') ? this.activateFileUpload(image.name) : this.changePicture(image);
@@ -358,6 +365,10 @@
             &--container {
                 grid-column: 1/3;
 
+            }
+
+            &--image {
+                aspect-ratio: 9 / 6;
             }
         }
         &__heading {
