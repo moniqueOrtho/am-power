@@ -1,6 +1,6 @@
 <template>
     <div class="advanced-cropper" ref="background">
-        <!-- <div class="advanced-cropper__error-wrapper">
+        <div class="advanced-cropper__error-wrapper">
             <CloseAlert
             alertColor="red-me"
             :alertMessage="error"
@@ -8,9 +8,8 @@
             spacing="my-2 mx-2"
             class="pa-4 advanced-cropper__error-box"
             />
-        </div> -->
-      <!-- <img :src="cropperImage.src" class="advanced-cropper__bg" :style="setBgSize"> -->
-
+        </div>
+        <img :src="cropperImage.src" class="advanced-cropper__bg" v-if="!changed">
 
         <cropper
             class="advanced-cropper__cropper"
@@ -21,9 +20,20 @@
             :stencil-props="stencilProps"
         />
         <vertical-buttons>
-			<square-button :title="action.title" @click="operation(action)" v-for="action in actions" :key="action.name">
-				<v-icon color="white">{{ action.icon }}</v-icon>
-			</square-button>
+            <v-tooltip right v-for="action in actions" :key="action.name">
+                <template v-slot:activator="{ on, props }">
+                    <square-button
+                        :title="action.title"
+                        @click="operation(action)"
+                        v-on="on"
+                        v-bind="props"
+                    >
+                        <v-icon color="white">{{ action.icon }}</v-icon>
+                    </square-button>
+                </template>
+                <span>{{ action.title }}</span>
+            </v-tooltip>
+
 		</vertical-buttons>
         <!-- <cropper
           class="cropper"
@@ -45,33 +55,31 @@
   import CloseAlert from "../alerts/CloseAlert.vue";
   import VerticalButtons from "../buttons/VerticalButtons.vue";
   import SquareButton from "../buttons/SquareButton.vue";
+  import ImageMixin from "../../mixins/image.js";
 
   export default {
     name: 'advanced-cropper',
     components: { Cropper, EditorMenu, CloseAlert, VerticalButtons, SquareButton },
+    mixins: [ ImageMixin ],
     props: {
       image: {
         type: Object,
         required: true,
       },
-      autoZoom: {
-        type: Boolean,
-        default: false,
-      },
       stencilProps: {
         type: Object,
         default: () => {{}},// Square stencil : {aspectRatio: 1/1}
       },
-      stencilSize: {
-        type: [Object, Boolean],
-        default: false,
+      resetImg: {
+        type: Boolean,
+        default: false
       },
       upload: {
         type: Boolean,
         default: false
       },
     },
-    emits: ['enable-loading', 'succes-message', 'error-upload', 'undo-upload'],
+    emits: ['image-changed'],
     created() {
       this.setImageData(this.image);
     },
@@ -85,14 +93,25 @@
             left: 0,
             top: 0,
         },
-        error: ''
+        changed: false,
+        cropped: false,
+        error: '',
+        text: {
+            crop: 'Crop',
+            flipHorizontal: 'Flip horizontal',
+            flipVertical: 'Flip vertical',
+            rotateClockwise: 'Rotate clockwise',
+            rotateCounter: 'Rotate counter clockwise',
+            reset: 'Reset'
+        }
       };
     },
     methods: {
         setImageData(data) {
-            this.cropperImage = data;
+            this.cropperImage = Object.assign({}, data);
         },
         operation(action) {
+            this.change();
             switch (action.name) {
                 case 'crop':
                     this.crop()
@@ -109,6 +128,9 @@
                 case 'rotate-left':
                     this.rotate(-90)
                     break;
+                case 'reset':
+                    this.reset()
+                    break;
 
                 default:
                     break;
@@ -116,10 +138,10 @@
         },
         crop() {
             const { coordinates, canvas, } = this.$refs.cropper.getResult();
-            console.log(coordinates)
 			this.coordinates = coordinates;
+            this.deleteUrl(this.cropperImage.src);
             this.cropperImage.src = canvas.toDataURL();
-
+            this.cropped = true;
         },
         flip(x, y) {
             const image = this.$refs.cropper.getResult();
@@ -132,51 +154,71 @@
 		rotate(angle) {
 			this.$refs.cropper.rotate(angle);
 		},
+        reset(parent = false) {
+            this.changed = false;
+            if(!parent) this.$emit('image-changed', false);
+            if(this.cropped) {
+                this.deleteUrl(this.cropperImage.src);
+                this.cropperImage = Object.assign({}, this.image);
+                this.coordinates = {
+                    width: 0,
+                    height: 0,
+                    left: 0,
+                    top: 0,
+                }
+                this.cropped = false;
+            } else {
+                this.$refs.cropper.reset();
+            }
+
+            this.error = '';
+        },
 		download() {
 			//const result = this.$refs.cropper.getResult().canvas.toDataURL();
 
 
 		},
-		change(args) {
-			//console.log(args)
+		change() {
+            if(!this.changed) {
+                this.changed = true;
+                this.$emit('image-changed', true)
+            }
 		},
 
     },
     watch: {
-      restrictionType(value) {
-        const index = this.tabsEdit.findIndex(item => item.name === 'stencil-free');
-        if(value === 'none') {
-          this.changeArrayWithIndex(this.tabsEdit, index, { name: 'stencil-free', icon: 'mdi-crop', color: 'accent lighten-1', tooltip: this.$t('Crop') })
-        } else {
-          this.changeArrayWithIndex(this.tabsEdit, index, { name: 'stencil-free', icon: 'mdi-crop-free', color: 'accent lighten-1', tooltip: this.$t('Free stencil') })
+        resetImg(value) {
+            this.reset(true);
+        },
+        upload(value) {
+            if(value) this.prepareUpload();
+        },
+        image(value) {
+            this.setImageData(value);
         }
-      },
-      upload(value) {
-        if(value) this.prepareUpload();
-      },
-      image() {
-        this.setImageData();
-      }
     },
     computed: {
         actions() {
-            return [
-                {name: 'crop', title: 'Crop', icon: 'mdi-crop'},
-                {name: 'flip-horizontal', title: 'Flip Horizontal', icon: 'mdi-flip-horizontal'},
-                {name: 'flip-vertical', title: 'Flip Vertical', icon: 'mdi-flip-vertical'},
-                {name: 'rotate-right', title: 'Rotate Clockwise', icon: 'mdi-reload'},
-                {name: 'rotate-left', title: 'Rotate Counter-Clockwise', icon: 'mdi-restore'},
+            let actions = [
+                {name: 'crop', title: this.labels.crop, icon: 'mdi-crop'},
+                {name: 'flip-horizontal', title: this.labels.flipHorizontal, icon: 'mdi-flip-horizontal'},
+                {name: 'flip-vertical', title: this.labels.flipVertical, icon: 'mdi-flip-vertical'},
+                {name: 'rotate-right', title: this.labels.rotateClockwise, icon: 'mdi-reload'},
+                {name: 'rotate-left', title: this.labels.rotateCounter, icon: 'mdi-restore'},
             ];
+            if(this.changed) actions.push({name: 'reset', title: this.labels.reset, icon: 'mdi-image-off'});
+            return actions
         },
-        // setBgSize() {
-        //     let obj = {};
-
-        //     if(this.coordinates.width > 0 && this.$refs.background.clientWidth ) {
-        //         obj.width = `${this.coordinates.width}px`,
-        //         obj.height = `${this.coordinates.height}px`
-        //     }
-        //     return obj;
-        // }
+        labels() {
+            const labels = this.$store.getters['labels/getTranslations'];
+            if(labels && Object.keys(labels) !== 0 && Object.getPrototypeOf(labels) === Object.prototype) {
+                let keys = Object.keys(this.text);
+                keys.forEach(k => {
+                    if(k in labels) this.text[k] = labels[k]
+                })
+            }
+            return this.text;
+        },
     },
   };
   </script>
@@ -187,6 +229,7 @@
     position: relative;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     border: 2px dotted white;

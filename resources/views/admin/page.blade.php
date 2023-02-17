@@ -32,7 +32,13 @@
             'close' => __('site.close'),
             'chooseAnotherImg' => __('site.choose_another_image'),
             'noImage' => __('site.no_image'),
-            'noRightImgSize' => __('site.image_size_restriction')
+            'noRightImgSize' => __('site.image_size_restriction'),
+            'crop' => __('site.crop'),
+            'flipHorizontal' => __('site.flip_horizontal'),
+            'flipVertical' => __('site.flip_vertical'),
+            'rotateClockwise' => __('site.rotate_clockwise'),
+            'rotateCounter' => __('site.rotate_counter_clockwise'),
+            'reset' => __('site.reset')
         ])}}"
     >
 

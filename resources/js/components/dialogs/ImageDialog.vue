@@ -31,7 +31,7 @@
                             </template>
                             <span>{{ labels.close }}</span>
                         </v-tooltip>
-                        <v-tooltip left v-if="edit">
+                        <v-tooltip left v-if="imageChanged">
                             <template v-slot:activator="{ on, attrs }">
                                 <v-btn
                                     icon
@@ -39,7 +39,7 @@
                                     x-large
                                     v-bind="attrs"
                                     v-on="on"
-                                    @click="uploadEditedImage"
+                                    @click="save"
                                     class="image-dialog__sidebar--save"
                                 >
                                     <v-icon>mdi-content-save</v-icon>
@@ -53,17 +53,15 @@
                             <image-btn
                                 :image="editedImg"
                                 :optionsBtn="{iconSize: '4rem', text: labels.addImage, clickable: false}"
-                                v-if="!cropper"
+                                v-if="!edit"
                             ></image-btn>
                             <AdvancedCropper
                                 v-else
                                 :image="editedImg"
+                                :resetImg="reset"
                                 :upload="upload"
-                                :stencilProps="{aspectRatio: 9/6}"
-                                @enable-loading="loadingDisabled = false"
-                                @succes-message="setSuccesMessage"
-                                @error-upload="loading = false"
-                                @undo-upload="upload = false"
+                                :stencil-props="getStencilProps"
+                                @image-changed="imageStatus"
                             />
                         </div>
                         <div class="text-center">
@@ -109,33 +107,12 @@
                 <input type="file" ref="file" name="file" :style="{display: 'none'}" @change="getImageFile">
             </div>
         </div>
-        <!-- <h6 class="text-h6 text-uppercase primary--text pa-5">
-          Plaatje toevoegen
-        </h6>
-        <div class="image__container d-flex justify-center align-center grey1 lighten-2">
-          <v-card class="pa-3 ma-8 image__card images__wrapper--square" elevation="4">
-                <p>Hier komt het plaatje</p>
-                <AdvancedCropper
-                :image="image"
-                :autoZoom="autoZoom"
-                :stencilProps="stencilProps"
-                :stencilSize="stencilSize"
-                :route="route"
-                :upload="upload"
-                :model="model"
-                @enable-loading="loadingDisabled = false"
-                @succes-message="setSuccesMessage"
-                @error-upload="loading = false"
-                @undo-upload="upload = false"
-                />
-          </v-card>
-        </div> -->
       </v-card>
     </v-dialog>
   </template>
 
   <script>
-  //import AdvancedCropper from '../form/AdvancedCropper.vue';
+
   import ImageBtn from '../buttons/ImageBtn.vue';
   import TextBtn from '../buttons/TextBtn.vue';
   import ImageMixin from '../../mixins/image.js';
@@ -155,41 +132,22 @@
             type: Boolean,
             default: false,
         },
-    //   autoZoom: {
-    //     type: Boolean,
-    //     default: false,
-    //   },
-    //   stencilProps: {
-    //     type: Object,
-    //     required: false,
-    //   },
-    //   stencilSize: {
-    //     type: Object,
-    //     required: false,
-    //   },
-    //   route: {
-    //     type: String,
-    //     required: true
-    //   },
-    //   model: {
-    //     type: Function,
-    //     required: true
-    //   }
     },
-    emits: ["dialog-closed"],
+    emits: ["dialog-closed", "set-image"],
     data() {
       return {
         editedImg: null,
         images: [],
-        imageUpload: {id: 'file', name: 'file', src : '', alt:'', class: ''},
+        imageUpload: {id: 'file', name: 'file', src : '', alt:'', class: '', aspectRatio: 'auto'},
         newImage: {},
         refName: '',
         upload: false,
+        reset: false,
         loadingDisabled: true,
         dialogState: false,
         edit: false,
-        cropper: false,
         error: null,
+        imageChanged: false,
         text: {
             close: 'Close',
             save: 'Save',
@@ -207,11 +165,8 @@
     methods: {
         editPicture(value) {
             this.edit = value;
-            if(value) {
-                setTimeout(() => {this.cropper = true}, 400)
-            } else {
-                this.cropper = false;
-            }
+            this.reset = !value;
+            if(!value && this.imageChanged && this.editedImg.id === this.image.id) this.imageChanged = false;
         },
         allNewImgUploads(image) {
             (image.name ==='file') ? this.activateFileUpload(image.name) : this.changePicture(image);
@@ -222,7 +177,8 @@
             this.$refs[this.refName].click();
         },
         changePicture(image) {
-            this.editedImg = image;
+            this.imageChanged =  this.image.src === image.src ? false : true;
+            this.editedImg = Object.assign({}, image);
             this.setImage(image);
         },
         getImageFile(e) {
@@ -248,18 +204,17 @@
             this.setImage(
                 {
                     id: data.id, name: data.name, src : data.sizes.original, alt : data.alt, class: this.editedImg.class,
-                    altChanged: false
+                    altChanged: false, aspectRatio: 'aspectRatio' in this.editedImg ? this.editedImg.aspectRatio : 'auto'
                 }
             );
         },
         setImage(image) {
             let newImage = Object.assign({}, image), from = this.images.findIndex(x => x.id === image.id);
-            if(! 'class' in newImage) this.image.class;
+            //if(! 'class' in newImage) this.image.class;
             if (from > -1) {
                 this.arrayMove(this.images, from, 1)
             } else {
                 this.arrayAddTo(this.images, newImage, 1);
-                this.editedImg = newImage;
             }
         },
         async deleteImage(image) {
@@ -289,10 +244,17 @@
             }
 
         },
-        uploadEditedImage() {
-            this.loading = true;
-            this.upload = true;
-            this.loadingDisabled = true;
+        imageStatus(changed) {
+            this.imageChanged = changed;
+        },
+        save() {
+            if(this.edit && this.imageChanged) {
+                this.loading = true;
+                this.upload = true;
+            } else {
+                this.$emit('set-image', this.editedImg);
+                this.$emit('dialog-closed');
+            }
         },
         setSuccesMessage(message) {
             this.loading = false;
@@ -301,6 +263,8 @@
             this.close();
         },
         close() {
+            this.edit = false;
+            this.imageChanged =  this.image.src === this.editedImg.src ? false : true;
             this.$emit('dialog-closed');
         }
     },
@@ -315,6 +279,14 @@
             }
             return this.text;
         },
+        getStencilProps() {
+            if('aspectRatio' in this.image) {
+                let arr = this.image.aspectRatio.split('/');
+                return {aspectRatio: arr[0]/arr[1]}
+            } else {
+                return {movable: true}
+            }
+        }
     },
 
     watch: {
@@ -329,8 +301,9 @@
                         this.transformData(i)
                     }
                 })
-                this.setImage(this.image);
+                this.setImage(this.editedImg);
             } else {
+                this.imageChanged = false;
                 this.images = [];
             }
         }
@@ -368,7 +341,7 @@
             }
 
             &--image {
-                aspect-ratio: 9 / 6;
+                aspect-ratio: 3/2;
             }
         }
         &__heading {

@@ -74,7 +74,7 @@ return [
     'back' => 'terug',
     'rotate' => 'Draaien',
     'rotate_clockwise' => 'Met klok mee',
-    'rotate_counter_clockwise' => 'Tegen de klok ine',
+    'rotate_counter_clockwise' => 'Tegen de klok in',
     'flip_horizontal' => 'Draai horizontaal',
     'flip_vertical' => 'Draai verticaal',
     'crop' => 'Bijsnijden',
