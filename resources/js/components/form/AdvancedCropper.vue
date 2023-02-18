@@ -1,15 +1,15 @@
 <template>
-    <div class="advanced-cropper" ref="background">
-        <div class="advanced-cropper__error-wrapper">
-            <CloseAlert
+    <div class="advanced-cropper">
+
+        <CloseAlert
             alertColor="red-me"
             :alertMessage="error"
             type="error"
             spacing="my-2 mx-2"
-            class="pa-4 advanced-cropper__error-box"
-            />
-        </div>
-        <img :src="cropperImage.src" class="advanced-cropper__bg" v-if="!changed">
+            class="advanced-cropper__error-box"
+        />
+
+        <img :src="cropperImage.src" class="advanced-cropper__bg" v-if="background" >
 
         <cropper
             class="advanced-cropper__cropper"
@@ -35,15 +35,6 @@
             </v-tooltip>
 
 		</vertical-buttons>
-        <!-- <cropper
-          class="cropper"
-          :src="imageEdited.src"
-          :auto-zoom="autoZoom"
-          :stencil-props="stencilProps"
-          :stencil-size="stencilSize"
-          :image-restriction="restrictionType"
-          ref="cropper"
-        /> -->
 
     </div>
   </template>
@@ -79,9 +70,20 @@
         default: false
       },
     },
-    emits: ['image-changed'],
+    emits: ['image-changed', 'edited-uploaded'],
     created() {
       this.setImageData(this.image);
+
+    },
+    mounted() {
+        this.$watch(
+            () => {
+                return this.$refs.cropper.image.width
+            },
+            (val) => {
+                if(val !== null) this.background = false;
+            }
+        )
     },
     data() {
       return {
@@ -95,6 +97,7 @@
         },
         changed: false,
         cropped: false,
+        background: true,
         error: '',
         text: {
             crop: 'Crop',
@@ -107,6 +110,18 @@
       };
     },
     methods: {
+        init() {
+            this.cropperImage = null;
+            this.coordinates = {
+                    width : 0,
+                    height : 0,
+                    left : 0,
+                    top : 0,
+                };
+            this.changed = false;
+            this.background = true;
+            this.error = '';
+        },
         setImageData(data) {
             this.cropperImage = Object.assign({}, data);
         },
@@ -173,11 +188,25 @@
 
             this.error = '';
         },
-		download() {
-			//const result = this.$refs.cropper.getResult().canvas.toDataURL();
-
-
-		},
+        prepareNewImage() {
+            const { canvas } = this.$refs.cropper.getResult();
+            if(canvas) {
+                const form = new FormData();
+                canvas.toBlob( blob => {
+                    form.append('image', blob, this.image.name);
+                    this.uploadImage(form)
+                })
+            }
+        },
+        transformData(data, makeEditable) {
+            this.$emit('edited-uploaded',
+                {
+                    id: data.id, name: data.name, src : data.sizes.original, alt : data.alt, class: this.image.class,
+                    altChanged: false, aspectRatio: 'aspectRatio' in this.image ? this.image.aspectRatio : 'auto'
+                }
+            );
+            this.init();
+        },
 		change() {
             if(!this.changed) {
                 this.changed = true;
@@ -191,11 +220,11 @@
             this.reset(true);
         },
         upload(value) {
-            if(value) this.prepareUpload();
+            if(value) this.prepareNewImage();
         },
         image(value) {
             this.setImageData(value);
-        }
+        },
     },
     computed: {
         actions() {
@@ -234,20 +263,16 @@
     align-items: center;
     border: 2px dotted white;
 
-    &__error-wrapper {
-      position: relative;
-      margin: 0 8px;
-      display: flex;
-      justify-content: center;
-      z-index: 100;
-    }
     &__error-box {
-      position: absolute;
-      width: 100%;
+        position: absolute;
+        z-index: 100;
+        top: 0;
+        right: 0;
+        margin: 0.5rem;
     }
+
     &__bg {
         width: 100%;
-        height: 100%;
         z-index: 5;
         object-fit: contain;
     }
@@ -260,5 +285,9 @@
         transform: translate(-50%, -50%);
     }
 
+  }
+  .image-cropper {
+    width: 100%;
+    height: 100%;
   }
   </style>

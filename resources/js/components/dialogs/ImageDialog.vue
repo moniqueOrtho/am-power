@@ -62,6 +62,7 @@
                                 :upload="upload"
                                 :stencil-props="getStencilProps"
                                 @image-changed="imageStatus"
+                                @edited-uploaded="editedImageUploaded"
                             />
                         </div>
                         <div class="text-center">
@@ -93,7 +94,18 @@
             <div class="image-dialog__heading light1">
                 <h6 class="text-h6 text-uppercase">{{ labels.ownImages }}</h6>
                 <h6 class="text-h6 primary--text">{{ labels.chooseAnotherImg }}</h6>
+
+                <div class="image-dialog__error-box">
+                    <CloseAlert
+                        alertColor="red-me"
+                        :alertMessage="error"
+                        type="error"
+                        spacing="my-2 mx-2"
+                    />
+                </div>
+
             </div>
+
             <div class="image-dialog__images white">
                 <div class="image-dialog__image" v-for="image in images" :key="image.name">
                     <curl-btn :obj="image" @curl-action="deleteImage" v-if="image.name !== editedImg.name && image.name !== 'file'"></curl-btn>
@@ -119,9 +131,10 @@
   import MoveMixin from '../../mixins/move.js';
   import CurlBtn from '../buttons/CurlBtn.vue';
   import AdvancedCropper from '../form/AdvancedCropper.vue';
+  import CloseAlert from '../alerts/CloseAlert.vue';
   export default {
     name: "image-dialog",
-    components: { ImageBtn, TextBtn, CurlBtn, AdvancedCropper },
+    components: { ImageBtn, TextBtn, CurlBtn, AdvancedCropper, CloseAlert },
     mixins: [ImageMixin, MoveMixin],
     props: {
         image: {
@@ -146,7 +159,7 @@
         loadingDisabled: true,
         dialogState: false,
         edit: false,
-        error: null,
+        error: '',
         imageChanged: false,
         text: {
             close: 'Close',
@@ -163,6 +176,17 @@
       };
     },
     methods: {
+        init() {
+            this.images = [];
+            this.newImage = {};
+            this.refName = '';
+            this.upload = false;
+            this.reset= false;
+            this.edit = false;
+            this.error = '';
+            this.imageChanged = false;
+            this.loading = false;
+        },
         editPicture(value) {
             this.edit = value;
             this.reset = !value;
@@ -200,17 +224,16 @@
             form.append('image', file);
             this.uploadImage(form, this.refName);
         },
-        transformData(data) {
-            this.setImage(
-                {
+        transformData(data, makeEditable = false) {
+            let image =  {
                     id: data.id, name: data.name, src : data.sizes.original, alt : data.alt, class: this.editedImg.class,
                     altChanged: false, aspectRatio: 'aspectRatio' in this.editedImg ? this.editedImg.aspectRatio : 'auto'
                 }
-            );
+            this.setImage(image);
+            if(makeEditable) this.editedImg = image;
         },
         setImage(image) {
             let newImage = Object.assign({}, image), from = this.images.findIndex(x => x.id === image.id);
-            //if(! 'class' in newImage) this.image.class;
             if (from > -1) {
                 this.arrayMove(this.images, from, 1)
             } else {
@@ -223,6 +246,7 @@
                 this.removeFormImages(image.id)
             } catch (error) {
                 console.log(error)
+                this.error = error.message
             }
         },
         removeFormImages(id) {
@@ -241,8 +265,14 @@
                 this.$store.dispatch('images/updateImage', updated.data.data);
             } catch (error) {
                 console.log(error)
+                this.error = error.message
             }
 
+        },
+        setNewImage(image) {
+            this.$emit('set-image', image);
+            this.$emit('dialog-closed');
+            if(this.upload) this.upload = false;
         },
         imageStatus(changed) {
             this.imageChanged = changed;
@@ -252,9 +282,12 @@
                 this.loading = true;
                 this.upload = true;
             } else {
-                this.$emit('set-image', this.editedImg);
-                this.$emit('dialog-closed');
+                this.setNewImage(this.editedImg);
             }
+        },
+        editedImageUploaded(image) {
+            this.setNewImage(image);
+            this.init();
         },
         setSuccesMessage(message) {
             this.loading = false;
@@ -352,7 +385,17 @@
             width: 100%;
             height: 100%;
             padding: 0 2rem;
+            position: relative;
         }
+        &__error-box {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
         &__images {
             grid-column: 3/9;
             padding: 2rem;

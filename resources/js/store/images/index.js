@@ -11,6 +11,13 @@ export default {
         setImages(state, payload) {
             state.images = payload;
         },
+        storeImage(state, payload) {
+            let index = state.images.findIndex(x => x.id === payload.id);
+            if(index > -1) {
+               this.commit('deleteImage', payload.id)
+            }
+            state.images.push(payload);
+        },
         updateImage(state, payload) {
             let index = state.images.findIndex(x => x.id === payload.id);
             state.images[index] = payload;
@@ -22,6 +29,9 @@ export default {
     actions: {
         setImages(context, payload) {
             context.commit('setImages', payload);
+        },
+        storeImage(context, payload) {
+            context.commit('storeImage', payload)
         },
         updateImage(context, payload) {
             context.commit('updateImage', payload);

@@ -32,7 +32,7 @@ export default {
         emptyFileInput(refName) {
             this.$refs[refName].value = "";
         },
-        async uploadImage(file, refName) {
+        async uploadImage(file, refName = '') {
             const config = {
                 headers: {
                 'content-type': 'multipart/form-data',
@@ -42,14 +42,14 @@ export default {
             this.loading = true;
             try {
             const newImage = await axios.post('/store_image', file, config);
+            this.$store.dispatch('images/storeImage', newImage.data.data);
             this.transformData(newImage.data.data, true);
             } catch (error) {
-            console.log(error);
-
+                console.log(error);
+                this.error = error.message
             } finally {
                 this.loading = false;
-                this.emptyFileInput(refName);
-
+                if(refName !== '') this.emptyFileInput(refName);
             }
         },
       setSuccesMessageImage(message) {
@@ -93,70 +93,7 @@ export default {
         // Start the reader job - read file as a data url (base64 format)
         reader.readAsArrayBuffer(file);
       },
-      imageAction(type) {
-        switch (type) {
-          case 'edit':
-            this.editImage();
-            break;
-          case 'delete':
-            this.deleteImage();
-            break;
-          case 'maximize':
-            this.maximize();
-            break;
-          case 'stencil-free':
-            this.setRestriction();
-            break;
-          case 'rotate':
-            this.rotate = true;
-            break;
-          case 'reset':
-            this.$refs.cropper.reset();
-            break;
-          case 'flip-horizontal':
-            this.flip(true, false);
-            break;
-          case 'flip-vertical':
-            this.flip(false, true);
-            break;
-          case 'rotate-clockwise':
-            this.rotateImage(90);
-            break;
-          case 'rotate-counter-clockwise':
-            this.rotateImage(-90);
-            break;
-        }
-      },
-      maximize() {
-        const { cropper } = this.$refs;
-        const center = {
-          left: cropper.coordinates.left + cropper.coordinates.width / 2,
-          top: cropper.coordinates.top + cropper.coordinates.height / 2,
-        };
-        cropper.setCoordinates([
-          ({ coordinates, imageSize }) => ({
-            width: imageSize.width,
-            height: imageSize.height,
-          }),
-          ({ coordinates, imageSize }) => ({
-            left: center.left - coordinates.width / 2,
-            top: center.top - coordinates.height / 2,
-          }),
-        ]);
-      },
-      setRestriction() {
-        this.restrictionType = (this.restrictionType === 'fill-area') ? 'none' : 'fill-area';
-      },
-      flip(x, y) {
-        if (this.$refs.cropper.customImageTransforms.rotate % 180 !== 0) {
-          this.$refs.cropper.flip(!x, !y);
-        } else {
-          this.$refs.cropper.flip(x, y);
-        }
-      },
-      rotateImage(angle) {
-        this.$refs.cropper.rotate(angle);
-      },
+
 
     }
   }

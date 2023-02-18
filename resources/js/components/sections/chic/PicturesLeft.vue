@@ -37,6 +37,7 @@ export default {
     },
     created() {
         this.initialize();
+
     },
     data() {
         return {

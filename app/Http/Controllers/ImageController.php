@@ -48,16 +48,16 @@ class ImageController extends Controller
             $upload = $request->file('image');
             $upload_path = $upload->getPathname();
 
-            // Check if image exist. When image exist, destroy this image
-            $org_name = $upload->getClientOriginalName();
-            $result = $this->images->findNotFailFirst('name', $org_name);
 
+            $org_name = $upload->getClientOriginalName();
+            // Get the orginal file name and replace any spaces with _, no captials and with timestamp to become unique
+            $filename = time()."_". preg_replace('/\$+/', '_', strtolower($org_name));
+
+            // Check if image exist. When image exist, destroy this image
+            $result = $this->images->findNotFailFirst('name', $filename);
             if(! is_null($result)) {
                 $destroyed = $this->destroy($result->id, false);
             }
-
-            // Get the orginal file name and replace any spaces with _, no captials and with timestamp to become unique
-            $filename = time()."_". preg_replace('/\$+/', '_', strtolower($org_name));
 
             // Move the upload to the temporary location (tmp)
             $tmp = $upload->storeAs('uploads/original', $filename, 'tmp');
