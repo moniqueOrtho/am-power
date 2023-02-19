@@ -480,6 +480,7 @@ $breakpoint argument choices
   position: absolute;
   bottom: 1rem;
   width: 100%;
+  z-index: 100;
 }
 .message__container--right {
   right: 0;
@@ -497,6 +498,18 @@ $breakpoint argument choices
 }
 .save-btn__container--left {
   left: 0;
+}
+
+.edit-img {
+  outline: 2px dotted white;
+  outline-offset: -1rem;
+}
+
+.editor-btn__container {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 50;
 }
 
 .login {

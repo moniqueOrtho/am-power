@@ -307,7 +307,7 @@ export default {
                 return `<h6 class="text-h6">${s.title}</h6><p>${s.text}</p>`
             });
             this.$emit('save-section', {
-                id : this.data === null ? null : this.data.id,
+                id : 'id' in this.data ? this.data.id : null,
                 sequence: this.sequence,
                 component: 'TheFeatures',
                 title: this.section.title,

@@ -11,6 +11,7 @@
     position: absolute;
     bottom: 1rem;
     width: 100%;
+    z-index: 100;
     &--right {
         right: 0;
     }
@@ -31,4 +32,18 @@
         left: 0;
     }
 
+}
+
+.edit-img {
+    outline: 2px dotted white;
+    outline-offset: -1rem;
+}
+
+.editor-btn {
+    &__container {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        z-index: 50;
+    }
 }

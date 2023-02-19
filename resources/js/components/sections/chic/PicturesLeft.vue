@@ -1,23 +1,52 @@
 <template>
-    <div class="story__pictures" :style="cssVars">
-        <img
-            v-for="(image, index) in editedSection.body.images"
-            :key="index"
-            :src="image.src"
-            :alt="image.alt"
-            :class="`story__img ${image.class}`"
-            @click="openImageDialog(image)"
-            :style="getImageStyle(image)"
-        >
-        <div class="story__background-editor" @click="openImageDialog(editedSection.body.background)"></div>
-        <image-dialog
-            :image="image"
-            :dialog="dialog"
-            @dialog-closed="dialog = false"
-            @set-image="setNewImage"
-            :labels="labels"
-        ></image-dialog>
+    <div class="story-editor">
+        <div class="editor-btn__container">
+            <v-fab-transition>
+                <v-btn
+                    color="primary"
+                    dark
+                    fab
+                    @click="edit = !edit"
+                >
+                    <v-icon v-if="!edit">mdi-pencil-box-multiple</v-icon>
+                    <v-icon v-else >mdi-close</v-icon>
+
+                </v-btn>
+            </v-fab-transition>
+        </div>
+        <div class="story-editor__pictures" :style="cssVars" v-if="edit">
+
+            <img
+                v-for="(image, index) in editedSection.body.images"
+                :key="index"
+                :src="image.src"
+                :alt="image.alt"
+                :class="`edit-img story-editor__img ${image.class}`"
+                @click="openImageDialog(image)"
+                :style="getImageStyle(image)"
+            >
+            <div class="story-editor__background-editor edit-img" @click="openImageDialog(editedSection.body.background)"></div>
+
+            <image-dialog
+                :image="image"
+                :dialog="dialog"
+                @dialog-closed="dialog = false"
+                @set-image="setNewImage"
+                :labels="labels"
+            ></image-dialog>
+        </div>
+        <pictures-left :data="data" v-else></pictures-left>
+        <div class="message__container message__container--left">
+            <close-alert
+                :alertColor="getAlertColor"
+                :alert-message="getAlertMessage"
+                :type="getAlertType"
+                spacing="my-3"
+                :closeAction="true"
+            ></close-alert>
+        </div>
     </div>
+
 </template>
 
 <script>
@@ -26,24 +55,39 @@ import image2 from "../../../../images/vrouw-met-laptop.jpg";
 import image0 from "../../../../images/wood.jpg";
 import ImageDialog from "../../dialogs/ImageDialog.vue";
 import ColorsMixin from "../../../mixins/colors.js";
+import CloseAlert from '../../alerts/CloseAlert.vue';
+import PicturesLeft from '../../themes/chic/PicturesLeft.vue';
 export default {
-    components: {ImageDialog},
+    components: {ImageDialog, CloseAlert, PicturesLeft},
     mixins: [ColorsMixin],
     props: {
         data: {
             type: Object,
             required: true
         },
+        sequence: {
+            type: Number,
+            required: true
+        },
+        success: {
+            type: String,
+            default: ''
+        },
+        error: {
+            type: String,
+            default: ''
+        },
     },
+    emits: ['save-section', 'delete-message'],
     created() {
         this.initialize();
-
     },
     data() {
         return {
             dialog: false,
             image: {},
-            editedSection: {}
+            editedSection: {},
+            edit: false
         }
     },
     methods: {
@@ -51,10 +95,10 @@ export default {
             this.editedSection = Object.assign({}, this.data);
             if(this.data.body === null) {
                 this.editedSection.body = {
-                    background: {name: 'background', src: image0, alt: 'Houten planken', class: 'story__pictures'},
+                    background: {name: 'background', src: image0, alt: 'Houten planken', class: 'story-editor__pictures'},
                     images: [
-                        {id: 'img-0', name: 'img-0', src : image1, alt:'Laptop en koffie', class: 'story__img--1', aspectRatio: '1/1'},
-                        {id: 'img-1', name: 'img-1', src : image2, alt:'Tevreden vrouw met laptop', class: 'story__img--2', aspectRatio: '3/2'}
+                        {id: 'img-0', name: 'img-0', src : image1, alt:'Laptop en koffie', class: 'story-editor__img--1', aspectRatio: '1/1'},
+                        {id: 'img-1', name: 'img-1', src : image2, alt:'Tevreden vrouw met laptop', class: 'story-editor__img--2', aspectRatio: '3/2'}
                     ]
                 }
             }
@@ -66,6 +110,16 @@ export default {
         setNewImage(image) {
             let index = this.editedSection.body.images.findIndex(i => i.class === image.class);
             this.editedSection.body.images[index] = image;
+
+            this.$emit('save-section', {
+                id : 'id' in this.editedSection ? this.editedSection.id : null,
+                sequence: this.sequence,
+                component: this.editedSection.component,
+                title: this.editedSection.title,
+                subtitle: this.editedSection.subtitle,
+                body: JSON.stringify(this.editedSection.body),
+                text: this.editedSection.text
+            });
         }
     },
     computed: {
@@ -83,15 +137,27 @@ export default {
             return (image) => {
                 return ('aspectRatio' in image) ? { aspectRatio : image.aspectRatio} : {aspectRatio : 'auto'};
             }
-        }
+        },
+        getAlertColor() {
+            return this.error ? 'red-me' : 'green-me';
+        },
+        getAlertMessage() {
+            let message = '';
+            if(this.error) message = this.error;
+            if(this.success) message = this.success;
+            return message;
+        },
+        getAlertType() {
+            return this.error ? 'error' : 'success';
+        },
     }
 }
 </script>
 
 <style lang="scss" scoped>
 
-    .story {
-
+    .story-editor {
+        position: relative;
         &__pictures {
             display: grid;
             grid-template-rows: repeat(6, 1fr);
@@ -102,6 +168,7 @@ export default {
             background-size: cover;
             cursor: pointer;
             position: relative;
+            height: 100%;
         }
 
         &__background-editor {
@@ -120,6 +187,8 @@ export default {
         &__img {
             overflow: hidden;
             object-fit: cover;
+            position: relative;
+
 
             &--1 {
                 width: 100%;

@@ -69,6 +69,7 @@ export default {
             background: linear-gradient(-90deg, var(--color), var(--color2)), var(--url);
             background-repeat: no-repeat; /* Do not repeat the image */
             background-size: cover;
+            height: 100%;
         }
 
         &__img--1 {
