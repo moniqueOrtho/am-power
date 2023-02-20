@@ -61,8 +61,10 @@
                                 :resetImg="reset"
                                 :upload="upload"
                                 :stencil-props="getStencilProps"
+                                :parentLoading="loading"
                                 @image-changed="imageStatus"
                                 @edited-uploaded="editedImageUploaded"
+                                @stop-loading="loading = false"
                             />
                         </div>
                         <div class="text-center">
@@ -156,6 +158,7 @@
         refName: '',
         upload: false,
         reset: false,
+        loading: false,
         loadingDisabled: true,
         dialogState: false,
         edit: false,
@@ -196,6 +199,7 @@
             (image.name ==='file') ? this.activateFileUpload(image.name) : this.changePicture(image);
         },
         activateFileUpload(name) {
+            this.error = '';
             this.refName = name;
             this.newImage = {};
             this.$refs[this.refName].click();

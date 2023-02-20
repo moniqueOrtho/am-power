@@ -69,6 +69,10 @@
         type: Boolean,
         default: false
       },
+      parentLoading: {
+        type: Boolean,
+        default: false
+      }
     },
     emits: ['image-changed', 'edited-uploaded'],
     created() {
@@ -106,7 +110,8 @@
             rotateClockwise: 'Rotate clockwise',
             rotateCounter: 'Rotate counter clockwise',
             reset: 'Reset'
-        }
+        },
+        loading: false
       };
     },
     methods: {
@@ -225,6 +230,12 @@
         image(value) {
             this.setImageData(value);
         },
+        loading(value) {
+            if(!value) this.$emit('stop-loading');
+        },
+        parentLoading(value) {
+            this.loading = value
+        }
     },
     computed: {
         actions() {

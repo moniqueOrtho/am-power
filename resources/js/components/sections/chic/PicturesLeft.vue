@@ -17,7 +17,7 @@
         <div class="story-editor__pictures" :style="cssVars" v-if="edit">
 
             <img
-                v-for="(image, index) in editedSection.body.images"
+                v-for="(image, index) in section.body.images"
                 :key="index"
                 :src="image.src"
                 :alt="image.alt"
@@ -25,7 +25,7 @@
                 @click="openImageDialog(image)"
                 :style="getImageStyle(image)"
             >
-            <div class="story-editor__background-editor edit-img" @click="openImageDialog(editedSection.body.background)"></div>
+            <div class="story-editor__background-editor edit-img" @click="openImageDialog(section.body.background)"></div>
 
             <image-dialog
                 :image="image"
@@ -35,7 +35,7 @@
                 :labels="labels"
             ></image-dialog>
         </div>
-        <pictures-left :data="data" v-else></pictures-left>
+        <pictures-left :data="section" v-else></pictures-left>
         <div class="message__container message__container--left">
             <close-alert
                 :alertColor="getAlertColor"
@@ -86,15 +86,15 @@ export default {
         return {
             dialog: false,
             image: {},
-            editedSection: {},
+            section: {},
             edit: false
         }
     },
     methods: {
         initialize() {
-            this.editedSection = Object.assign({}, this.data);
+            this.section = Object.assign({}, this.data);
             if(this.data.body === null) {
-                this.editedSection.body = {
+                this.section.body = {
                     background: {name: 'background', src: image0, alt: 'Houten planken', class: 'story-editor__pictures'},
                     images: [
                         {id: 'img-0', name: 'img-0', src : image1, alt:'Laptop en koffie', class: 'story-editor__img--1', aspectRatio: '1/1'},
@@ -102,23 +102,25 @@ export default {
                     ]
                 }
             }
+            if(typeof this.section.body === 'string') this.section.body = JSON.parse(this.section.body);
+
         },
         openImageDialog(image) {
             this.dialog = true;
             this.image = image;
         },
         setNewImage(image) {
-            let index = this.editedSection.body.images.findIndex(i => i.class === image.class);
-            this.editedSection.body.images[index] = image;
+            let index = this.section.body.images.findIndex(i => i.class === image.class);
+            this.section.body.images[index] = image;
 
             this.$emit('save-section', {
-                id : 'id' in this.editedSection ? this.editedSection.id : null,
+                id : 'id' in this.section ? this.section.id : null,
                 sequence: this.sequence,
-                component: this.editedSection.component,
-                title: this.editedSection.title,
-                subtitle: this.editedSection.subtitle,
-                body: JSON.stringify(this.editedSection.body),
-                text: this.editedSection.text
+                component: this.section.component,
+                title: this.section.title,
+                subtitle: this.section.subtitle,
+                body: JSON.stringify(this.section.body),
+                text: this.section.text
             });
         }
     },
@@ -130,7 +132,7 @@ export default {
             return {
                 '--color': this.convertHex(this.$vuetify.theme.themes.light.primary, 50),
                 '--color2': this.convertHex(this.$vuetify.theme.themes.light.tertiary, 50),
-                '--url': `url(${this.editedSection.body.background.src})`
+                '--url': `url(${this.section.body.background.src})`
             }
         },
         getImageStyle() {

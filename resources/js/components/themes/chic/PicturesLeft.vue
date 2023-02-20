@@ -1,6 +1,13 @@
 <template>
     <div class="story__pictures" :style="cssVars">
-        <img :src="image.src" :alt="image.alt" :class="image.class" v-for="(image, index) in this.section.body.images" :key="index">
+        <img
+            :src="image.src"
+            :alt="image.alt"
+            :class="image.class"
+            v-for="(image, index) in this.section.body.images"
+            :key="index"
+            :style="getImageStyle(image)"
+        >
     </div>
 </template>
 
@@ -15,11 +22,6 @@ export default {
             required: true
         }
     },
-    data() {
-        return {
-
-        }
-    },
     methods: {
         convertHex (color, opacity) {
         color = color.replace('#', '')
@@ -32,11 +34,18 @@ export default {
     },
     computed: {
         section() {
-            let data = {};
+            let section = {};
             if(this.data.body !== null) {
-                data = Object.assign({}, this.data);
+                section = JSON.parse(JSON.stringify(this.data));
+                if(typeof section.body === 'string') {
+                    section.body = JSON.parse(section.body);
+                }
+                section.body.background.class = 'story__pictures'
+                section.body.images.forEach((image, index) => {
+                    image.class = `story__img--${index + 1}`
+                });
             } else {
-                data['body'] = {
+                section['body'] = {
                     background: image0,
                     images: [
                         {src : image1, alt:'Laptop en koffie', class: 'story__img--1'},
@@ -44,15 +53,20 @@ export default {
                     ]
                 }
             }
-            return data;
+            return section;
         },
         cssVars() {
             return {
                 '--color': this.convertHex(this.$vuetify.theme.themes.light.primary, 50),
                 '--color2': this.convertHex(this.$vuetify.theme.themes.light.tertiary, 50),
-                '--url': `url(${this.section.body.background})`
+                '--url': `url(${this.section.body.background.src})`
             }
-        }
+        },
+        getImageStyle() {
+            return (image) => {
+                return ('aspectRatio' in image) ? { aspectRatio : image.aspectRatio} : {aspectRatio : 'auto'};
+            }
+        },
     }
 }
 </script>

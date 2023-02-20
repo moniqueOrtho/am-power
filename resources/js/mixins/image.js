@@ -6,21 +6,22 @@ export default {
     },
     methods: {
         validateImage(file) {
+            const labels = this.$store.getters['labels/getTranslations'];
             this.error = "";
             // Is there a file?
             if(!file) {
-            this.error = this.$t("No image");
+            this.error = 'noImage' in labels ? labels.noImage : 'No image has been selected!';
             return false;
             }
             // Validate type gif|jpg|png|jpeg|bmp
             let isGood = /\.(?=gif|jpg|png|jpeg|bmp)/gi.test(file.name);
             if(!isGood) {
-            this.error = this.$t("No image");
+            this.error = 'noImage' in labels ? labels.noImage : 'No image has been selected!';
             return false;
             }
             // Validate size. Size must be smaller then 2mb
             if(file.size > 2000000) {
-            this.error = this.$t("Image size restriction");
+            this.error = 'noRightImgSize' in labels ? labels.noRightImgSize : 'The image is larger than 2MB!';
             return false;
             }
             return true;
