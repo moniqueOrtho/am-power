@@ -113,8 +113,9 @@
                     <curl-btn :obj="image" @curl-action="deleteImage" v-if="image.name !== editedImg.name && image.name !== 'file'"></curl-btn>
                     <image-btn
                         :image="image"
-                        :optionsBtn="{iconSize: '4rem', text: labels.addImage, bgColor: image.name !== 'file' ? $vuetify.theme.themes.light.accent : 'transparent', clickable: image.name === editedImg.name ? false : true }"
+                        :optionsBtn="{iconSize: '4rem', text: labels.addImage, bgColor: image.name !== 'file' ? $vuetify.theme.themes.light.accent : 'transparent', clickable: image.id === editedImg.id ? false : true }"
                         @btn-clicked="allNewImgUploads"
+                        :class="{'outline--accent' : image.id === editedImg.id}"
                     ></image-btn>
                 </div>
 

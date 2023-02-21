@@ -23,11 +23,11 @@ import TheFooter from '../themes/chic/TheFooter.vue';
 import HeaderOne from '../themes/chic/HeaderOne.vue';
 import HeaderTwo from '../themes/chic/HeaderTwo.vue';
 import TheGallery from '../themes/chic/TheGallery.vue';
-import TheHomes from '../themes/chic/TheProducts.vue';
+import TheProducts from '../themes/chic/TheProducts.vue';
 import TheSidebar from '../themes/chic/TheSidebar.vue';
 
 export default {
-    components: {TheFeatures, ContentRight, PicturesLeft, TheFooter, HeaderOne, HeaderTwo, TheGallery, TheHomes, TheSidebar},
+    components: {TheFeatures, ContentRight, PicturesLeft, TheFooter, HeaderOne, HeaderTwo, TheGallery, TheProducts, TheSidebar},
     props: {
         page : {
             type: Object,
@@ -51,7 +51,7 @@ export default {
                 {component: 'TheFeatures', class:'chic__the-features', title: null, subtitle: null, body: null, text: null},
                 {component: 'PicturesLeft', class:'chic__pictures-left', title: null, subtitle: null, body: null, text: null},
                 {component: 'ContentRight', class:'chic__content-right light1', title: null, subtitle: null, body: null, text: null},
-                {component: 'TheHomes', class:'chic__item chic__the-homes tertiary', title: null, subtitle: null, body: null, text: null},
+                {component: 'TheProducts', class:'chic__item chic__the-products', title: null, subtitle: null, body: null, text: null},
                 {component: 'TheGallery', class:'chic__item chic__the-gallery grey1', title: null, subtitle: null, body: null, text: null},
                 {component: 'TheFooter', class:'chic__item chic__the-footer tertiary', title: null, subtitle: null, body: null, text: null},
             ],
@@ -66,6 +66,10 @@ export default {
 
                 grey1: '#54483A',
                 grey2: '#6D5D4B',
+            },
+            text: {
+                sectionSaved: 'Section has been saved successful!',
+                sectionNotSaved: 'Paragraph has not been saved'
             },
             succesIndex: -1,
             errorIndex: -1,
@@ -83,6 +87,14 @@ export default {
     methods: {
         setTranslationStore() {
             this.$store.dispatch('labels/setTranslations', this.labels);
+        },
+        getTranslations() {
+            if(this.labels && Object.keys(this.labels) > 0 ) {
+                let keys = Object.keys(this.text);
+                keys.forEach(k => {
+                    if(k in this.labels) this.text[k] = this.labels[k]
+                })
+            }
         },
         setUserImages() {
             this.$store.dispatch('images/setImages', Object.values(this.images));
@@ -140,6 +152,7 @@ export default {
     },
 
 
+
 }
 </script>
 
@@ -175,7 +188,7 @@ export default {
             grid-column: col-start 5 / full-end;
         }
 
-        &__the-homes {
+        &__the-products {
             grid-column: center-start / center-end;
         }
 

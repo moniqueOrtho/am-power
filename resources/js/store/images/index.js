@@ -12,10 +12,6 @@ export default {
             state.images = payload;
         },
         storeImage(state, payload) {
-            let index = state.images.findIndex(x => x.id === payload.id);
-            if(index > -1) {
-               this.commit('deleteImage', payload.id)
-            }
             state.images.push(payload);
         },
         updateImage(state, payload) {

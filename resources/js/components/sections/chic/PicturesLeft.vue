@@ -6,7 +6,7 @@
                     color="primary"
                     dark
                     fab
-                    @click="edit = !edit"
+                    @click="editState"
                 >
                     <v-icon v-if="!edit">mdi-pencil-box-multiple</v-icon>
                     <v-icon v-else >mdi-close</v-icon>
@@ -95,15 +95,19 @@ export default {
             this.section = Object.assign({}, this.data);
             if(this.data.body === null) {
                 this.section.body = {
-                    background: {name: 'background', src: image0, alt: 'Houten planken', class: 'story-editor__pictures'},
+                    background: {id: 'background', name: 'background', src: image0, alt: 'Houten planken', class: 'story-editor__pictures'},
                     images: [
-                        {id: 'img-0', name: 'img-0', src : image1, alt:'Laptop en koffie', class: 'story-editor__img--1', aspectRatio: '1/1'},
+                        {id: 'img-0', name: 'img-0', src : image1, alt:'Laptop en koffie', class: 'story-editor__img--1'},
                         {id: 'img-1', name: 'img-1', src : image2, alt:'Tevreden vrouw met laptop', class: 'story-editor__img--2', aspectRatio: '3/2'}
                     ]
                 }
             }
             if(typeof this.section.body === 'string') this.section.body = JSON.parse(this.section.body);
 
+        },
+        editState() {
+            this.edit = !this.edit
+            this.$emit('delete-message');
         },
         openImageDialog(image) {
             this.dialog = true;
@@ -137,7 +141,7 @@ export default {
         },
         getImageStyle() {
             return (image) => {
-                return ('aspectRatio' in image) ? { aspectRatio : image.aspectRatio} : {aspectRatio : 'auto'};
+                return ('aspectRatio' in image) ? { aspectRatio : image.aspectRatio} : {movable : true};
             }
         },
         getAlertColor() {
