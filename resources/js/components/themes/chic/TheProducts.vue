@@ -32,7 +32,7 @@
         >
             <div class="info-dialog">
                 <img :src="info.src" :alt="info.alt" class="info-dialog__img">
-                <div class="info-dialog__price">
+                <div class="info-dialog__price" :id="`ribbon-${info.id}`" :style="setVarWidth">
                     <p>&euro; {{ price }}</p>
                 </div>
                 <div class="info-dialog__features">
@@ -69,6 +69,7 @@ export default {
     data() {
         return {
             dialog: false,
+            ribbonWidth: null,
             info: {},
             price: null,
             products: [
@@ -89,6 +90,8 @@ export default {
             this.info = Object.assign({}, product);
             this.info.features = this.info.features.filter(i => i.label !== 'Price');
             this.price = product.features.find(i => i.label === 'Price').text;
+            console.log(product)
+            this.ribbonWidth = document.getElementById(`ribbon-${product.id}`).clientWidth;
 
         },
         close() {
@@ -104,6 +107,11 @@ export default {
             } else {
                 let index = this.text.findIndex(t => t.id === info.id)
                 return index > -1 ? this.text[index] : this.loremIpsem;
+            }
+        },
+        setVarWidth() {
+            return {
+                '--ribbon-width' : `${this.ribbonWidth/2}px`
             }
         }
     }
@@ -210,6 +218,41 @@ export default {
             grid-row: 1/2;
             grid-column: 1/1;
             z-index: 3;
+
+            justify-self: start;
+            background-color: var(--v-primary-base);
+            margin-left: 0.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 30%;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+            &::before, &::after {
+                content: "";
+                position: absolute;
+                height: 0;
+                width: 0;
+                bottom: -var(--ribbon-width);
+                border-top: var(--ribbon-width) solid var(--v-primary-base);
+                border-left: var(--ribbon-width) solid transparent;
+                border-right: var(--ribbon-width) solid transparent;
+            }
+
+            &::before {
+                left: 0;
+            }
+
+            &::after {
+                left: 50%;
+            }
+
+            p {
+                padding: .5rem;
+                color: var(--v-light1-base);
+                font-weight: 400;
+            }
         }
 
         &__features {
