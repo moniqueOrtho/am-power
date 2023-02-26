@@ -30,21 +30,25 @@
             v-model="dialog"
             max-width="80%"
         >
-            <div class="info-dialog">
+            <div class="info-dialog" v-if="dialog">
+                <font-awesome-icon icon="fa-solid fa-times" class="info-dialog__close" @click="close"/>
                 <img :src="info.src" :alt="info.alt" class="info-dialog__img">
-                <div class="info-dialog__price" :id="`ribbon-${info.id}`" :style="setVarWidth">
+                <ribbon class="info-dialog__price" :color="$vuetify.theme.themes.light.primary">
                     <p>&euro; {{ price }}</p>
-                </div>
+                </ribbon>
                 <div class="info-dialog__features">
                     <div class="info-dialog__attr"  v-for="attr in info.features">
                         <v-icon color="primary" size="1.5rem">mdi-check</v-icon>
                         <div class="info-dialog__text">
-                            <span>{{ attr.text }} </span><span>{{ attr.label }}</span>
+                            <span>{{ attr.label }}: </span><span>{{  attr.text}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="info-dialog__info">
-                    <h4 class="info-dialog__title">{{ info.title }}</h4>
+
+                        <h4 class="info-dialog__title">{{ info.title }}</h4>
+
+
                     <div class="info-dialog__paragraph">{{ getParagraph }}</div>
                 </div>
 
@@ -63,13 +67,14 @@ import balloon3 from "../../../../images/balloons4.jpg";
 import diagram from "../../../../images/hand-met-diagram.jpg"
 import parachute from "../../../../images/parachute.jpg";
 import balloons from "../../../../images/small-balloons.jpg";
+import Ribbon from "../../themesComponents/Ribbon.vue";
 
 export default {
     name: 'products-section',
+    components: {Ribbon},
     data() {
         return {
             dialog: false,
-            ribbonWidth: null,
             info: {},
             price: null,
             products: [
@@ -90,8 +95,7 @@ export default {
             this.info = Object.assign({}, product);
             this.info.features = this.info.features.filter(i => i.label !== 'Price');
             this.price = product.features.find(i => i.label === 'Price').text;
-            console.log(product)
-            this.ribbonWidth = document.getElementById(`ribbon-${product.id}`).clientWidth;
+
 
         },
         close() {
@@ -109,11 +113,6 @@ export default {
                 return index > -1 ? this.text[index] : this.loremIpsem;
             }
         },
-        setVarWidth() {
-            return {
-                '--ribbon-width' : `${this.ribbonWidth/2}px`
-            }
-        }
     }
 
 }
@@ -205,6 +204,15 @@ export default {
         grid-template-columns: repeat(auto-fit, minmax(23rem, 1fr));
         grid-gap: 1.5rem;
         padding: 1.5rem;
+        border-top: 2.5rem solid var(--v-primary-base);
+        border-left: none;
+        position: relative;
+
+        @media screen and (min-width: 1074px) {
+            border-left: 2.5rem solid var(--v-primary-base);
+            border-top: none;
+        }
+
 
         &__img {
             width: 100%;
@@ -214,39 +222,35 @@ export default {
             grid-column: 1/1;
         }
 
+        &__close {
+            position: absolute;
+            top: -2.25rem;
+
+            font-size: 2rem;
+            color: var(--v-light1-base);
+            cursor: pointer;
+
+            &:hover {
+                color: var(--v-secondary-base);
+            }
+
+            @media screen and (max-width: 1073px) {
+                left: .6rem;
+            }
+
+            @media screen and (min-width: 1074px) {
+                color: var(--v-primary-base);
+                top: .6rem;
+                right: .6rem;
+            }
+        }
+
         &__price {
             grid-row: 1/2;
             grid-column: 1/1;
             z-index: 3;
-
-            justify-self: start;
-            background-color: var(--v-primary-base);
-            margin-left: 0.5rem;
-            position: relative;
-            display: flex;
-            align-items: center;
-            height: 30%;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
-            &::before, &::after {
-                content: "";
-                position: absolute;
-                height: 0;
-                width: 0;
-                bottom: -var(--ribbon-width);
-                border-top: var(--ribbon-width) solid var(--v-primary-base);
-                border-left: var(--ribbon-width) solid transparent;
-                border-right: var(--ribbon-width) solid transparent;
-            }
-
-            &::before {
-                left: 0;
-            }
-
-            &::after {
-                left: 50%;
-            }
+            justify-self: end;
+            margin-right: 0.5rem;
 
             p {
                 padding: .5rem;
@@ -266,14 +270,13 @@ export default {
             display: flex;
         }
 
-
-
-        &__text {
-
-        }
-
         &__title {
-
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            border-bottom: 2px solid var(--v-primary-base);
+            margin-bottom: 1rem;
+            display: inline-block;
         }
 
         &__paragraph {
