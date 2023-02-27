@@ -113,19 +113,7 @@ export default {
         error: {
             type: String,
             default: ''
-        },
-        // labels: {
-        //     type: Object,
-        //     default: () => {
-        //         return {
-        //             feature: 'Feature',
-        //             add: 'Add',
-        //             title: 'Title',
-        //             save: 'Save',
-        //             noTitle: 'No title'
-        //         }
-        //     }
-        // }
+        }
     },
     emits: ['save-section', 'delete-message'],
     created() {

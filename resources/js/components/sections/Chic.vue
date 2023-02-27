@@ -19,11 +19,12 @@
 import TheFeatures from './chic/TheFeatures.vue';
 import ContentRight from './chic/ContentRight.vue';
 import PicturesLeft from './chic/PicturesLeft.vue';
+import TheProducts from './chic/TheProducts.vue';
 import TheFooter from '../themes/chic/TheFooter.vue';
 import HeaderOne from '../themes/chic/HeaderOne.vue';
 import HeaderTwo from '../themes/chic/HeaderTwo.vue';
 import TheGallery from '../themes/chic/TheGallery.vue';
-import TheProducts from '../themes/chic/TheProducts.vue';
+
 import TheSidebar from '../themes/chic/TheSidebar.vue';
 
 export default {
@@ -51,7 +52,7 @@ export default {
                 {component: 'TheFeatures', class:'chic__the-features', title: null, subtitle: null, body: null, text: null},
                 {component: 'PicturesLeft', class:'chic__pictures-left', title: null, subtitle: null, body: null, text: null},
                 {component: 'ContentRight', class:'chic__content-right light1', title: null, subtitle: null, body: null, text: null},
-                {component: 'TheProducts', class:'chic__item chic__the-products', title: null, subtitle: null, body: null, text: null},
+                {component: 'TheProducts', class:'chic__the-products', title: null, subtitle: null, body: null, text: null},
                 {component: 'TheGallery', class:'chic__item chic__the-gallery grey1', title: null, subtitle: null, body: null, text: null},
                 {component: 'TheFooter', class:'chic__item chic__the-footer tertiary', title: null, subtitle: null, body: null, text: null},
             ],
