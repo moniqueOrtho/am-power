@@ -12,7 +12,8 @@ use App\Repositories\Contracts\{
     IUser,
     IRole,
     IPermission,
-    IImage
+    IImage,
+    IProduct
 };
 
 use App\Repositories\Eloquent\{
@@ -24,7 +25,8 @@ use App\Repositories\Eloquent\{
     UserRepository,
     RoleRepository,
     PermissionRepository,
-    ImageRepository
+    ImageRepository,
+    ProductRepository
 };
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -55,5 +57,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(IRole::class, RoleRepository::class);
         $this->app->bind(IPermission::class, PermissionRepository::class);
         $this->app->bind(IImage::class, ImageRepository::class);
+        $this->app->bind(IProduct::class, ProductRepository::class);
     }
 }

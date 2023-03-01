@@ -88,5 +88,9 @@ return [
     'other_image' => 'Other image',
     'choose_another_image' => 'Choose another image',
     'no_image' => 'No image has been selected!',
-    'image_size_restriction' => 'The image is larger than 2MB!'
+    'image_size_restriction' => 'The image is larger than 2MB!',
+    'products' => 'Product|Products',
+    'prices' => 'Price|Prices',
+    'vat' => 'VAT'
+
 ];

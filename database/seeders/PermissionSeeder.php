@@ -25,7 +25,8 @@ class PermissionSeeder extends Seeder
             [
                 'role' => 'admin',
                 'permissions' => [
-                    'update_site', 'update_profile', 'create_page', 'update_page', 'delete_page','create_post', 'update_post', 'delete_post', 'create_subscriber', 'update_subscriber', 'delete_subscriber', 'view_users'
+                    'update_site', 'update_profile', 'create_page', 'update_page', 'delete_page','create_post', 'update_post', 'delete_post', 'create_subscriber', 'update_subscriber', 'delete_subscriber', 'view_users',
+                    'create_product', 'update_product', 'delete_product'
                 ]
             ],
             [

@@ -42,6 +42,12 @@
                 'link' => route('pages', ['siteId' => $sites->isNotEmpty() ? $sites->first() : 0])
             ],
             [
+                'name' => 'products',
+                'perm'  => 'product',
+                'label' => trans_choice('site.products', 2),
+                'link' => route('products', ['siteId' => $sites->isNotEmpty() ? $sites->first() : 0])
+            ],
+            [
                 'name' => 'posts',
                 'perm'  => 'post',
                 'label' => trans_choice('site.posts', 2),
