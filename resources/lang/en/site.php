@@ -91,6 +91,8 @@ return [
     'image_size_restriction' => 'The image is larger than 2MB!',
     'products' => 'Product|Products',
     'prices' => 'Price|Prices',
-    'vat' => 'VAT'
-
+    'vat' => 'VAT',
+    'stock' => 'Stock',
+    'digital' => 'Digital',
+    'physical' => 'Physical'
 ];

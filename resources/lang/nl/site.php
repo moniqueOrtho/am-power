@@ -91,5 +91,8 @@ return [
     'image_size_restriction' => 'De afbeelding is groter dan 2MB!',
     'products' => 'Product|Producten',
     'prices' => 'Prijs|Prijzen',
-    'vat' => 'BTW'
+    'vat' => 'BTW',
+    'stock' => 'Voorraad',
+    'digital' => 'Digitaal',
+    'physical' => 'Fysiek'
 ];

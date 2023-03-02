@@ -6,10 +6,12 @@ use App\Models\Page;
 use App\Models\Site;
 use App\Models\User;
 use App\Models\Image;
+use App\Models\Product;
 use App\Policies\PagePolicy;
 use App\Policies\SitePolicy;
 use App\Policies\UserPolicy;
 use App\Policies\ImagePolicy;
+use App\Policies\ProductPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -24,7 +26,8 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Site::class => SitePolicy::class,
         Page::class => PagePolicy::class,
-        Image::class => ImagePolicy::class
+        Image::class => ImagePolicy::class,
+        Product::class => ProductPolicy::class
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
 

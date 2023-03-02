@@ -45,6 +45,8 @@
                             :type="element.type"
                             :rules="element.rules"
                             :counter="element.counter"
+                            :min="'min' in element ? element.min : ''"
+                            :max="'max' in element ? element.max : ''"
                             clearable
                             background-color="grey lighten-4"
                             :required="element.required"

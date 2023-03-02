@@ -16,7 +16,8 @@ use App\Http\Controllers\{
     SectionController,
     SiteController,
     UserController,
-    ImageController
+    ImageController,
+    ProductController
 };
 use App\Models\Role;
 
@@ -58,6 +59,8 @@ Route::middleware(['auth'])->group( function () {
 
     Route::resource( __('site.pages_slug'), PageController::class)->only(['store', 'update', 'destroy']);
 
+    Route::resource( strtolower(trans_choice('site.products', 2)), ProductController::class)->only(['store', 'update', 'destroy']);
+
     Route::resource( strtolower(trans_choice('site.sites', 2)), SiteController::class)->names([
         'index' => 'sites'
     ])->only(['index', 'store', 'update', 'destroy']);
@@ -69,6 +72,8 @@ Route::middleware(['auth'])->group( function () {
     Route::get('/' . strtolower(trans_choice('site.subscribers', 2)) . '/{siteId}' , [UserController::class, 'indexSubscribers'] )->name('subscribers');
 
     Route::get('/' . __('site.pages_slug') . '/{siteId}' , [PageController::class, 'index'] )->name('pages');
+
+    Route::get('/' . strtolower(trans_choice('site.products', 2)) . '/{siteId}' , [ProductController::class, 'index'] )->name('products');
 
     Route::get('/' . strtolower(trans_choice('site.pages', 1)) . '/{id}', [PageController::class, 'show']);
 

@@ -3,9 +3,8 @@
 @section('content')
 
 <crud-table
-    request="{{'/' . __('site.products')}}"
+    request="{{'/' . strtolower(trans_choice('site.products', 2))}}"
     :crud="{{ Js::from([
-        'view' => auth()->user()->hasPermissionTo('create_product'),
         'create' => auth()->user()->hasPermissionTo('create_product'),
         'update' => auth()->user()->hasPermissionTo('update_product'),
         'delete' => auth()->user()->hasPermissionTo('delete_product'),
@@ -15,6 +14,8 @@
             [ 'text' => '', 'value' => 'data-table-expand'],
             [ 'text' => trans_choice('site.names', 1), 'value' => 'name'],
             [ 'text' => trans_choice('site.titles', 1), 'value' => 'title' ],
+            [ 'text' => 'Type', 'value' => 'type'],
+            [ 'text' => __('site.stock'), 'value' => 'stock' ],
             [ 'text' => trans_choice('site.prices', 1), 'value' => 'price' ],
             [ 'text' => __('site.vat'), 'value' => 'VAT' ],
             [ 'text' => trans_choice('site.actions', 2), 'value' => 'actions', 'sortable' => false, 'align' => 'center']
@@ -24,15 +25,19 @@
     :default-item=" {{ Js::from( [
         'name' => '',
         'title' => '',
-        'description' => '',
+        'type' => 'real',
+        'stock' => '',
         'price' => '',
-        'VAT' => ''
+        'VAT' => '21',
+        'description' => ''
     ]) }} "
     :fields="{{ Js::from( [
         [ 'name' => 'name', 'label' => trans_choice('site.names', 1), 'counter' => 50, 'rules' => ['required', 'max-counter'], 'required' => true, 'sm' => 6, 'md' => 6 ],
         [ 'name' => 'title', 'label' => trans_choice('site.titles', 1), 'rules' => 'required', 'required' => true, 'sm' => 6, 'md' => 6 ],
-        [ 'name' => 'price', 'label' => trans_choice('site.prices', 1), 'rules' => 'required', 'required' => true, 'sm' => 6, 'md' => 6],
-        [ 'name' => 'VAT', 'label' => __('site.vat'), 'rules' => 'required', 'required' => true, 'sm' => 6, 'md' => 6],
+        [ 'name' => 'type', 'label' => 'Type', 'input' => 'select', 'items' => [[ 'text' => __('site.digital') . ' ' . strtolower(trans_choice('site.products', 1)), 'value' => 'online'], [ 'text' => __('site.physical') . ' ' . strtolower(trans_choice('site.products', 1)), 'value' => 'real'] ], 'required' => true, 'sm' => 6, 'md' => 6 ],
+        [ 'name' => 'stock', 'label' => __('site.stock'), 'type' => 'number', 'min' => 0, 'sm' => 6, 'md' => 6 ],
+        [ 'name' => 'price', 'label' => trans_choice('site.prices', 1), 'type' => 'number', 'min' => 0, 'rules' => 'required', 'required' => true, 'sm' => 6, 'md' => 6],
+        [ 'name' => 'VAT', 'label' => __('site.vat'), 'input' => 'select', 'items' => [[ 'text' => '0%-tarief', 'value' => '0'], [ 'text' => '9%-tarief', 'value' => '9'], [ 'text' => '21%-tarief', 'value' => '21']  ], 'rules' => 'required', 'required' => true, 'sm' => 6, 'md' => 6],
         [ 'name' => 'description', 'label' => trans_choice('site.descriptions', 1), 'sm' => 12, 'md' => 12, 'input' => 'textarea', 'rows' => 4 ]
     ]) }}"
     :labels="{{ Js::from( [
@@ -41,7 +46,7 @@
         'noResultText' => __('site.no result text'),
         'noDataText' => __('site.no_data_text'),
         'itesmPage' => __('site.items_per_p'),
-        'newItem' => trans_choice('site.new i', 2) . " " . trans_choice('site.pages', 1),
+        'newItem' => trans_choice('site.new i', 1) . " " . trans_choice('site.products', 1),
         'editItem' => __('site.edit'),
         'save' => __('site.save'),
         'succesMessage' => __('site.succes_message'),
