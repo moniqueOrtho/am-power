@@ -1,6 +1,14 @@
 <template>
     <div class="products-maker__container">
-        <section class="products-maker">
+        <editing-bar
+            :actions="actions"
+            :changed="maker && changed"
+            @editor-active="bigActivatorClicked"
+            @save-section="save"
+            @title-actions="titleActions"
+        ></editing-bar>
+        <section class="products-maker" >
+            <input class="chic__heading-4 chic__heading-4--dark products-maker__title editor__box editor__box--title" v-model="section.title" :placeholder="labels.title"  v-if="titles.title && maker">
             <div class="product-maker"
                 v-for="product in section.body"
                 :key="product.name"
@@ -69,13 +77,13 @@ import parachute from "../../../../images/parachute.jpg";
 import balloons from "../../../../images/small-balloons.jpg";
 import Ribbon from "../../themesComponents/Ribbon.vue";
 
-import EditorMenu from "../../tools/EditorMenu.vue";
 import CurlBtn from "../../buttons/CurlBtn.vue";
 import CloseAlert from "../../alerts/CloseAlert.vue";
+import EditingBar from '../../tools/EditingBar.vue';
 
 export default {
     name: 'products-section',
-    components: {Ribbon, EditorMenu, CurlBtn, CloseAlert},
+    components: {Ribbon, CurlBtn, CloseAlert, EditingBar},
     props: {
         sequence: {
             type: Number,
@@ -104,6 +112,13 @@ export default {
             info: {},
             price: null,
             section: null,
+            maker: false,
+            titles: {
+                title: false,
+                subtitle: false,
+            },
+            changed: false,
+            actions: ['title', 'subtitle'],
             products: [
                 {id: '1', title: 'Product 1', src: balloon1, alt: 'One balloon', features: [{icon: 'mdi-web', text: 1, label: 'Website'}, {icon: 'mdi-material-design', text: 1, label: 'Standard design'}, {icon: 'mdi-pencil-ruler', text: 0, label: 'Own design'}, {icon: 'mdi-currency-eur', text: 400, label: 'Price'}]},
                 {id: '2', title: 'Product 2', src: balloon2, alt: 'Two balloons', features: [{icon: 'mdi-web', text: 2, label: 'Website'}, {icon: 'mdi-material-design', text: 1, label: 'Standard design'}, {icon: 'mdi-pencil-ruler', text: 0, label: 'Own design'}, {icon: 'mdi-currency-eur', text: 700, label: 'Price'}]},
@@ -128,13 +143,39 @@ export default {
             this.info = Object.assign({}, product);
             this.info.features = this.info.features.filter(i => i.label !== 'Price');
             this.price = product.features.find(i => i.label === 'Price').text;
-
-
         },
         close() {
             this.dialog = false;
             this.info = {}
             this.price = null;
+        },
+        bigActivatorClicked(closed) {
+            this.maker = ! closed;
+            if(this.error || this.success) {
+                this.$emit('delete-message');
+            }
+        },
+        titleActions(titleObj) {
+            let key = Object.keys(titleObj)[0];
+            console.log(key)
+            this.$set(this.titles, key, titleObj[key]);
+            if(this.section[key] && !titleObj[key]) {
+                this.section[key] = null;
+                this.changed = true;
+            }
+        },
+        save() {
+            this.changed = false;
+            this.maker = false;
+            this.$emit('save-section', {
+                id : this.data === null ? null : this.data.id,
+                sequence: this.sequence,
+                component: 'TheProducts',
+                title: this.section.title,
+                subtitle: this.section.subtitle,
+                body: JSON.stringify(this.section.body),
+                text: this.section.text
+            });
         }
     },
     computed: {
@@ -160,6 +201,14 @@ export default {
         grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
         grid-gap: 4.375rem;
         margin: 9rem 0;
+        &__container {
+            position: relative;
+        }
+        &__title {
+            grid-column: 1/-1;
+            justify-self: center;
+            text-align: center;
+        }
     }
     .product-maker {
         background-color: var(--v-light1-base);
