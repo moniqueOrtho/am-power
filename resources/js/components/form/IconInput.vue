@@ -21,6 +21,7 @@
           >
           <span class="icon-input__placeholder">{{placeholder}}</span>
           <button
+            type="button"
             class="icon-input__visibility"
             v-if="type === 'password'"
             @click.prevent="changeVisibility">
